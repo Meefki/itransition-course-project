@@ -1,3 +1,14 @@
-﻿namespace Comments.Domain;
+﻿using Comments.Domain.SeedWork;
 
-public record ReviewId(Guid Id);
+namespace Comments.Domain;
+
+public class ReviewId 
+    : EntityIdentifier<Guid>
+{
+    public ReviewId(Guid Value)
+    {
+        this.Value = Value;
+    }
+
+    public override Guid Value { get; }
+}

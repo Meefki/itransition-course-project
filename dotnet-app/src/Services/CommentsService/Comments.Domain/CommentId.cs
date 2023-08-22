@@ -1,3 +1,14 @@
-﻿namespace Comments.Domain;
+﻿using Comments.Domain.SeedWork;
 
-public record CommentId(Guid Id);
+namespace Comments.Domain;
+
+public class CommentId
+    : EntityIdentifier<Guid>
+{
+    public CommentId(Guid Value)
+    {
+        this.Value = Value;
+    }
+
+    public override Guid Value { get; }
+}

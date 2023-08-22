@@ -1,23 +1,55 @@
-﻿namespace Comments.Domain;
+﻿using Comments.Domain.DomainEvents;
+using Comments.Domain.SeedWork;
 
-public class Comment
+namespace Comments.Domain;
+
+public class Comment 
+    : Entity<Guid>, IAggregateRoot
 {
     public Comment(
-        CommentId id,
         ReviewId reviewId,
         UserId userId,
         string text)
+        : base(CommentId.Create<CommentId>(Guid.NewGuid()))
     {
-        Id = id;
         ReviewId = reviewId;
         UserId = userId;
         Text = text;
         SentDate = DateTime.UtcNow;
+
+        AddCommentAddedDomainEvent(id);
     }
 
-    public CommentId Id { get; init; }
+    private CommentId id = null!;
+    public override EntityIdentifier<Guid> Id
+    {
+        get => id;
+        init => id = (CommentId)value;
+    }
+
     public ReviewId ReviewId { get; init; }
     public UserId UserId { get; init; }
     public string Text { get; init; }
     public DateTime SentDate { get; init; }
+
+    public void Delete()
+    {
+        AddCommendDeletedDomainEvent(id);
+    }
+
+    #region Domain Events
+
+    private void AddCommentAddedDomainEvent(CommentId commentId)
+    {
+        CommendAddedDomainEvent domainEvent = new(commentId);
+        AddDomainEvent(domainEvent);
+    }
+
+    private void AddCommendDeletedDomainEvent(CommentId commentId)
+    {
+        CommandDeletedDomainEvent domainEvent = new(id);
+        AddDomainEvent(domainEvent);
+    }
+
+    #endregion
 }
