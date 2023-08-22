@@ -18,9 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Services\CommentsService\Comments.Application\Comments.Application.csproj" />
-    <ProjectReference Include="..\src\Services\CommentsService\Comments.Domain\Comments.Domain.csproj" />
-    <ProjectReference Include="..\src\Services\CommentsService\Comments.Infrastructure\Comments.Infrastructure.csproj" />
+    <ProjectReference Include="..\Comments.Application\Comments.Application.csproj" />
+    <ProjectReference Include="..\Comments.Infrastructure\Comments.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
