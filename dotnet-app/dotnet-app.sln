@@ -3,7 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{DC597375-8BE3-495C-B611-F1FADBBFC12F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Domain", "src\Services\UsersService\Users.Domain\Users.Domain.csproj", "{DC597375-8BE3-495C-B611-F1FADBBFC12F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00EBB2A1-0D06-445B-A779-6C7BE15113DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "src\Services", "{D48ED8B9-82BA-4FD8-AD8E-57FA6E22B607}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UsersService", "src\Services\UsersService", "{83101546-819F-418C-81EB-C2032C7C80B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommentsService", "src\Services\CommentsService", "{37730CA6-5870-438E-B137-4DE29744EDD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comments.Domain", "src\Services\CommentsService\Comments.Domain\Comments.Domain.csproj", "{7BFBAB89-83F3-46E7-812C-8668423775C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReviewsService", "src\Services\ReviewsService", "{B2E605B6-1B52-47DC-B244-171C30B249CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reviews.Domain", "src\Services\ReviewsService\Reviews.Domain\Reviews.Domain.csproj", "{EB31ADE8-2BE1-40B7-B584-498D22159422}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comments.Application", "src\Services\CommentsService\Comments.Application\Comments.Application.csproj", "{ABB8FB97-3444-4930-8F95-26A57B142B8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +31,31 @@ Global
 		{DC597375-8BE3-495C-B611-F1FADBBFC12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC597375-8BE3-495C-B611-F1FADBBFC12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC597375-8BE3-495C-B611-F1FADBBFC12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BFBAB89-83F3-46E7-812C-8668423775C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BFBAB89-83F3-46E7-812C-8668423775C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BFBAB89-83F3-46E7-812C-8668423775C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BFBAB89-83F3-46E7-812C-8668423775C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB31ADE8-2BE1-40B7-B584-498D22159422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB31ADE8-2BE1-40B7-B584-498D22159422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB31ADE8-2BE1-40B7-B584-498D22159422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB31ADE8-2BE1-40B7-B584-498D22159422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABB8FB97-3444-4930-8F95-26A57B142B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB8FB97-3444-4930-8F95-26A57B142B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB8FB97-3444-4930-8F95-26A57B142B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB8FB97-3444-4930-8F95-26A57B142B8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DC597375-8BE3-495C-B611-F1FADBBFC12F} = {83101546-819F-418C-81EB-C2032C7C80B7}
+		{D48ED8B9-82BA-4FD8-AD8E-57FA6E22B607} = {00EBB2A1-0D06-445B-A779-6C7BE15113DC}
+		{83101546-819F-418C-81EB-C2032C7C80B7} = {D48ED8B9-82BA-4FD8-AD8E-57FA6E22B607}
+		{37730CA6-5870-438E-B137-4DE29744EDD6} = {D48ED8B9-82BA-4FD8-AD8E-57FA6E22B607}
+		{7BFBAB89-83F3-46E7-812C-8668423775C8} = {37730CA6-5870-438E-B137-4DE29744EDD6}
+		{B2E605B6-1B52-47DC-B244-171C30B249CE} = {D48ED8B9-82BA-4FD8-AD8E-57FA6E22B607}
+		{EB31ADE8-2BE1-40B7-B584-498D22159422} = {B2E605B6-1B52-47DC-B244-171C30B249CE}
+		{ABB8FB97-3444-4930-8F95-26A57B142B8E} = {37730CA6-5870-438E-B137-4DE29744EDD6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2F756E04-F7FD-41AE-84B2-4B3ED7845283}
