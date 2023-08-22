@@ -7,8 +7,8 @@ var services = builder.Services;
 services.AddControllers();
 
 services.AddCustomDbContext(builder.Configuration);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 services.AddMediatR(cfg =>
 {
