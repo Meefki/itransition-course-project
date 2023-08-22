@@ -2,4 +2,4 @@
 
 namespace Comments.Domain.DomainEvents;
 
-public record CommendAddedDomainEvent(CommentId CommentId) : IDomainEvent;
+public record CommentAddedDomainEvent(CommentId CommentId) : IDomainEvent;

@@ -2,4 +2,4 @@
 
 namespace Comments.Domain.DomainEvents;
 
-public record CommandDeletedDomainEvent(CommentId CommandId) : IDomainEvent;
+public record CommentDeletedDomainEvent(CommentId CommandId) : IDomainEvent;
