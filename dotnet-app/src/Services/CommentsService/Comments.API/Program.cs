@@ -1,3 +1,6 @@
+using Comments.Application.SeedWork;
+using Users.Application.SeedWork.Mediator;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -14,6 +17,7 @@ services.AddMediatR(cfg =>
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
 });
+services.AddScoped<IDomainEventMediator>(x => new DomainEventMediator(x.GetRequiredService<IServiceScopeFactory>(), typeof(DomainEventMediator)));
 
 services.AddScoped<ICommentQueries>(sp => new CommentQueries(builder.Configuration.GetConnectionString("CommentDB")!));
 services.AddScoped<ICommentRepository, CommentRepository>();
@@ -28,8 +32,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.MapControllers();
 
@@ -39,4 +43,7 @@ using (var scope = app.Services.CreateScope())
     await context.Database.MigrateAsync();
 }
 
-await app.RunAsync();
+if (app.Environment.IsDevelopment())
+    app.Run();
+else
+    await app.RunAsync();

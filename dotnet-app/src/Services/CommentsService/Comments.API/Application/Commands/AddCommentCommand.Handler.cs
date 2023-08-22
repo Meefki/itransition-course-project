@@ -1,5 +1,4 @@
 ﻿using Comments.Application.Commands;
-using Comments.Application.Repositories;
 using Comments.Application.SeedWork;
 using MediatR;
 
@@ -11,7 +10,7 @@ public class AddCommentCommandHandler :
 {
     public AddCommentCommandHandler(
         ICommentRepository commentRepository, 
-        ILogger<AddCommentAbstractCommandHandler<AddCommentCommand>> logger)
+        ILogger<AddCommentCommandHandler> logger)
         : base(commentRepository, logger)
     {}
 }

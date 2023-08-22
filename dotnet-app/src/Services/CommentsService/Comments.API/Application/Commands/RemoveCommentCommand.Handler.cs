@@ -1,5 +1,4 @@
 ﻿using Comments.Application.Commands;
-using Comments.Application.Repositories;
 using Comments.Application.SeedWork;
 using MediatR;
 

@@ -1,4 +1,6 @@
-﻿namespace Comments.Domain.SeedWork.DomainExceptions;
+﻿using System.Text.Json.Serialization;
+
+namespace Comments.Domain.SeedWork.DomainExceptions;
 
 public class DomainErrorDetails
 {
@@ -8,6 +10,8 @@ public class DomainErrorDetails
         Message = message;
     }
 
+
+    [JsonIgnore]
     public DomainException Ex { get; init; }
     public string Message { get; init; }
 }

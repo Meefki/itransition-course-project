@@ -6,6 +6,10 @@ namespace Comments.Domain;
 public class Comment 
     : Entity<Guid>, IAggregateRoot
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    public Comment() : base(null!) { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
     public Comment(
         ReviewId reviewId,
         UserId userId,
@@ -47,7 +51,7 @@ public class Comment
 
     private void AddCommendDeletedDomainEvent(CommentId commentId)
     {
-        CommentDeletedDomainEvent domainEvent = new(id);
+        CommentDeletedDomainEvent domainEvent = new(commentId);
         AddDomainEvent(domainEvent);
     }
 

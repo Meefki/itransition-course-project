@@ -15,6 +15,6 @@ public abstract class EntityIdentifier<T>
         yield return Value;
     }
 
-    public static TIdentifier Create<TIdentifier>(T value)
-        => (TIdentifier)Activator.CreateInstance(typeof(EntityIdentifier<T>), new[] { value })!;
+    public static TIdentifier Create<TIdentifier>(object value)
+        => (TIdentifier)Activator.CreateInstance(typeof(TIdentifier), new[] { value })!;
 }

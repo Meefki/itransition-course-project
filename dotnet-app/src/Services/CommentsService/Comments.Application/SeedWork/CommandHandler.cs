@@ -95,34 +95,3 @@ public abstract class CommandHandler<TRequest>
         return response;
     }
 }
-
-public abstract class NotificationHandler<TRequest>
-{
-    private readonly ILogger logger;
-
-    public NotificationHandler(ILogger logger)
-    {
-        this.logger = logger;
-    }
-
-    protected abstract Task Action(TRequest request, CancellationToken cancellationToken);
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>")]
-    public async Task Handle(TRequest request, CancellationToken cancellationToken)
-    {
-        try
-        {
-            await Action(request, cancellationToken);
-        }
-        catch (DomainException ex)
-        {
-            logger.LogError(ex, message: ex.Message);
-        }
-        catch (Exception ex)
-        {
-            SomethingWentWrongDomainException domainException = new(SomethingWentWrongDomainException.MessageText, ex);
-            logger.LogError(domainException, message: SomethingWentWrongDomainException.MessageText);
-            logger.LogCritical(ex, message: ex.Message);
-        }
-    }
-}
