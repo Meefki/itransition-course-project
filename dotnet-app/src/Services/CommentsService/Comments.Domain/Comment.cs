@@ -41,13 +41,13 @@ public class Comment
 
     private void AddCommentAddedDomainEvent(CommentId commentId)
     {
-        CommendAddedDomainEvent domainEvent = new(commentId);
+        CommentAddedDomainEvent domainEvent = new(commentId);
         AddDomainEvent(domainEvent);
     }
 
     private void AddCommendDeletedDomainEvent(CommentId commentId)
     {
-        CommandDeletedDomainEvent domainEvent = new(id);
+        CommentDeletedDomainEvent domainEvent = new(id);
         AddDomainEvent(domainEvent);
     }
 
