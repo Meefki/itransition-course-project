@@ -56,7 +56,7 @@ public sealed class Review
     }
 
     public string? ImageUrl { get; private set; }
-    public void ChangeImage(string imageUrl)
+    public void ChangeImage(string? imageUrl)
     {
         //if (!string.IsNullOrWhiteSpace(ImageUrl) && 
         //    string.IsNullOrWhiteSpace(imageUrl))
