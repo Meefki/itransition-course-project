@@ -1,5 +1,4 @@
-﻿using Reviewing.Domain.AggregateModels.ReviewAggregate.DomainExceptions;
-using Reviewing.Domain.Enumerations;
+﻿using Reviewing.Domain.Enumerations;
 using Reviewing.Domain.Identifiers;
 using Reviewing.Domain.SeedWork;
 
@@ -16,17 +15,17 @@ public sealed class Review
         string name,
         Subject subject,
         string content,
-        string image,
-        IEnumerable<Tag> tags)
+        string? imageUrl,
+        ISet<Tag> tags)
         : base(ReviewId.Create<ReviewId>(Guid.NewGuid()))
     {
         Name = name;
         Subject = subject;
         Content = content;
-        ImageUrl = image;
+        ImageUrl = imageUrl;
         Status = ReviewStatuses.Published;
 
-        this.tags = new HashSet<Tag>(tags);
+        this.tags = tags;
         comments = new HashSet<CommentId>();
         likes = new HashSet<UserId>();
     }
