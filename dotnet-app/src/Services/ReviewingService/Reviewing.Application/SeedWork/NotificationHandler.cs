@@ -1,9 +1,9 @@
-﻿using Comments.Domain.DomainExceptions;
-using Comments.Domain.SeedWork.DomainEvents;
-using Comments.Domain.SeedWork.DomainExceptions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Reviewing.Domain.DomainExceptions;
+using Reviewing.Domain.SeedWork.DomainEvents;
+using Reviewing.Domain.SeedWork.DomainExceptions;
 
-namespace Comments.Application.SeedWork;
+namespace Reviewing.Application.SeedWork;
 
 public abstract class NotificationHandler<TRequest>
     : IDomainEventHandler<TRequest>

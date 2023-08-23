@@ -1,14 +1,14 @@
-﻿using Comments.Application.SeedWork;
-using Comments.Domain.DomainEvents;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Reviewing.Application.SeedWork;
+using Reviewing.Domain.AggregateModels.CommentAggregate.DomainEvents;
 
-namespace Comments.Application.DomainEvents;
+namespace Reviewing.Application.DomainEventHandlers;
 
 public class CommentDeletedDomainEventHandler
     : NotificationHandler<CommentDeletedDomainEvent>
 {
     public CommentDeletedDomainEventHandler(
-        ILogger<CommentDeletedDomainEventHandler> logger) 
+        ILogger<CommentDeletedDomainEventHandler> logger)
         : base(logger)
     { }
 

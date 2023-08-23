@@ -1,9 +1,9 @@
-﻿using Comments.Application.Commands;
-using Comments.Application.SeedWork;
-using MediatR;
+﻿using MediatR;
+using Reviewing.Application.Commands;
+using Reviewing.Application.SeedWork;
 
-namespace Comments.API.Application.Commands;
+namespace Reviewing.API.Application.Commands;
 
-public record AddCommentCommand(string ReviewId, string UserId, string Text) : 
-    AddCommentAbstractCommand(ReviewId, UserId, Text), 
+public record AddCommentCommand(string ReviewId, string UserId, string Text) :
+    AddCommentAbstractCommand(ReviewId, UserId, Text),
     IRequest<CommandResponse<string>>;

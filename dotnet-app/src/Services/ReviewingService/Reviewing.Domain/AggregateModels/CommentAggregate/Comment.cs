@@ -1,13 +1,14 @@
-﻿using Comments.Domain.DomainEvents;
-using Comments.Domain.SeedWork;
+﻿using Reviewing.Domain.AggregateModels.CommentAggregate.DomainEvents;
+using Reviewing.Domain.Identifiers;
+using Reviewing.Domain.SeedWork;
 
-namespace Comments.Domain;
+namespace Reviewing.Domain.AggregateModels.CommentAggregate;
 
-public class Comment 
+public sealed class Comment
     : Entity<Guid>, IAggregateRoot
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public Comment() : base(null!) { }
+    private Comment() : base(null!) { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     public Comment(
@@ -21,7 +22,7 @@ public class Comment
         Text = text;
         SentDate = DateTime.UtcNow;
 
-        AddCommentAddedDomainEvent(id);
+        AddCommentAddedDomainEvent(id, reviewId);
     }
 
     private CommentId id = null!;
@@ -38,20 +39,20 @@ public class Comment
 
     public void Delete()
     {
-        AddCommendDeletedDomainEvent(id);
+        AddCommendDeletedDomainEvent(id, ReviewId);
     }
 
     #region Domain Events
 
-    private void AddCommentAddedDomainEvent(CommentId commentId)
+    private void AddCommentAddedDomainEvent(CommentId commentId, ReviewId reviewId)
     {
-        CommentAddedDomainEvent domainEvent = new(commentId);
+        CommentAddedDomainEvent domainEvent = new(commentId, reviewId);
         AddDomainEvent(domainEvent);
     }
 
-    private void AddCommendDeletedDomainEvent(CommentId commentId)
+    private void AddCommendDeletedDomainEvent(CommentId commentId, ReviewId reviewId)
     {
-        CommentDeletedDomainEvent domainEvent = new(commentId);
+        CommentDeletedDomainEvent domainEvent = new(commentId, reviewId);
         AddDomainEvent(domainEvent);
     }
 

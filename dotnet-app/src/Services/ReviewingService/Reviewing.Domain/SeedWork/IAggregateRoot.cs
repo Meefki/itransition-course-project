@@ -1,3 +1,3 @@
-﻿namespace Comments.Domain.SeedWork;
+﻿namespace Reviewing.Domain.SeedWork;
 
 public interface IAggregateRoot { }

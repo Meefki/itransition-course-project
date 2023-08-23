@@ -1,4 +1,4 @@
-﻿namespace Comments.API.Application.Queries;
+﻿namespace Reviewing.API.Application.Queries;
 
 public interface ICommentQueries
 {

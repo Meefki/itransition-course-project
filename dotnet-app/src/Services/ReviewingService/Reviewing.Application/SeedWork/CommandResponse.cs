@@ -1,6 +1,6 @@
-﻿using Comments.Domain.SeedWork.DomainExceptions;
+﻿using Reviewing.Domain.SeedWork.DomainExceptions;
 
-namespace Comments.Application.SeedWork;
+namespace Reviewing.Application.SeedWork;
 
 public class CommandResponse<T>
     : CommandResponse

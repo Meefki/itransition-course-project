@@ -1,12 +1,13 @@
-﻿using Comments.Domain;
-using Comments.Domain.SeedWork;
+﻿using Reviewing.Application.SeedWork;
+using Reviewing.Domain.AggregateModels.CommentAggregate;
+using Reviewing.Domain.Identifiers;
 
-namespace Comments.Application.Repositories;
+namespace Reviewing.Application.Repositories;
 
-public interface ICommentRepository 
+public interface ICommentRepository
     : IRepository<Comment>
 {
-    Task<Comment> Get(CommentId id);
-    Task Create(Comment comment);
+    Task<Comment> GetById(CommentId id);
+    Task Add(Comment comment);
     Task Delete(Comment comment);
 }

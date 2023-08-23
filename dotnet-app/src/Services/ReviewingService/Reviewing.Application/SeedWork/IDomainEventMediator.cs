@@ -1,6 +1,6 @@
-﻿using Comments.Domain.SeedWork.DomainEvents;
+﻿using Reviewing.Domain.SeedWork.DomainEvents;
 
-namespace Users.Application.SeedWork.Mediator;
+namespace Reviewing.Application.SeedWork;
 
 public interface IDomainEventMediator
 {

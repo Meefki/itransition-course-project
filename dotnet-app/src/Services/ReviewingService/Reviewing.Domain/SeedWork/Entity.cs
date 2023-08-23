@@ -1,6 +1,6 @@
-﻿using Comments.Domain.SeedWork.DomainEvents;
+﻿using Reviewing.Domain.SeedWork.DomainEvents;
 
-namespace Comments.Domain.SeedWork;
+namespace Reviewing.Domain.SeedWork;
 
 public abstract class Entity<T> : IEntity
 {
@@ -17,7 +17,7 @@ public abstract class Entity<T> : IEntity
     private List<IDomainEvent> _domainEvents;
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly() ?? new List<IDomainEvent>().AsReadOnly();
 
-    public void AddDomainEvent(IDomainEvent eventItem)
+    protected void AddDomainEvent(IDomainEvent eventItem)
     {
         _domainEvents ??= new List<IDomainEvent>();
         _domainEvents.Add(eventItem);

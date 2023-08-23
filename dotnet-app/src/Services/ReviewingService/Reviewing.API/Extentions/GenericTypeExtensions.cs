@@ -1,4 +1,4 @@
-﻿namespace Comments.API.Extentions;
+﻿namespace Reviewing.API.Extentions;
 
 public static class GenericTypeExtensions
 {

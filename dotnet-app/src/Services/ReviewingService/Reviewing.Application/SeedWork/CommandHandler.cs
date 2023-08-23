@@ -1,8 +1,8 @@
-﻿using Comments.Domain.DomainExceptions;
-using Comments.Domain.SeedWork.DomainExceptions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Reviewing.Domain.DomainExceptions;
+using Reviewing.Domain.SeedWork.DomainExceptions;
 
-namespace Comments.Application.SeedWork;
+namespace Reviewing.Application.SeedWork;
 
 public abstract class CommandHandler<TRequest, TResponse>
     where TRequest : class

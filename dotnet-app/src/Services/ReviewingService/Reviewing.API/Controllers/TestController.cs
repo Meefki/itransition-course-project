@@ -1,9 +1,9 @@
-﻿using Comments.API.Application.Commands;
-using Comments.Application.SeedWork;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Reviewing.API.Application.Commands;
+using Reviewing.Application.SeedWork;
 
-namespace Comments.API.Controllers
+namespace Reviewing.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]

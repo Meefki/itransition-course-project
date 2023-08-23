@@ -1,9 +1,10 @@
-﻿using Comments.Application.Repositories;
-using Comments.Application.SeedWork;
-using Comments.Domain;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Reviewing.Application.Repositories;
+using Reviewing.Application.SeedWork;
+using Reviewing.Domain.AggregateModels.CommentAggregate;
+using Reviewing.Domain.Identifiers;
 
-namespace Comments.Application.Commands;
+namespace Reviewing.Application.Commands;
 
 public abstract class AddCommentAbstractCommandHandler<TRequest>
     : CommandHandler<TRequest, string>
@@ -24,7 +25,7 @@ public abstract class AddCommentAbstractCommandHandler<TRequest>
         ReviewId reviewId = ReviewId.Create<ReviewId>(Guid.Parse(request.ReviewId));
         UserId userId = UserId.Create<UserId>(Guid.Parse(request.UserId));
         Comment comment = new(reviewId, userId, request.Text);
-        await commentRepository.Create(comment);
+        await commentRepository.Add(comment);
 
         await commentRepository.UnitOfWork
             .SaveEntitiesAsync(cancellationToken);

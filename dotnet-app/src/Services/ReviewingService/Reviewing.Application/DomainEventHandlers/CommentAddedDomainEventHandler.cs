@@ -1,20 +1,31 @@
-﻿using Comments.Application.SeedWork;
-using Comments.Domain.DomainEvents;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Reviewing.Application.Repositories;
+using Reviewing.Application.SeedWork;
+using Reviewing.Domain.AggregateModels.CommentAggregate.DomainEvents;
+using Reviewing.Domain.AggregateModels.ReviewAggregate;
 
-namespace Comments.Application.DomainEvents;
+namespace Reviewing.Application.DomainEventHandlers;
 
 public class CommentAddedDomainEventHandler
     : NotificationHandler<CommentAddedDomainEvent>
 {
+    private readonly IReviewRepository reviewRepository;
+
     public CommentAddedDomainEventHandler(
-        ILogger<CommentAddedDomainEventHandler> logger) 
+        IReviewRepository reviewRepository,
+        ILogger<CommentAddedDomainEventHandler> logger)
         : base(logger)
-    { }
+    {
+        this.reviewRepository = reviewRepository;
+    }
 
     protected override async Task Action(CommentAddedDomainEvent request, CancellationToken cancellationToken)
     {
-        //throw new NotImplementedException();
+        //Review review = await reviewRepository.GetById(request.ReviewId);
+        //review.AddComment(request.CommentId);
+
+        //await reviewRepository.UnitOfWork
+        //    .SaveEntitiesAsync(cancellationToken);
         await Task.CompletedTask;
     }
 }

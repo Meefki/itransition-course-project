@@ -1,16 +1,17 @@
-﻿using Comments.Application.Commands;
-using Comments.Application.SeedWork;
-using MediatR;
+﻿using MediatR;
+using Reviewing.Application.Commands;
+using Reviewing.Application.Repositories;
+using Reviewing.Application.SeedWork;
 
-namespace Comments.API.Application.Commands;
+namespace Reviewing.API.Application.Commands;
 
-public class AddCommentCommandHandler : 
-    AddCommentAbstractCommandHandler<AddCommentCommand>, 
+public class AddCommentCommandHandler :
+    AddCommentAbstractCommandHandler<AddCommentCommand>,
     IRequestHandler<AddCommentCommand, CommandResponse<string>>
 {
     public AddCommentCommandHandler(
-        ICommentRepository commentRepository, 
+        ICommentRepository commentRepository,
         ILogger<AddCommentCommandHandler> logger)
         : base(commentRepository, logger)
-    {}
+    { }
 }

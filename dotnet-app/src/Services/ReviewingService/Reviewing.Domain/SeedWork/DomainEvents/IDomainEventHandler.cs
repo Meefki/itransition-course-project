@@ -1,4 +1,4 @@
-﻿namespace Comments.Domain.SeedWork.DomainEvents;
+﻿namespace Reviewing.Domain.SeedWork.DomainEvents;
 
 public interface IDomainEventHandler<in DomainEvent>
     where DomainEvent : IDomainEvent

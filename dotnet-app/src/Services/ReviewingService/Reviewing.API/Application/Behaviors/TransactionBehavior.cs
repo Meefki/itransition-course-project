@@ -1,21 +1,21 @@
-﻿using Comments.API.Extentions;
-using Comments.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MediatR;
+using Reviewing.Infrastructure;
+using Reviewing.API.Extentions;
 
-namespace Comments.API.Application.Behaviors;
+namespace Reviewing.API.Application.Behaviors;
 
-public class TransactionBehavior<TRequest, TResponse> 
-    : IPipelineBehavior<TRequest, TResponse> 
+public class TransactionBehavior<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> logger;
-    private readonly CommentDbContext context;
+    private readonly ReviewingDbContext context;
 
-    public TransactionBehavior(CommentDbContext context,
+    public TransactionBehavior(ReviewingDbContext context,
         ILogger<TransactionBehavior<TRequest, TResponse>> logger)
     {
-        this.context = context ?? throw new ArgumentException(nameof(CommentDbContext));
+        this.context = context ?? throw new ArgumentException(nameof(ReviewingDbContext));
         this.logger = logger ?? throw new ArgumentException(nameof(ILogger));
     }
 

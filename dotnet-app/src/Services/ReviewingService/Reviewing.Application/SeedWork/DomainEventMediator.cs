@@ -1,25 +1,25 @@
-﻿using Comments.Domain.SeedWork.DomainEvents;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Reviewing.Domain.SeedWork.DomainEvents;
 using System.Collections.Concurrent;
 using System.Reflection;
-using Users.Application.SeedWork.Mediator;
 
-namespace Comments.Application.SeedWork;
+namespace Reviewing.Application.SeedWork;
 
 public class DomainEventMediator
     : IDomainEventMediator
 {
     private readonly ConcurrentDictionary<Type, List<object>> handlers = new();
+    //private readonly ConcurrentDictionary<Type, List<Type>> handlers = new();
 
     public DomainEventMediator(
-        IServiceScopeFactory serviceScopeFactory, 
+        IServiceScopeFactory serviceScopeFactory,
         Type assemblyType)
     {
         var domainEventHandlerTypes = Assembly
                 .GetAssembly(assemblyType)!
                 .GetTypes()
                 .Where(x => x.GetInterfaces()
-                    .Any(y => y.IsGenericType && 
+                    .Any(y => y.IsGenericType &&
                          y.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)) &&
                        !x.IsAbstract);
 

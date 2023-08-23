@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Reviewing.API.Application.Queries;
 
-namespace Comments.API.Controllers
+namespace Reviewing.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CommentController 
+    public class CommentController
         : ControllerBase
     {
         private readonly ICommentQueries commentQueries;

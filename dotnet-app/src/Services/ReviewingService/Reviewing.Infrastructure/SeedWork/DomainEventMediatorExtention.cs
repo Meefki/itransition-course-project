@@ -1,13 +1,14 @@
-﻿using Comments.Domain.SeedWork;
-using Users.Application.SeedWork.Mediator;
+﻿using Reviewing.Application.SeedWork;
+using Reviewing.Domain.SeedWork;
+using Reviewing.Infrastructure;
 
-namespace Comments.Infrastructure.SeedWork;
+namespace Reviewing.Infrastructure.SeedWork;
 
 public static class DomainEventMediatorExtention
 {
     public static async Task DispatchDomainEventsAsync(
         this IDomainEventMediator mediator,
-        CommentDbContext context,
+        ReviewingDbContext context,
         CancellationToken cancellationToken = default)
     {
         var domainEntities = context.ChangeTracker

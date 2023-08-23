@@ -1,8 +1,8 @@
-﻿using Comments.Domain.SeedWork;
+﻿using Reviewing.Domain.SeedWork;
 
-namespace Comments.Domain;
+namespace Reviewing.Domain.Identifiers;
 
-public class UserId
+public sealed class UserId
     : EntityIdentifier<Guid>
 {
     public UserId(Guid Value)

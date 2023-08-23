@@ -1,4 +1,4 @@
-﻿namespace Comments.Domain.SeedWork;
+﻿namespace Reviewing.Domain.SeedWork;
 
 public abstract class ValueObject
 {

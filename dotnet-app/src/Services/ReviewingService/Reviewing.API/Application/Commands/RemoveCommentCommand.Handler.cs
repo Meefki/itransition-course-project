@@ -1,8 +1,9 @@
-﻿using Comments.Application.Commands;
-using Comments.Application.SeedWork;
-using MediatR;
+﻿using MediatR;
+using Reviewing.Application.Commands;
+using Reviewing.Application.Repositories;
+using Reviewing.Application.SeedWork;
 
-namespace Comments.API.Application.Commands;
+namespace Reviewing.API.Application.Commands;
 
 public class RemoveCommentCommandHandler :
     RemoveCommentAbstractCommandHandler<RemoveCommentCommand>,
@@ -10,7 +11,7 @@ public class RemoveCommentCommandHandler :
 {
     public RemoveCommentCommandHandler(
         ICommentRepository commentRepository,
-        ILogger<RemoveCommentCommandHandler> logger) 
+        ILogger<RemoveCommentCommandHandler> logger)
         : base(commentRepository, logger)
     { }
 }

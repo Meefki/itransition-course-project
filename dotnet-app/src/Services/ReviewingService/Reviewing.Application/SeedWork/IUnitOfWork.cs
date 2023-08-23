@@ -1,4 +1,4 @@
-﻿namespace Comments.Domain.SeedWork;
+﻿namespace Reviewing.Application.SeedWork;
 
 public interface IUnitOfWork : IDisposable
 {

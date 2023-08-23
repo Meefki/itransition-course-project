@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Comments.Domain.SeedWork.DomainExceptions;
+namespace Reviewing.Domain.SeedWork.DomainExceptions;
 
 public class DomainErrorDetails
 {

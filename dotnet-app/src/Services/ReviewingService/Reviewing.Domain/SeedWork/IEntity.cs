@@ -1,6 +1,6 @@
-﻿using Comments.Domain.SeedWork.DomainEvents;
+﻿using Reviewing.Domain.SeedWork.DomainEvents;
 
-namespace Comments.Domain.SeedWork;
+namespace Reviewing.Domain.SeedWork;
 
 public interface IEntity
 {

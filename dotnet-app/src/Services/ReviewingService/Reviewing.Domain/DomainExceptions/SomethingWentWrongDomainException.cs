@@ -1,6 +1,6 @@
-﻿using Comments.Domain.SeedWork.DomainExceptions;
+﻿using Reviewing.Domain.SeedWork.DomainExceptions;
 
-namespace Comments.Domain.DomainExceptions;
+namespace Reviewing.Domain.DomainExceptions;
 
 public sealed class SomethingWentWrongDomainException
     : DomainException<SomethingWentWrongDomainException>

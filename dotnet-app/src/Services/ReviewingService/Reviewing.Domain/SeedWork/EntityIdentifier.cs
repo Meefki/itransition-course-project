@@ -1,4 +1,4 @@
-﻿namespace Comments.Domain.SeedWork;
+﻿namespace Reviewing.Domain.SeedWork;
 
 public abstract class EntityIdentifier<T>
     : ValueObject
@@ -15,6 +15,7 @@ public abstract class EntityIdentifier<T>
         yield return Value;
     }
 
-    public static TIdentifier Create<TIdentifier>(object value)
+    public static TIdentifier Create<TIdentifier>(T value)
+        where TIdentifier : EntityIdentifier<T>
         => (TIdentifier)Activator.CreateInstance(typeof(TIdentifier), new[] { value })!;
 }

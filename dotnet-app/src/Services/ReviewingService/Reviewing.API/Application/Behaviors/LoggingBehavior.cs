@@ -1,9 +1,9 @@
-﻿using Comments.API.Extentions;
-using MediatR;
+﻿using MediatR;
+using Reviewing.API.Extentions;
 
-namespace Comments.API.Application.Behaviors;
+namespace Reviewing.API.Application.Behaviors;
 
-public class LoggingBehavior<TRequest, TResponse> 
+public class LoggingBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {

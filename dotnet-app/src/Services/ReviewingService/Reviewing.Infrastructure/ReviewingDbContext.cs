@@ -1,26 +1,28 @@
-﻿using Comments.Domain;
-using Comments.Domain.SeedWork;
-using Comments.Infrastructure.SeedWork;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Reviewing.Application.SeedWork;
+using Reviewing.Domain.AggregateModels.CommentAggregate;
+using Reviewing.Domain.AggregateModels.ReviewAggregate;
+using Reviewing.Infrastructure.EntityConfigurations;
+using Reviewing.Infrastructure.SeedWork;
 using System.Data;
-using Users.Application.SeedWork.Mediator;
 
-namespace Comments.Infrastructure;
+namespace Reviewing.Infrastructure;
 
-public class CommentDbContext
+public class ReviewingDbContext
     : DbContext, IUnitOfWork
 {
-    public const string DEFAULT_SCHEMA = "dbo";
+    public const string DEFAULT_SCHEMA = "reviewing";
 
     private readonly IDomainEventMediator mediator = null!;
     private IDbContextTransaction? currentTransaction;
 
+    //public DbSet<Review> Reviews { get; } = null!;
     public DbSet<Comment> Comments { get; set; }
 
-    public CommentDbContext(DbContextOptions<CommentDbContext> options) : base(options) { }
-    public CommentDbContext(
-        DbContextOptions<CommentDbContext> options,
+    public ReviewingDbContext(DbContextOptions<ReviewingDbContext> options) : base(options) { }
+    public ReviewingDbContext(
+        DbContextOptions<ReviewingDbContext> options,
         IDomainEventMediator mediator)
         : base(options)
     {
@@ -33,9 +35,8 @@ public class CommentDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CommentDbContext).Assembly);
+        modelBuilder.ApplyConfiguration(new CommentConfiguration());
+        //modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReviewingDbContext).Assembly);
     }
 
     public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)

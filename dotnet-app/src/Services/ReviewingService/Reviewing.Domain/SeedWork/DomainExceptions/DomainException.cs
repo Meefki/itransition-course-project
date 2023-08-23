@@ -1,4 +1,4 @@
-﻿namespace Comments.Domain.SeedWork.DomainExceptions;
+﻿namespace Reviewing.Domain.SeedWork.DomainExceptions;
 
 public abstract class DomainException<T>
     : DomainException

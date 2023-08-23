@@ -1,3 +1,3 @@
-﻿namespace Comments.Domain.SeedWork.DomainEvents;
+﻿namespace Reviewing.Domain.SeedWork.DomainEvents;
 
 public interface IDomainEvent { }

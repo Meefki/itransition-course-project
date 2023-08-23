@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Comments.Domain.SeedWork;
+namespace Reviewing.Domain.SeedWork;
 
 public abstract class Enumeration : IComparable
 {

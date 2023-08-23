@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Reviewing.Application\Reviewing.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
