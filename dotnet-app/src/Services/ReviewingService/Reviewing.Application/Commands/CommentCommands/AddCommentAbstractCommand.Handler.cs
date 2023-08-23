@@ -4,7 +4,7 @@ using Reviewing.Application.SeedWork;
 using Reviewing.Domain.AggregateModels.CommentAggregate;
 using Reviewing.Domain.Identifiers;
 
-namespace Reviewing.Application.Commands;
+namespace Reviewing.Application.Commands.CommentCommands;
 
 public abstract class AddCommentAbstractCommandHandler<TRequest>
     : CommandHandler<TRequest, string>

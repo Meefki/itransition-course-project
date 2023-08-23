@@ -21,11 +21,10 @@ public class CommentAddedDomainEventHandler
 
     protected override async Task Action(CommentAddedDomainEvent request, CancellationToken cancellationToken)
     {
-        //Review review = await reviewRepository.GetById(request.ReviewId);
-        //review.AddComment(request.CommentId);
+        Review review = await reviewRepository.GetById(request.ReviewId);
+        review.AddComment(request.CommentId);
 
-        //await reviewRepository.UnitOfWork
-        //    .SaveEntitiesAsync(cancellationToken);
-        await Task.CompletedTask;
+        await reviewRepository.UnitOfWork
+            .SaveEntitiesAsync(cancellationToken);
     }
 }

@@ -16,21 +16,18 @@ public class CommentConfiguration
 
         builder.Property(c => c.Id)
             .HasConversion(
-                id => id.ToString(),
-                value => CommentId.Create<CommentId>(Guid.Parse(value)));
+                id => id.Value,
+                value => CommentId.Create<CommentId>(value));
         builder.HasKey(c => c.Id);
 
-        builder.Ignore(x => x.UserId);
-        builder.Ignore(x => x.ReviewId);
+        builder.Property(c => c.UserId)
+            .HasConversion(
+                id => id.Value,
+                value => UserId.Create<UserId>(value));
 
-        //builder.Property(c => c.UserId)
-        //    .HasConversion(
-        //        id => id.ToString(), 
-        //        value => UserId.Create<UserId>(Guid.Parse(value)));
-
-        //builder.Property(c => c.ReviewId)
-        //    .HasConversion(
-        //        id => id.ToString(), 
-        //        value => ReviewId.Create<ReviewId>(Guid.Parse(value)));
+        builder.Property(c => c.ReviewId)
+            .HasConversion(
+                id => id.Value,
+                value => ReviewId.Create<ReviewId>(value));
     }
 }

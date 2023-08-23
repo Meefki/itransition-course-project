@@ -37,15 +37,6 @@ public sealed class Subject
         }
     }
 
-    //public Subject ChangeName(string name)
-    //    => new(name, Group, Grade);
-
-    //public Subject ChangeGroup(SubjectGroups group)
-    //    => new(Name, group, Grade);
-
-    //public Subject ChangeGrage(int grade)
-    //    => new(Name, Group, grade);
-
     public static Subject Create(string name, SubjectGroups group, int grade)
         => new(name, group, grade);
 

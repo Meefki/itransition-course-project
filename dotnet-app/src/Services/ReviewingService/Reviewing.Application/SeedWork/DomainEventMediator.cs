@@ -8,13 +8,15 @@ namespace Reviewing.Application.SeedWork;
 public class DomainEventMediator
     : IDomainEventMediator
 {
-    private readonly ConcurrentDictionary<Type, List<object>> handlers = new();
-    //private readonly ConcurrentDictionary<Type, List<Type>> handlers = new();
+    private readonly ConcurrentDictionary<Type, List<Type>> handlers = new();
+    private readonly IServiceScopeFactory serviceScopeFactory;
 
     public DomainEventMediator(
         IServiceScopeFactory serviceScopeFactory,
         Type assemblyType)
     {
+        this.serviceScopeFactory = serviceScopeFactory;
+
         var domainEventHandlerTypes = Assembly
                 .GetAssembly(assemblyType)!
                 .GetTypes()
@@ -23,7 +25,6 @@ public class DomainEventMediator
                          y.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)) &&
                        !x.IsAbstract);
 
-        using var scope = serviceScopeFactory.CreateScope();
         foreach (var handlerType in domainEventHandlerTypes)
         {
             var domainEventType = handlerType
@@ -35,9 +36,7 @@ public class DomainEventMediator
                 .GetMethod(nameof(DomainEventMediator.Register))!
                 .MakeGenericMethod(domainEventType!);
 
-            var handlerInstance = ActivatorUtilities.CreateInstance(scope.ServiceProvider, handlerType)!;
-
-            registereMethod.Invoke(this, new object[] { handlerInstance });
+            registereMethod.Invoke(this, new object[] { handlerType });
         }
     }
 
@@ -45,27 +44,29 @@ public class DomainEventMediator
     {
         var domainEventType = domainEvent.GetType();
         if (handlers.ContainsKey(domainEventType))
-            foreach (var handler in handlers[domainEventType])
+        {
+            using var scope = serviceScopeFactory.CreateScope();
+            foreach (var handlerType in handlers[domainEventType])
             {
-                var handlerType = handler.GetType();
-                var domainHandler = Convert.ChangeType(handler, handlerType);
+                var handlerInstance = ActivatorUtilities.CreateInstance(scope.ServiceProvider, handlerType)!;
 
-                var handleMethod = handler
+                var handleMethod = handlerInstance
                     .GetType()
                     .GetMethod(nameof(IDomainEventHandler<IDomainEvent>.Handle));
 
-                var asyncMethod = (Task)handleMethod!.Invoke(handler, new object[] { domainEvent, cancellationToken })!;
+                var asyncMethod = (Task)handleMethod!.Invoke(handlerInstance, new object[] { domainEvent, cancellationToken })!;
 
                 await asyncMethod;
             }
+        }
     }
 
-    public void Register<T>(IDomainEventHandler<T> handler) where T : IDomainEvent
+    public void Register<T>(Type handlerType)
+        where T : IDomainEvent
     {
-        var domainEventType = typeof(T);
-        if (!handlers.ContainsKey(domainEventType))
-            handlers[domainEventType] = new();
+        if (!handlers.ContainsKey(handlerType))
+            handlers[typeof(T)] = new();
 
-        handlers[domainEventType].Add(handler);
+        handlers[typeof(T)].Add(handlerType);
     }
 }

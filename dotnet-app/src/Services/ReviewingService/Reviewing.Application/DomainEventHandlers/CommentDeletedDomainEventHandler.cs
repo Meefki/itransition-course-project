@@ -14,7 +14,6 @@ public class CommentDeletedDomainEventHandler
 
     protected override async Task Action(CommentDeletedDomainEvent request, CancellationToken cancellationToken)
     {
-        //throw new NotImplementedException();
-        await Task.CompletedTask;
+        throw new NotImplementedException();
     }
 }

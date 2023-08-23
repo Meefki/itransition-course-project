@@ -17,5 +17,9 @@ public abstract class EntityIdentifier<T>
 
     public static TIdentifier Create<TIdentifier>(T value)
         where TIdentifier : EntityIdentifier<T>
-        => (TIdentifier)Activator.CreateInstance(typeof(TIdentifier), new[] { value })!;
+    {
+        Type type = typeof(TIdentifier);
+        var instance = (Activator.CreateInstance(type, value) as TIdentifier)!;
+        return instance;
+    }
 }

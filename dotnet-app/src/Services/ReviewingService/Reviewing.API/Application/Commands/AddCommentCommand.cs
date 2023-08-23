@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using Reviewing.Application.Commands;
-using Reviewing.Application.SeedWork;
+using Reviewing.Application.Commands.CommentCommands;
 
 namespace Reviewing.API.Application.Commands;
 

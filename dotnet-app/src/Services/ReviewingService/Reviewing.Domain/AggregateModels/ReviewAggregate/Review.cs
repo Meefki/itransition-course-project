@@ -23,8 +23,8 @@ public sealed class Review
         Name = name;
         Subject = subject;
         Content = content;
-        Image = image;
-        Status = ReviewStatuses.Draft;
+        ImageUrl = image;
+        Status = ReviewStatuses.Published;
 
         this.tags = new HashSet<Tag>(tags);
         comments = new HashSet<CommentId>();
@@ -41,40 +41,34 @@ public sealed class Review
     public string Name { get; private set; }
     public void ChangeName(string name)
     {
-        if (!IsDraft())
-            CannotChangeReviewInfoDomainException.Throw();
         Name = name;
     }
 
     public Subject Subject { get; private set; }
     public void ChangeSubject(Subject subject)
     {
-        if (!IsDraft())
-            CannotChangeReviewInfoDomainException.Throw();
         Subject = subject;
     }
 
     public string Content { get; private set; }
     public void ChangeContent(string content)
     {
-        if (!IsDraft())
-            CannotChangeReviewInfoDomainException.Throw();
         Content = content;
     }
 
-    public string Image { get; private set; }
-    public void ChangeImage(string image)
+    public string? ImageUrl { get; private set; }
+    public void ChangeImage(string imageUrl)
     {
-        if (!IsDraft())
-            CannotChangeReviewInfoDomainException.Throw();
-        Image = image;
+        //if (!string.IsNullOrWhiteSpace(ImageUrl) && 
+        //    string.IsNullOrWhiteSpace(imageUrl))
+        //    AddDomainEvent...
+
+        ImageUrl = imageUrl;
     }
 
     public ReviewStatuses Status { get; private set; }
     public void ChangeStatus(ReviewStatuses newStatus)
     {
-        if (newStatus.Id <= Status.Id)
-            ConnotChangeReviewStatusDomainException.Throw(Status, newStatus);
         Status = newStatus;
     }
 
@@ -82,8 +76,6 @@ public sealed class Review
     public IReadOnlyCollection<Tag> Tags => tags.ToList().AsReadOnly();
     public void ChangeTags(IEnumerable<Tag> tags)
     {
-        if (!IsDraft())
-            CannotChangeReviewInfoDomainException.Throw();
         this.tags.Clear();
         foreach (var tag in tags)
             this.tags.Add(tag);
@@ -109,7 +101,4 @@ public sealed class Review
         else
             likes.Add(userId);
     }
-
-    private bool IsDraft()
-        => Status == ReviewStatuses.Draft;
 }
