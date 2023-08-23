@@ -11,13 +11,16 @@ internal static class CustomServicesConfigureExtention
     {
         ClientsConfiguration clientConfig = config.GetSection(ClientsConfiguration.SectionName).Get<ClientsConfiguration>();
 
-        services.AddIdentityServer()
-            .AddAspNetIdentity<IdentityUser>()
-            .AddInMemoryApiResources(Configuration.ApiResources)
-            .AddInMemoryIdentityResources(Configuration.IdentityResources)
-            .AddInMemoryApiScopes(Configuration.ApiScopes)
-            .AddInMemoryClients(Configuration.Clients(clientConfig))
-            .AddDeveloperSigningCredential();
+        services.AddIdentityServer(options =>
+        {
+            options.Authentication.CookieLifetime = TimeSpan.FromHours(2);
+        })
+        .AddAspNetIdentity<IdentityUser>()
+        .AddInMemoryApiResources(Configuration.ApiResources)
+        .AddInMemoryIdentityResources(Configuration.IdentityResources)
+        .AddInMemoryApiScopes(Configuration.ApiScopes)
+        .AddInMemoryClients(Configuration.Clients(clientConfig))
+        .AddDeveloperSigningCredential();
 
         return services;
     }
@@ -43,8 +46,8 @@ internal static class CustomServicesConfigureExtention
             config.Password.RequireNonAlphanumeric = false;
             config.Password.RequireUppercase = false;
         })
-            .AddEntityFrameworkStores<AuthDbContext>()
-            .AddDefaultTokenProviders();
+        .AddEntityFrameworkStores<AuthDbContext>()
+        .AddDefaultTokenProviders();
 
         return services;
     }
@@ -68,14 +71,13 @@ internal static class CustomServicesConfigureExtention
                 .GetSection(GoogleConfiguration.SectionName)
                 .Get<GoogleConfiguration>();
 
-        services
-            .AddAuthentication(/*CookieAuthenticationDefaults.AuthenticationScheme*/)
+        services.AddAuthentication(/*CookieAuthenticationDefaults.AuthenticationScheme*/);
 
-            .AddGoogle(options =>
-            {
-                options.ClientId = googleConfig.ClientId;
-                options.ClientSecret = googleConfig.ClientSecret;
-            });
+            //.AddGoogle(options =>
+            //{
+            //    options.ClientId = googleConfig.ClientId;
+            //    options.ClientSecret = googleConfig.ClientSecret;
+            //});
 
             //.AddFacebook()
 

@@ -1,5 +1,6 @@
 using IdentityService;
 using IdentityService.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -8,9 +9,9 @@ var config = builder.Configuration;
 builder.Services
 	.AddCustomIdentityServer(config)
 	.AddCustomAuthentication(config)
-    .AddCustomDbContext(config)
-	.AddCustomIdentity()
-	.AddCustomCookie();
+	.AddCustomDbContext(config);
+	//.AddCustomIdentity()
+	//.AddCustomCookie();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -26,9 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-
 app.UseIdentityServer();
-
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
@@ -39,6 +38,7 @@ using (var scope = app.Services.CreateScope())
 	try
 	{
 		var context = serviceProvider.GetRequiredService<AuthDbContext>();
+		await context.Database.MigrateAsync();
 	}
 	catch (Exception ex)
 	{
