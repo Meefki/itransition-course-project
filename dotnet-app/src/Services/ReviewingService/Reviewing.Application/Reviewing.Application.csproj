@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Reviewing.Domain\Reviewing.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\ReviewCommands\" />
-  </ItemGroup>
-
 </Project>
