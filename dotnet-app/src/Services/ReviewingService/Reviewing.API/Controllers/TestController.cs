@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Reviewing.API.Application.Commands;
+using Reviewing.API.Application.Commands.CommentCommands;
 using Reviewing.Application.SeedWork;
 
 namespace Reviewing.API.Controllers
