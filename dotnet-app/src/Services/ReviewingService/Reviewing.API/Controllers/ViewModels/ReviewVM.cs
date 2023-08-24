@@ -1,6 +1,6 @@
-﻿namespace Reviewing.Application.Commands.ReviewCommands;
+﻿namespace Reviewing.API.Controllers.ViewModels;
 
-public abstract record PublishReviewAbstractCommand(
+public record ReviewVM(
     string Name,
     string AuthorUserId,
     string Content,
@@ -8,4 +8,5 @@ public abstract record PublishReviewAbstractCommand(
     string SubjectName,
     string SubjectGroupName,
     int Grade,
-    IEnumerable<string> Tags);
+    IEnumerable<string> Tags,
+    string? Id = null);

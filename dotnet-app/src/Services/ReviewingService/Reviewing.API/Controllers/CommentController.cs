@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Reviewing.API.Application.Queries;
 
 namespace Reviewing.API.Controllers
 {

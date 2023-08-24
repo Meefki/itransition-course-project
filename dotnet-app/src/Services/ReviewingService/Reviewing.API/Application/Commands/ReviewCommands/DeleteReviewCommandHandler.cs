@@ -1,15 +1,16 @@
 ﻿using MediatR;
+using Reviewing.Application.Commands.ReviewCommands;
 
-namespace Reviewing.Application.Commands.ReviewCommands;
+namespace Reviewing.API.Application.Commands.ReviewCommands;
 
-public class DeleteReviewCommandHandler : 
+public class DeleteReviewCommandHandler :
     DeleteReviewAbstractCommandHandler<DeleteReviewCommand>,
     IRequestHandler<DeleteReviewCommand, CommandResponse>
 
 {
-    protected DeleteReviewCommandHandler(
+    public DeleteReviewCommandHandler(
         IReviewRepository reviewRepository,
-        ILogger<DeleteReviewCommandHandler> logger) 
+        ILogger<DeleteReviewCommandHandler> logger)
         : base(reviewRepository, logger)
     { }
 }

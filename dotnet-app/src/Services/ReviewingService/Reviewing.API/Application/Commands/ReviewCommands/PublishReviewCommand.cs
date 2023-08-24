@@ -5,6 +5,7 @@ namespace Reviewing.API.Application.Commands.ReviewCommands;
 
 public record PublishReviewCommand(
     string Name,
+    string AuthorUserId,
     string Content,
     string? ImageUrl,
     string SubjectName,
@@ -13,6 +14,7 @@ public record PublishReviewCommand(
     IEnumerable<string> Tags) : 
     PublishReviewAbstractCommand(
         Name,
+        AuthorUserId,
         Content,
         ImageUrl,
         SubjectName,

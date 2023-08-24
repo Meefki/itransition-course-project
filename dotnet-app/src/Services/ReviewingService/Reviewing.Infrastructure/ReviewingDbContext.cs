@@ -19,7 +19,7 @@ public class ReviewingDbContext
     public DbSet<Review> Reviews { get; } = null!;
     public DbSet<Comment> Comments { get; set; }
 
-    public ReviewingDbContext(DbContextOptions<ReviewingDbContext> options) : base(options) { }
+    //public ReviewingDbContext(DbContextOptions<ReviewingDbContext> options) : base(options) { }
     public ReviewingDbContext(
         DbContextOptions<ReviewingDbContext> options,
         IDomainEventMediator mediator)

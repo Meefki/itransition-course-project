@@ -27,7 +27,7 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
         ReviewId reviewId = ReviewId.Create<ReviewId>(Guid.Parse(request.ReviewId));
         Review review = await reviewRepository.GetById(reviewId);
 
-        bool isChanged = UpdateReview(review, request);
+        bool isChanged = EditReviewAbstractCommandHandler<TRequest>.UpdateReview(review, request);
 
         if (isChanged)
         {
@@ -37,7 +37,7 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
         }
     }
 
-    private bool UpdateReview(Review review, TRequest request)
+    private static bool UpdateReview(Review review, TRequest request)
     {
         bool isChanged = false;
 

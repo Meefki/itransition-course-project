@@ -9,7 +9,7 @@ public class PublishReviewCommandHandler :
 {
     public PublishReviewCommandHandler(
         IReviewRepository reviewRepository, 
-        ILogger logger) 
+        ILogger<PublishReviewCommandHandler> logger) 
         : base(reviewRepository, logger)
     { }
 }

@@ -3,6 +3,7 @@ using Reviewing.Application.Repositories;
 using Reviewing.Application.SeedWork;
 using Reviewing.Domain.AggregateModels.ReviewAggregate;
 using Reviewing.Domain.Enumerations;
+using Reviewing.Domain.Identifiers;
 using Reviewing.Domain.SeedWork;
 
 namespace Reviewing.Application.Commands.ReviewCommands;
@@ -29,8 +30,10 @@ public abstract class PublishReviewAbstractCommandHandler<TRequest>
                 .FirstOrDefault(x => x.Name == request.SubjectName) ?? 
                 new(subjectGroups.Max(x => x.Id) + 1, request.SubjectName);
         Subject subject = Subject.Create(request.SubjectName, subjectGroup, request.Grade);
+        UserId userId = UserId.Create<UserId>(Guid.Parse(request.AuthorUserId));
         Review review = 
-            new(request.Name, 
+            new(request.Name,
+                userId,
                 subject, 
                 request.Content, 
                 request.ImageUrl, 

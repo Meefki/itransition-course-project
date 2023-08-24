@@ -21,7 +21,10 @@ public class ReviewConfiguration
                 value => ReviewId.Create<ReviewId>(value));
         builder.HasKey(x => x.Id);
 
-        builder.Ignore(x => x.Tags);
+        builder.Property(x => x.AuthorUserId)
+            .HasConversion(
+                userId => userId.Value,
+                value => UserId.Create<UserId>(value));
 
         builder.Property(x => x.Status)
             .HasConversion(

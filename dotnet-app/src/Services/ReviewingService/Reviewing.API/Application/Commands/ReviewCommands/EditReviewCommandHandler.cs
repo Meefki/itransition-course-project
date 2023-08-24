@@ -9,7 +9,7 @@ public class EditReviewCommandHandler :
 {
     public EditReviewCommandHandler(
         IReviewRepository reviewRepository, 
-        ILogger logger) 
+        ILogger<EditReviewCommandHandler> logger) 
         : base(reviewRepository, logger)
     { }
 }

@@ -13,6 +13,7 @@ public sealed class Review
 
     public Review(
         string name,
+        UserId authorUserId,
         Subject subject,
         string content,
         string? imageUrl,
@@ -20,6 +21,7 @@ public sealed class Review
         : base(ReviewId.Create<ReviewId>(Guid.NewGuid()))
     {
         Name = name;
+        AuthorUserId = authorUserId;
         Subject = subject;
         Content = content;
         ImageUrl = imageUrl;
@@ -36,6 +38,8 @@ public sealed class Review
         get => id;
         init => id = (ReviewId)value;
     }
+
+    public UserId AuthorUserId { get; init; }
 
     public string Name { get; private set; }
     public void ChangeName(string name)

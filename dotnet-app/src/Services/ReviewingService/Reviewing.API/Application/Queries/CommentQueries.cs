@@ -8,7 +8,8 @@ public class CommentQueries
 {
     private readonly string connectionString;
 
-    public CommentQueries(string connectionString)
+    public CommentQueries(
+        string connectionString)
     {
         this.connectionString = connectionString;
     }
@@ -17,17 +18,19 @@ public class CommentQueries
     {
         using var connection = new SqlConnection(connectionString);
         int offset = pageNumber * pageSize;
+        object param = new { offset, reviewId, pageSize };
+        var timeout = TimeSpan.FromSeconds(10); // TODO: set from config
+        string sql =
+            @$"select
+                     c.Id       as commentId
+                    ,c.UserId   as userId
+                    ,c.Text     as text
+                    ,c.SentDate as sentDate
+                from [reviewing].[Comments] as c
+                where c.ReviewId = @{nameof(reviewId)}
+                order by c.SentDate desc
+                offset (@{nameof(offset)}) rows fetch next (@{nameof(pageSize)}) rows only";
         connection.Open();
-        return await connection.QueryAsync<dynamic>(
-            @"select
-                         c.Id       as commentId
-                        ,c.UserId   as userId
-                        ,c.Text     as text
-                        ,c.SentDate as sentDate
-                    from [dbo].[comments] as c
-                    where c.ReviewId = @reviewId
-                    order by c.SentDate desc
-                    offset (@offset) rows fetch next (@pageSize) rows only",
-            new { offset, reviewId, pageSize });
+        return await connection.QueryAsync<dynamic>(sql, param, commandTimeout: timeout.Seconds);
     }
 }

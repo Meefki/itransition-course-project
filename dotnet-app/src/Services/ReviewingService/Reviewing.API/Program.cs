@@ -16,6 +16,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddScoped<IDomainEventMediator>(x => new DomainEventMediator(x.GetRequiredService<IServiceScopeFactory>(), typeof(DomainEventMediator)));
 
 builder.Services.AddScoped<ICommentQueries>(sp => new CommentQueries(builder.Configuration.GetConnectionString("ReviewingDb")!));
+builder.Services.AddScoped<IReviewQueries>(sp => new ReviewQueries(builder.Configuration.GetConnectionString("ReviewingDb")!));
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
