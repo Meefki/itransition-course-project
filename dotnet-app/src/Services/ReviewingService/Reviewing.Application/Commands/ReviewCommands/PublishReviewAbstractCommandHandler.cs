@@ -29,7 +29,7 @@ public abstract class PublishReviewAbstractCommandHandler<TRequest>
             subjectGroups
                 .FirstOrDefault(x => x.Name == request.SubjectName) ?? 
                 new(subjectGroups.Max(x => x.Id) + 1, request.SubjectName);
-        Subject subject = Subject.Create(request.SubjectName, subjectGroup, request.Grade);
+        Subject subject = Subject.Create(request.SubjectName, subjectGroup, request.SubjectGrade);
         UserId userId = UserId.Create<UserId>(Guid.Parse(request.AuthorUserId));
         Review review = 
             new(request.Name,

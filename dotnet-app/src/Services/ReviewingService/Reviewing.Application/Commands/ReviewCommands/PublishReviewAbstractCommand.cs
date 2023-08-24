@@ -7,5 +7,5 @@ public abstract record PublishReviewAbstractCommand(
     string? ImageUrl,
     string SubjectName,
     string SubjectGroupName,
-    int Grade,
+    int SubjectGrade,
     IEnumerable<string> Tags);
