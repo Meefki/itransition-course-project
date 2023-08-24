@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MediatR;
-using Reviewing.Infrastructure;
-using Reviewing.API.Extentions;
+﻿using MediatR;
 
 namespace Reviewing.API.Application.Behaviors;
 
