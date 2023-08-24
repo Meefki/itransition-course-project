@@ -26,6 +26,7 @@ public sealed class Review
         Content = content;
         ImageUrl = imageUrl;
         Status = ReviewStatuses.Published;
+        PublishedDate = DateTime.UtcNow;
 
         this.tags = tags;
         comments = new HashSet<CommentId>();
@@ -74,6 +75,8 @@ public sealed class Review
     {
         Status = newStatus;
     }
+
+    public DateTime PublishedDate { get; init; }
 
     private readonly ISet<Tag> tags;
     public IReadOnlyCollection<Tag> Tags => tags.ToList().AsReadOnly();

@@ -28,8 +28,8 @@ public class ReviewConfiguration
 
         builder.Property(x => x.Status)
             .HasConversion(
-                status => status.Id,
-                value => Enumeration.FromValue<ReviewStatuses>(value));
+                status => status.Name,
+                value => Enumeration.FromDisplayName<ReviewStatuses>(value));
 
         builder.OwnsOne(x => x.Subject, subjectBuidler =>
         {
