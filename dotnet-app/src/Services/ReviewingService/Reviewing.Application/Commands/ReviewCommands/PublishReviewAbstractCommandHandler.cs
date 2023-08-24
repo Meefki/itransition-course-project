@@ -7,8 +7,9 @@ using Reviewing.Domain.SeedWork;
 
 namespace Reviewing.Application.Commands.ReviewCommands;
 
-public abstract class PublishReviewAbstractCommandHandler
-    : CommandHandler<PublishReviewAbstractCommand, string>
+public abstract class PublishReviewAbstractCommandHandler<TRequest>
+    : CommandHandler<TRequest, string>
+    where TRequest : PublishReviewAbstractCommand
 {
     private readonly IReviewRepository reviewRepository;
 
@@ -20,7 +21,7 @@ public abstract class PublishReviewAbstractCommandHandler
         this.reviewRepository = reviewRepository;
     }
 
-    protected override async Task<string> Action(PublishReviewAbstractCommand request, CancellationToken cancellationToken)
+    protected override async Task<string> Action(TRequest request, CancellationToken cancellationToken)
     {
         IEnumerable<SubjectGroups> subjectGroups = Enumeration.GetAll<SubjectGroups>();
         SubjectGroups subjectGroup = 

@@ -7,8 +7,9 @@ using Reviewing.Domain.Identifiers;
 
 namespace Reviewing.Application.Commands.ReviewCommands;
 
-public abstract class DeleteReviewAbstractCommandHandler
-    : CommandHandler<DeleteReviewAbstractCommand>
+public abstract class DeleteReviewAbstractCommandHandler<TRequest>
+    : CommandHandler<TRequest>
+    where TRequest : DeleteReviewAbstractCommand
 {
     private readonly IReviewRepository reviewRepository;
 
@@ -20,7 +21,7 @@ public abstract class DeleteReviewAbstractCommandHandler
         this.reviewRepository = reviewRepository;
     }
 
-    protected override async Task Action(DeleteReviewAbstractCommand request, CancellationToken cancellationToken)
+    protected override async Task Action(TRequest request, CancellationToken cancellationToken)
     {
         ReviewId reviewId = ReviewId.Create<ReviewId>(Guid.Parse(request.ReviewId));
         Review review = await reviewRepository.GetById(reviewId);

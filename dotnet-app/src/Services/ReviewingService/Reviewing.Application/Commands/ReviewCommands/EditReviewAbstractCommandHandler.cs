@@ -8,8 +8,9 @@ using Reviewing.Domain.SeedWork;
 
 namespace Reviewing.Application.Commands.ReviewCommands;
 
-public abstract class EditReviewAbstractCommandHandler
-    : CommandHandler<EditReviewAbstractCommand>
+public abstract class EditReviewAbstractCommandHandler<TRequest>
+    : CommandHandler<TRequest>
+    where TRequest : EditReviewAbstractCommand
 {
     private readonly IReviewRepository reviewRepository;
 
@@ -21,7 +22,7 @@ public abstract class EditReviewAbstractCommandHandler
         this.reviewRepository = reviewRepository;
     }
 
-    protected override async Task Action(EditReviewAbstractCommand request, CancellationToken cancellationToken)
+    protected override async Task Action(TRequest request, CancellationToken cancellationToken)
     {
         ReviewId reviewId = ReviewId.Create<ReviewId>(Guid.Parse(request.ReviewId));
         Review review = await reviewRepository.GetById(reviewId);
@@ -36,7 +37,7 @@ public abstract class EditReviewAbstractCommandHandler
         }
     }
 
-    private bool UpdateReview(Review review, EditReviewAbstractCommand request)
+    private bool UpdateReview(Review review, TRequest request)
     {
         bool isChanged = false;
 
