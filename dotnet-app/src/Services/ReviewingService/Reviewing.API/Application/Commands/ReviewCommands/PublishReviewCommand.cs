@@ -10,7 +10,7 @@ public record PublishReviewCommand(
     string? ImageUrl,
     string SubjectName,
     string SubjectGroupName,
-    int Grade,
+    int SubjectGrade,
     IEnumerable<string> Tags) : 
     PublishReviewAbstractCommand(
         Name,
@@ -19,6 +19,6 @@ public record PublishReviewCommand(
         ImageUrl,
         SubjectName,
         SubjectGroupName,
-        Grade,
+        SubjectGrade,
         Tags),
     IRequest<CommandResponse<string>>;

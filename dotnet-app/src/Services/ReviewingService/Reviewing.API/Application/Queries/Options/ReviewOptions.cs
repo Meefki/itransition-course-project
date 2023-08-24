@@ -1,12 +1,12 @@
-﻿namespace Reviewing.API.Controllers.ViewModels;
+﻿namespace Reviewing.API.Application.Queries.Options;
 
-public record ReviewVM(
+public record ReviewOptions(
     string Name,
     string AuthorUserId,
     string Content,
     string? ImageUrl,
     string SubjectName,
     string SubjectGroupName,
-    int Grade,
+    int SubjectGrade,
     IEnumerable<string> Tags,
     string? Id = null);

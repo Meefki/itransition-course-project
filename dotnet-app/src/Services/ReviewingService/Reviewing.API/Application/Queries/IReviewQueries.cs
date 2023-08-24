@@ -5,10 +5,10 @@ namespace Reviewing.API.Application.Queries;
 public interface IReviewQueries
 {
     Task<dynamic> GetTags(string startWith = "");
-    Task<dynamic> GetReviewsDescription(
+    Task<dynamic> GetReviewsShortDescription(
         PaginationOptions paginationOptions,
-        ReviewSortOptions sortOptions,
-        ReviewFilterOptions filterOptions);
+        ReviewSortOptions? sortOptions = null,
+        ReviewFilterOptions? filterOptions = null);
 
     Task<dynamic> GetReview(string reviewId);
 }

@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Reviewing.Infrastructure\Reviewing.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\Queries\ViewModels\" />
-  </ItemGroup>
-
 </Project>

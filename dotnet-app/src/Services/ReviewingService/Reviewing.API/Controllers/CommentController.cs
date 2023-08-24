@@ -17,7 +17,7 @@ namespace Reviewing.API.Controllers
         [HttpGet]
         public async Task<dynamic> GetReviewComments(string reviewId, int pageSize = 10, int pageNumber = 0)
         {
-            return await commentQueries.GetReviewComments(reviewId, pageSize, pageNumber);
+            return await commentQueries.GetReviewComments(reviewId, new(pageSize, pageNumber));
         }
     }
 }
