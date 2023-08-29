@@ -24,6 +24,8 @@ export function Login() {
     const [rememberMe, setRememberMe] = useState(true);
     const [passHash, setPassHash] = useState('');
 
+    const [error, setError] = useState('');
+
     function handleJustifyClick(value) {
         if (value === justifyActive) {
             return;
@@ -34,6 +36,7 @@ export function Login() {
         setEmail('');
         setPassword('');
         setRememberMe(true);
+        setError('');
         setJustifyActive(value);
     };
 
@@ -79,7 +82,10 @@ export function Login() {
         const data = await response.json();
 
         if (data && data.isOk) {
-          window.location = data.redirectUrl;
+            window.location = data.redirectUrl;
+        }
+        else {
+            setError('Wrong email or password');
         }
     }
 
@@ -106,7 +112,6 @@ export function Login() {
 
                         <div className="text-center mb-3">
                             <p>Sign in with:</p>
-
                             <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
                                 <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
                                     <MDBIcon fab icon='facebook-f' size="sm" />
@@ -149,14 +154,14 @@ export function Login() {
                                 }}/>
 
                             <div className="d-flex justify-content-between mx-4 mb-4">
-                                <MDBCheckbox 
-                                    name='flexCheck' 
+                                <MDBCheckbox  
                                     value=''
                                     checked={rememberMe}
                                     onChange={(event) => setRememberMe(event.target.checked)}
-                                    id='flexCheckDefault' 
                                     label='Remember me' />
                             </div>
+
+                            {error ? <span className="text-danger w-100">{error}</span> : ''}
 
                             <MDBBtn className="mb-4 w-100" type="submit">Sign in</MDBBtn>
                         </form>

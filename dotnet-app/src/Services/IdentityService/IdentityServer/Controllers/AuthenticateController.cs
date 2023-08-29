@@ -95,7 +95,7 @@ namespace IdentityServer.Controllers
             }
 
             await events.RaiseAsync(new UserLoginFailureEvent(user?.UserName ?? vm.Email, "invalid credentials", clientId: context?.Client.ClientId));
-            return Unauthorized();
+            return new JsonResult(new { RedirectUrl = string.Empty, IsOk = false });
         }
 
         [HttpGet]
