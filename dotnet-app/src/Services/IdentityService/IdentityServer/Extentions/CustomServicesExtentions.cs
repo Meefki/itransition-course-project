@@ -1,6 +1,6 @@
 ﻿using IdentityServer.Data;
 using IdentityServer.ReturnUrlParsers;
-using IdentityServer4;
+using IdentityServer4.Configuration;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +12,16 @@ public static class CustomServicesExtentions
 {
     //public static IServiceCollection AddCustom(this IServiceCollection services) { return services; }
 
-    public static IServiceCollection AddCustomCors(this IServiceCollection services)
+    public static IServiceCollection AddCustomCors(this IServiceCollection services, IConfiguration configuration)
     {
+        string[] allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
             {
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
-                policy.WithOrigins("https://localhost:3000", "https://localhost:3001");
+                policy.WithOrigins(allowedOrigins);
                 policy.AllowCredentials();
             });
         });
@@ -31,7 +32,6 @@ public static class CustomServicesExtentions
     public static IServiceCollection AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Authorization") ?? "";
-
         services.AddDbContext<AuthorizationDbContext>(options =>
         {
             options.UseSqlServer(connectionString);
@@ -42,26 +42,24 @@ public static class CustomServicesExtentions
 
     public static IServiceCollection AddCustomIdentityServer(this IServiceCollection services, IConfiguration configuration)
     {
+        PasswordOptions passwordOptions = configuration.GetSection("Identity:Password").Get<PasswordOptions>(); 
         services
             .AddIdentity<IdentityUser, IdentityRole>(config =>
             {
-                config.Password.RequiredLength = 4;
-                config.Password.RequireDigit = false;
-                config.Password.RequireNonAlphanumeric = false;
-                config.Password.RequireUppercase = false;
+                config.Password = passwordOptions;
             })
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
 
         var assemblyName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
         var authenticationConnectionString = configuration.GetConnectionString("Authentication");
-
+        UserInteractionOptions userInteractionOptions = configuration.GetSection("Identity:UserInteraction").Get<UserInteractionOptions>();
         services
             .AddIdentityServer(options =>
             {
-                options.UserInteraction.LoginUrl = "https://localhost:3001";
-                options.UserInteraction.ErrorUrl = "https://localhost:3001/error";
-                options.UserInteraction.LogoutUrl = "https://localhost:3001/logout";
+                options.UserInteraction.LoginUrl = userInteractionOptions.LoginUrl;
+                options.UserInteraction.ErrorUrl = userInteractionOptions.ErrorUrl;
+                options.UserInteraction.LogoutUrl = userInteractionOptions.LogoutUrl;
             })
             .AddDeveloperSigningCredential()
             .AddConfigurationStore(options =>

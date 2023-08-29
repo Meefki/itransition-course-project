@@ -6,7 +6,7 @@ var services = builder.Services;
 
 // Add services to the container.
 services.AddControllersWithViews();
-services.AddCustomCors();
+services.AddCustomCors(config);
 services.AddCustomDbContext(config);
 services.AddCustomIdentityServer(config);
 
