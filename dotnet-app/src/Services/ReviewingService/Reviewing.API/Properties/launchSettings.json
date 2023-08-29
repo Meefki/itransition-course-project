@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Comments.API": {
+    "Reviewing.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

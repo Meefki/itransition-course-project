@@ -2,9 +2,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddCustomDbContext(builder.Configuration);
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDefaultAuthentication(builder.Configuration);
+//builder.Services.AddDefaultOpenApi(builder.Configuration);
 builder.Services.AddSwaggerGen();
+builder.Services.AddCustomDbContext(builder.Configuration);
+builder.Services.AddCustomCors(builder.Configuration);
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddMediatR(cfg =>
 {
@@ -30,10 +33,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors();
 
 using (var scope = app.Services.CreateScope())
 {

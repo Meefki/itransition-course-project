@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Reviewing.API.Application.Commands.ReviewCommands;
 using Reviewing.API.Application.Queries.Options;
@@ -74,6 +76,7 @@ namespace Reviewing.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<dynamic> Publish([FromBody] ReviewOptions opt)
         {
             PublishReviewCommand command = new(opt.Name, opt.AuthorUserId, opt.Content, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
