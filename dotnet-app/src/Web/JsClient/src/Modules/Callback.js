@@ -7,10 +7,10 @@ export function Callback() {
 
     async function result() {
         if (!window.location.search)
-            window.location = "/";
+            window.location = "/home";
 
         mgr.signinRedirectCallback().then(function() {
-            window.location = "/"
+            window.location = "/home"
         }).catch(function(e) {
             console.error(e);
         })

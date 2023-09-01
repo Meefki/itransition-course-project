@@ -4,7 +4,7 @@ import { Logout } from "./components/Logout";
 
 const AppRoutes = [
     {
-        path: '/',
+        path: '/login',
         element: <Login />
     },
     {
