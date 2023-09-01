@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Reviewing.API.Application.Commands.ReviewCommands;
 using Reviewing.API.Application.Queries.Options;

@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Reviewing.API.Filters;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Reviewing.API.Extentions;
 
@@ -10,9 +9,10 @@ public static class CustomServicesExtention
 {
     public static IServiceCollection AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
     {
+        string connectionString = configuration.GetConnectionString("Reviewving") ?? "";
         services.AddDbContext<ReviewingDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("ReviewingDb"), sqlOptions =>
+            options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.MigrationsAssembly(typeof(ReviewingDbContext).Assembly.FullName);
                 sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
@@ -43,26 +43,6 @@ public static class CustomServicesExtention
 
     public static IServiceCollection AddDefaultAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        //var identitySection = configuration.GetSection("Identity");
-
-        //if (!identitySection.Exists())
-        //{
-        //    return services;
-        //}
-
-        //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-
-        //services.AddAuthentication().AddJwtBearer(options =>
-        //{
-        //    var identityUrl = identitySection.GetValue<string>("Url");
-        //    var audience = identitySection.GetValue<string>("Audience");
-
-        //    options.Authority = identityUrl;
-        //    options.RequireHttpsMetadata = false;
-        //    options.Audience = audience;
-        //    options.TokenValidationParameters.ValidateAudience = false; //TODO: rework
-        //});
-
         services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {

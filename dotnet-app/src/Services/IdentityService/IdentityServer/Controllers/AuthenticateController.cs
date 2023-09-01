@@ -65,8 +65,8 @@ namespace IdentityServer.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginVM vm)
         {
-            string returnUrl = Uri.UnescapeDataString(HttpContext.Request.Query["ReturnUrl"].ToString());
-
+            string queryString = HttpContext.Request.QueryString.ToString();
+            string returnUrl = Uri.UnescapeDataString(queryString);
             var context = await interaction.GetAuthorizationContextAsync(returnUrl);
             var user = dbContext.Users.FirstOrDefault(x =>
                         x.Email == vm.Email &&
@@ -91,7 +91,7 @@ namespace IdentityServer.Controllers
                 };
 
                 await HttpContext.SignInAsync(isuser, props);
-                return new JsonResult(new { RedirectUrl = returnUrl, IsOk = true });
+                return new JsonResult(new { RedirectUrl = Uri.UnescapeDataString(HttpContext.Request.QueryString.ToString()), IsOk = true });
             }
 
             await events.RaiseAsync(new UserLoginFailureEvent(user?.UserName ?? vm.Email, "invalid credentials", clientId: context?.Client.ClientId));
@@ -100,9 +100,9 @@ namespace IdentityServer.Controllers
 
         [HttpGet]
         [Route("logout")]
-        public async Task<IActionResult> Logout(string logoutId)
+        public async Task<IActionResult> Logout(string? logoutId = "")
         {
-            var context = await interaction.GetLogoutContextAsync(logoutId);
+            var context = await interaction.GetLogoutContextAsync(logoutId ?? "");
 
             if ((User?.Identity?.IsAuthenticated ?? false) && context is not null)
             {

@@ -59,11 +59,6 @@ public class CustomReturnUrlParser
 
     public bool IsValidReturnUrl(string returnUrl)
     {
-        //string redirectUri = OidcConstants.AuthorizeRequest.RedirectUri + '=';
-
-        //int startIndex = returnUrl.IndexOf(redirectUri) == -1 ? 0 : returnUrl.IndexOf(redirectUri) + redirectUri.Length;
-        //int lenght = !returnUrl.Contains('&') ? returnUrl.Length - startIndex : returnUrl.IndexOf('&') - startIndex;
-
         string url = QueryParamParser.GetParam<string>(returnUrl, OidcConstants.AuthorizeRequest.RedirectUri) ?? string.Empty;
 
         if (url.IsLocalUrl())
@@ -72,13 +67,25 @@ public class CustomReturnUrlParser
             return true;
         }
 
-        if (Config.GetClients(config).Where(x => x.Enabled).SelectMany(x => x.RedirectUris).Contains(url))
+        string clientId = QueryParamParser.GetParam<string>(returnUrl, OidcConstants.AuthorizeRequest.ClientId) ?? string.Empty;
+        var client = clientStore.FindEnabledClientByIdAsync(clientId).Result;
+        if (client is not null && client.RedirectUris.Contains(url))
         {
             _logger.LogTrace("returnUrl is valid");
             return true;
         }
 
-        _logger.LogTrace("returnUrl is not valid");
+        if (client is null)
+        {
+            string message = "returnUrl is not valid. Cannot find a client: {0}";
+            _logger.LogTrace(message, clientId);
+        }
+        else
+        {
+            string message = "returnUrl is not valid. Client ({0}) doesn't contains specified redirectUrl ({1})";
+            _logger.LogTrace(message, clientId, url);
+        }
+
         return false;
     }
 }

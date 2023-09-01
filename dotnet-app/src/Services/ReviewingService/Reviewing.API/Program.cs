@@ -1,27 +1,33 @@
 var builder = WebApplication.CreateBuilder(args);
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddUserSecrets(typeof(Program).Assembly);
+}
+var config = builder.Configuration;
 
-builder.Services.AddControllers();
-
-builder.Services.AddDefaultAuthentication(builder.Configuration);
-//builder.Services.AddDefaultOpenApi(builder.Configuration);
-builder.Services.AddSwaggerGen();
-builder.Services.AddCustomDbContext(builder.Configuration);
-builder.Services.AddCustomCors(builder.Configuration);
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddMediatR(cfg =>
+var services = builder.Services;
+services.AddControllers();
+//builder.Services.AddDefaultOpenApi(config);
+services.AddDefaultAuthentication(config);
+if (builder.Environment.IsDevelopment())
+{
+    services.AddSwaggerGen();
+}
+services.AddCustomDbContext(config);
+services.AddCustomCors(config);
+services.AddEndpointsApiExplorer();
+services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
 
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
 });
-builder.Services.AddScoped<IDomainEventMediator>(x => new DomainEventMediator(x.GetRequiredService<IServiceScopeFactory>(), typeof(DomainEventMediator)));
-
-builder.Services.AddScoped<ICommentQueries>(sp => new CommentQueries(builder.Configuration.GetConnectionString("ReviewingDb")!));
-builder.Services.AddScoped<IReviewQueries>(sp => new ReviewQueries(builder.Configuration.GetConnectionString("ReviewingDb")!));
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+services.AddScoped<IDomainEventMediator>(x => new DomainEventMediator(x.GetRequiredService<IServiceScopeFactory>(), typeof(DomainEventMediator)));
+services.AddScoped<ICommentQueries>(sp => new CommentQueries(config.GetConnectionString("Reviewving")!));
+services.AddScoped<IReviewQueries>(sp => new ReviewQueries(config.GetConnectionString("Reviewving")!));
+services.AddScoped<ICommentRepository, CommentRepository>();
+services.AddScoped<IReviewRepository, ReviewRepository>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

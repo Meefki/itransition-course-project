@@ -1,35 +1,35 @@
 using IdentityServer.Extentions;
+using IdentityServer4.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddUserSecrets(typeof(Program).Assembly);
+}
 var config = builder.Configuration;
 var services = builder.Services;
-
-// Add services to the container.
-services.AddControllersWithViews();
+services.AddControllers();
+if (builder.Environment.IsDevelopment())
+{
+    services.AddSwaggerGen();
+}
 services.AddCustomCors(config);
 services.AddCustomDbContext(config);
 services.AddCustomIdentityServer(config);
+services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-
+app.MapControllers();
 app.UseCors();
 app.UseIdentityServer();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.MapFallbackToFile("index.html"); ;
 
 await app.InitializeDatabase();
 
