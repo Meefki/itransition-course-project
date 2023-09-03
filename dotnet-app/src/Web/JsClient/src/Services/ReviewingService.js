@@ -1,6 +1,3 @@
-import { useContext } from 'react';
-import { UserManagerContext } from '../Contexts/UserManagerContext';
-
 const fetchGet = async (url) => {
     const response = await fetch(url);
     const data = await response.json();
@@ -24,7 +21,6 @@ const getSearch = (params) => {
 }
 
 export class ReviewingService {
-    mgr = useContext(UserManagerContext);
 
     getTags = async (startWith) => {
         const params = [

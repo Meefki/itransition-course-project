@@ -69,7 +69,7 @@ public class CustomReturnUrlParser
 
         string clientId = QueryParamParser.GetParam<string>(returnUrl, OidcConstants.AuthorizeRequest.ClientId) ?? string.Empty;
         var client = clientStore.FindEnabledClientByIdAsync(clientId).Result;
-        if (client is not null && client.RedirectUris.Contains(url))
+        if (client is not null && (client.RedirectUris.Contains(url) || client.RedirectUris.Contains(Uri.UnescapeDataString(url))))
         {
             _logger.LogTrace("returnUrl is valid");
             return true;

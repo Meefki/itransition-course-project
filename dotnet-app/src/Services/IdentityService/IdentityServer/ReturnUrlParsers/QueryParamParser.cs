@@ -10,6 +10,7 @@ public static class QueryParamParser
         int startIndex = queryString.IndexOf(paramName) == -1 ? 0 : queryString.IndexOf(paramName) + paramName.Length;
         int lenght = !queryString.Contains('&') ? queryString.Length - startIndex : queryString.IndexOf('&', startIndex) - startIndex;
 
-        return queryString.Substring(startIndex, lenght) as T;
+        T? value = queryString.Substring(startIndex, lenght) as T;
+        return value;
     }
 }

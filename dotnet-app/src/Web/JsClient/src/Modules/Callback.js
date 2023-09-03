@@ -5,12 +5,12 @@ export function Callback() {
 
     const mgr = useContext(UserManagerContext);
 
-    async function result() {
+    function result() {
         if (!window.location.search)
-            window.location = "/home";
+            window.location = "/";
 
-        mgr.signinRedirectCallback().then(function() {
-            window.location = "/home"
+        mgr.signinRedirectCallback().then(() => {
+            window.location = "/"
         }).catch(function(e) {
             console.error(e);
         })
