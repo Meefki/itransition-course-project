@@ -1,9 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { UserManagerContext } from "../Contexts/UserManagerContext";
 import { ReviewingService } from "../Services/ReviewingService";
 import { UserInteraction } from "../Services/UserInteraction";
+import { useTranslation } from 'react-i18next';
 
 export function Main() {
+
+    const ns = 'reviews';
+    const { t, i18n } = useTranslation(ns);
+    const [pageLoadingStage, setPageLoadingStage] = useState(true);
 
     const mgr = useContext(UserManagerContext);
     const [isAuthorized, setIsAuthorized] = useState(false);
@@ -21,6 +26,17 @@ export function Main() {
         })
     }, [mgr])
 
+    /* eslint-disable */
+    useMemo(() => {
+        i18n.isInitialized &&
+        !i18n.hasLoadedNamespace(ns) && 
+            i18n.loadNamespaces(ns)
+            .then(() => {
+                setPageLoadingStage(false);
+            });
+    }, [i18n.isInitialized])
+    /* eslint-enable */
+
     async function login() {
         await userInteraction.login()
         setIsAvtive(false)
@@ -35,11 +51,11 @@ export function Main() {
         setTags(await reviewingService.getTags());
     }
 
-    return(
+    return pageLoadingStage ? '' :
         <div className="container d-flex flex-row">
             <div className="align-items-baseline justify-content-start">
                 <button className="btn btn-primary m-3" onClick={() => getTags()}>Get Tags</button>
-                <button className="btn btn-primary m-3" disabled={!isActive} hidden={isAuthorized} onClick={() => login()}>Login</button>
+                <button className="btn btn-primary m-3" disabled={!isActive} hidden={isAuthorized} onClick={() => login()}>{t('login_btn', { ns: 'reviews' })}</button>
                 <button className="btn btn-primary m-3" disabled={!isActive} hidden={!isAuthorized} onClick={() => logout()}>Logout</button>
             </div>
 
@@ -51,5 +67,4 @@ export function Main() {
                 </ul>
             </div>
         </div>
-    )
 }

@@ -1,0 +1,17 @@
+{
+    "login_tab": "LOGIN",
+    "signin_btn": "SIGN IN",
+    "signin_label": "Sign in with:",
+    "remember_me": "Remember me",
+
+    "register_tab": "REGISTER",
+    "signup_btn": "SIGN UP",
+    "signup_label": "Sign up with:",
+
+    "or_label": "or:",
+
+    "email_label": "Email address",
+    "password_label": "Password",
+    "name_label": "Full name",
+    "username_label": "Username"
+}

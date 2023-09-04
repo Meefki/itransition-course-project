@@ -1,0 +1,17 @@
+{
+    "login_tab": "ВХОД",
+    "signin_btn": "ВОЙТИ",
+    "signin_label": "Войти через:",
+    "remember_me": "Запомнить",
+
+    "register_tab": "Регистрация",
+    "signup_btn": "Зарегистрироваться",
+    "signup_label": "Зарегистрироваться через:",
+
+    "or_label": "или:",
+
+    "email_label": "Электронная почта",
+    "password_label": "Пароль",
+    "name_label": "Полное имя",
+    "username_label": "Логин"
+}

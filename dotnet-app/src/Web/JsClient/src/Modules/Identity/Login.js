@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   MDBContainer,
   MDBTabs,
@@ -15,8 +15,12 @@ import {
 from 'mdb-react-ui-kit';
 import CryptoJS from 'crypto-js';
 import { IdentityService } from '../../Services/IdentityService';
+import { useTranslation } from 'react-i18next';
 
 export function Login() {
+    
+    const ns = 'identity-login';
+    const { t, i18n } = useTranslation(ns);
 
     const [justifyActive, setJustifyActive] = useState('login')
     // const [name, setName] = useState('');
@@ -29,6 +33,7 @@ export function Login() {
     const [error, setError] = useState('');
 
     const [loadingState, setLoadingState] = useState(false);
+    const [pageLoadingStage, setPageLoadingStage] = useState(true);
 
     const identityService = new IdentityService();
 
@@ -47,7 +52,7 @@ export function Login() {
     };
 
     async function register(event) {
-        event.preventDefault(); // just because of MDB
+        event.preventDefault();
         setLoadingState(true);
 
         const credentials = {
@@ -88,19 +93,31 @@ export function Login() {
         }
     }
 
-    return (
+    /* eslint-disable */
+    useMemo(() => {
+        i18n.isInitialized &&
+        !i18n.hasLoadedNamespace(ns) && 
+            i18n.loadNamespaces(ns)
+            .then(() => {
+                setPageLoadingStage(false);
+            });
+    }, [i18n.isInitialized]);
+    /* eslint-enable */
+
+    return pageLoadingStage ? '' :
         <div style={{height: "100vh"}} className='d-flex align-items-center'>
+
             <MDBContainer className="p-3 my-5 d-flex flex-column col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
 
                 <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
                     <MDBTabsItem>
                         <MDBTabsLink onClick={() => handleJustifyClick('login')} active={justifyActive === 'login'}>
-                            Login
+                            {t('login_tab')}
                         </MDBTabsLink>
                     </MDBTabsItem>
                     <MDBTabsItem>
                         <MDBTabsLink onClick={() => handleJustifyClick('register')} active={justifyActive === 'register'}>
-                            Register
+                            {t('register_tab')}
                         </MDBTabsLink>
                     </MDBTabsItem>
                 </MDBTabs>
@@ -110,7 +127,7 @@ export function Login() {
                     <MDBTabsPane show={justifyActive === 'login'}>
 
                         <div className="text-center mb-3">
-                            <p>Sign in with:</p>
+                            <p>{t('signin_label')}</p>
                             <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
                                 <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}>
                                     <MDBIcon fab icon='facebook-f' size="sm" />
@@ -129,21 +146,21 @@ export function Login() {
                                 </MDBBtn>
                             </div>
 
-                            <p className="text-center mt-3">or:</p>
+                            <p className="text-center mt-3">{t('or_label')}</p>
                         </div>
 
                         <form onSubmit={login}>
                             <MDBInput 
                                 wrapperClass='mb-4' 
-                                label='Email address'
+                                label={t('email_label')}
                                 type='email' 
                                 required
                                 value={email}
                                 onChange={(event) => setEmail(event.target.value) }/>
                             <MDBInput 
                                 wrapperClass='mb-4' 
-                                label='Password' 
-                                type='password' 
+                                label={t('password_label')}
+                                type='password'
                                 required
                                 value={password}
                                 onChange={(event) => {
@@ -157,14 +174,14 @@ export function Login() {
                                     value=''
                                     checked={rememberMe}
                                     onChange={(event) => setRememberMe(event.target.checked)}
-                                    label='Remember me' />
+                                    label={t('remember_me')} />
                             </div>
 
                             {error ? <span className="text-danger w-100">{error}</span> : ''}
 
                             <MDBBtn disabled={loadingState} className="mb-4 w-100" type="submit">
                                 {loadingState && <MDBSpinner className='me-2' size='sm'></MDBSpinner>}
-                                <span>Sign in</span>
+                                <span>{t('signin_btn')}</span>
                             </MDBBtn>
                         </form>
                     </MDBTabsPane>
@@ -172,7 +189,7 @@ export function Login() {
                     <MDBTabsPane show={justifyActive === 'register'}>
 
                         <div className="text-center mb-3">
-                            <p>Sign up with:</p>
+                            <p>{t('signup_label')}</p>
 
                             <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
                                 <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}>
@@ -192,7 +209,7 @@ export function Login() {
                                 </MDBBtn>
                             </div>
 
-                            <p className="text-center mt-3">or:</p>
+                            <p className="text-center mt-3">{t('or_label')}</p>
                         </div>
 
                         <form onSubmit={register}>
@@ -204,21 +221,21 @@ export function Login() {
                                 onChange={(event) => setName(event.target.value) }/> */}
                             <MDBInput 
                                 wrapperClass='mb-4' 
-                                label='Username' 
+                                label={t('username_label')}
                                 type='text' 
                                 required
                                 value={username}
                                 onChange={(event) => setUsername(event.target.value) }/>
                             <MDBInput 
                                 wrapperClass='mb-4' 
-                                label='Email' 
+                                label={t('email_label')}
                                 type='email'
                                 required
                                 value={email}
                                 onChange={(event) => setEmail(event.target.value) }/>
                             <MDBInput 
                                 wrapperClass='mb-4' 
-                                label='Password' 
+                                label={t('password_label')}
                                 type='password' 
                                 required
                                 value={password}
@@ -230,7 +247,7 @@ export function Login() {
 
                             <MDBBtn disabled={loadingState} className="mb-4 w-100" type="submit">
                                 {loadingState && <MDBSpinner className='me-2' size='sm'></MDBSpinner>}
-                                <span>Sign up</span>
+                                <span>{t('signup_btn')}</span>
                             </MDBBtn>
                         </form>
                     </MDBTabsPane>
@@ -239,5 +256,4 @@ export function Login() {
 
             </MDBContainer>
         </div>
-    );
 }
