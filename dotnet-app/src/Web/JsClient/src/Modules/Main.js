@@ -27,7 +27,7 @@ export function Main() {
     }, [mgr])
 
     /* eslint-disable */
-    useMemo(() => {
+    useEffect(() => {
         i18n.isInitialized &&
         !i18n.hasLoadedNamespace(ns) && 
             i18n.loadNamespaces(ns)
@@ -55,8 +55,8 @@ export function Main() {
         <div className="container d-flex flex-row">
             <div className="align-items-baseline justify-content-start">
                 <button className="btn btn-primary m-3" onClick={() => getTags()}>Get Tags</button>
-                <button className="btn btn-primary m-3" disabled={!isActive} hidden={isAuthorized} onClick={() => login()}>{t('login_btn', { ns: 'reviews' })}</button>
-                <button className="btn btn-primary m-3" disabled={!isActive} hidden={!isAuthorized} onClick={() => logout()}>Logout</button>
+                {!isAuthorized && <button className="btn btn-primary m-3" disabled={!isActive} onClick={() => login()}>{t('login_btn', { ns: 'reviews' })}</button>}
+                {isAuthorized && <button className="btn btn-primary m-3" disabled={!isActive} onClick={() => logout()}>Logout</button>}
             </div>
 
             <div>

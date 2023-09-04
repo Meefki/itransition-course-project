@@ -14,6 +14,7 @@ i18next
 .init({
   debug: process.env.REACT_APP_ENV === 'development',
   fallbackLng: 'en',
+  defaultNS: ['reviews'],
   detection: {
     order: ['localStorage', 'cookie', 'subdomain'],
     caches: ['localStorage', 'cookie'],

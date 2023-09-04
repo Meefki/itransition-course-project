@@ -6,8 +6,22 @@ const ThemeLayout = () => {
     const light = 'light';
     const dark = 'dark';
     const themes = {
-        light: { key: light, cssPath: 'css/mdb.min.css', icon: 'sun' },
-        dark: { key: dark, cssPath: 'css/mdb.dark.min.css', icon: 'moon' }
+        light: { 
+            key: light, 
+            cssPaths: {
+                main: 'css/mdb.min.css', 
+                header: 'css/header/header.css'
+            }, 
+            icon: 'sun'
+        },
+        dark: { 
+            key: dark, 
+            cssPaths: {
+                main: 'css/mdb.dark.min.css',
+                header: 'css/header/header.dark.css'
+            }, 
+            icon: 'moon'
+        }
     };
 
     const loadTheme = () => {
@@ -21,7 +35,8 @@ const ThemeLayout = () => {
     const [theme, setTheme] = useState(loadTheme);
 
     const changeTheme = (theme) => {
-        document.getElementById('theme').setAttribute('href', theme.cssPath);
+        document.getElementById('theme').setAttribute('href', theme.cssPaths.main);
+        document.getElementById('headerTheme').setAttribute('href', theme.cssPaths.header);
         localStorage.setItem('theme', JSON.stringify(theme));
     }
 

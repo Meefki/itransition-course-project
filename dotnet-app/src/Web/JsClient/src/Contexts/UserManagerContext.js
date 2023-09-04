@@ -15,4 +15,4 @@ export const config = {
     userStore: new WebStorageStateStore({ store: localStorage })
 };
 
-export const UserManagerContext = createContext(new UserManager(config));
+export const UserManagerContext = createContext(new UserManager());

@@ -1,11 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import ThemeLayout from './ThemeLayout';
+import Header from '../Shared/Header'
 
 const MainLayout = () => {
     return (
-        <ThemeLayout>
-            <Outlet />
-        </ThemeLayout>
+        <div style={{height: '100vh'}}>
+            <Header />
+            <ThemeLayout>
+                <Outlet />
+            </ThemeLayout>
+        </div>
     );
 }
 

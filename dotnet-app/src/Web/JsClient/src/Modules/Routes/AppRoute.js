@@ -2,7 +2,7 @@ import { Callback } from "../Identity/Callback";
 import { Main } from "../Main";
 import { Login } from "../Identity/Login"
 import { Logout } from "../Identity/Logout"
-import { Error } from "../Error"
+import { Error } from "../Shared/Error"
 import ThemeLayout from "../Layouts/ThemeLayout";
 import WithoutLayout from "../Layouts/WithoutLayout";
 import MainLayout from "../Layouts/MainLayout";
@@ -17,8 +17,7 @@ const AppRoutes = [
                 title: 'Login page',
                 path: '/login',
                 component: <Login />,
-                isPublic: true,
-                hasSiderLink: true
+                isPublic: true
             }
         ]
     },
@@ -44,8 +43,7 @@ const AppRoutes = [
                 title: 'Logout page',
                 path: '/logout',
                 component: <Logout />,
-                isPublic: true,
-                hasSiderLink: true
+                isPublic: true
             }
         ]
     },
@@ -57,8 +55,7 @@ const AppRoutes = [
                 title: 'Main page',
                 path: '/',
                 component: <Main />,
-                isPublic: true,
-                hasSiderLink: true
+                isPublic: true
             }
         ]
     }
