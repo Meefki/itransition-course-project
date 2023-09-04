@@ -1,20 +1,20 @@
-import './App.css';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { Route, Routes } from 'react-router-dom';
-import AppRoutes from './AppRoute';
+import { Routes } from './Modules/Routes/AppRoute';
 import { UserManagerContext, config } from './Contexts/UserManagerContext';
 import { UserManager } from 'oidc-client';
+import { useEffect, useState, useMemo } from "react";
 
 function App() {
+  const userManager = useMemo(() => new UserManager(config), []);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    setIsAuthorized(userManager.getUser() ? true : false);
+  }, [userManager]);
+
   return (
-    <UserManagerContext.Provider value={new UserManager(config)}>
-      <Routes>
-        {AppRoutes.map((route, index) => {
-          const { element, ...rest } = route;
-          return <Route key={index} {...rest} element={element} />;
-        })}
-      </Routes>
+    <UserManagerContext.Provider value={userManager}>
+      <Routes isAuthorized={isAuthorized}/>
     </UserManagerContext.Provider>
   );
 }

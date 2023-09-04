@@ -4,11 +4,16 @@
     <meta charset="utf-8" />
     <base href="%PUBLIC_URL%/" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link id="theme" rel="stylesheet" href="css/mdb.min.css" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <title>React App</title>
   </head>
   <body>
+    <script>
+        let theme = localStorage.getItem('theme');
+        document.getElementById('theme').setAttribute('href', JSON.parse(theme)?.cssPath ?? 'css/mdb.min.css');
+    </script>
     <div id="root"></div>
   </body>
 </html>

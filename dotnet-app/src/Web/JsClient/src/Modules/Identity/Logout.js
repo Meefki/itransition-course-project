@@ -3,7 +3,6 @@ import { IdentityService } from "../../Services/IdentityService"
 
 export function Logout() {
     const identityService = new IdentityService();
-    
     async function logout() {
         var query = window.location.search;
         var logoutIdQuery = query && query.toLowerCase().indexOf('?logoutid=') === 0 && query;

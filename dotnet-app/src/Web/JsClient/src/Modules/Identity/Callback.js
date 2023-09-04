@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react"
-import { UserManagerContext } from "../Contexts/UserManagerContext";
+import { UserManagerContext } from "../../Contexts/UserManagerContext";
 
 export function Callback() {
 

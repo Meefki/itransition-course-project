@@ -9,7 +9,8 @@ import {
   MDBBtn,
   MDBIcon,
   MDBInput,
-  MDBCheckbox
+  MDBCheckbox,
+  MDBSpinner
 }
 from 'mdb-react-ui-kit';
 import CryptoJS from 'crypto-js';
@@ -26,6 +27,8 @@ export function Login() {
     const [passHash, setPassHash] = useState('');
 
     const [error, setError] = useState('');
+
+    const [loadingState, setLoadingState] = useState(false);
 
     const identityService = new IdentityService();
 
@@ -45,6 +48,8 @@ export function Login() {
 
     async function register(event) {
         event.preventDefault(); // just because of MDB
+        setLoadingState(true);
+
         const credentials = {
             passHash: passHash,
             email: email,
@@ -56,10 +61,16 @@ export function Login() {
         if (data && data.isOk) {
           window.location = data.redirectUrl;
         }
+        else {
+            setError('Wrong email or password');
+            setLoadingState(false);
+        }
     }
 
     async function login(event) {
         event.preventDefault();
+        setLoadingState(true);
+
         const credentials = {
             passHash: passHash,
             email: email,
@@ -73,6 +84,7 @@ export function Login() {
         }
         else {
             setError('Wrong email or password');
+            setLoadingState(false);
         }
     }
 
@@ -150,7 +162,10 @@ export function Login() {
 
                             {error ? <span className="text-danger w-100">{error}</span> : ''}
 
-                            <MDBBtn className="mb-4 w-100" type="submit">Sign in</MDBBtn>
+                            <MDBBtn disabled={loadingState} className="mb-4 w-100" type="submit">
+                                {loadingState && <MDBSpinner className='me-2' size='sm'></MDBSpinner>}
+                                <span>Sign in</span>
+                            </MDBBtn>
                         </form>
                     </MDBTabsPane>
 
@@ -213,7 +228,10 @@ export function Login() {
                                     setPassHash(generatedPassHash);
                                 }}/>
 
-                            <MDBBtn className="mb-4 w-100" type="submit">Sign up</MDBBtn>
+                            <MDBBtn disabled={loadingState} className="mb-4 w-100" type="submit">
+                                {loadingState && <MDBSpinner className='me-2' size='sm'></MDBSpinner>}
+                                <span>Sign up</span>
+                            </MDBBtn>
                         </form>
                     </MDBTabsPane>
 
