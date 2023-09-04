@@ -10,6 +10,7 @@ function App() {
 
   useEffect(() => {
     setIsAuthorized(userManager.getUser() ? true : false);
+    userManager.clearStaleState(userManager.userStore);
   }, [userManager]);
 
   return (
