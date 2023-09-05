@@ -60,6 +60,24 @@ select top 1
         return review;
     }
 
+    public async Task<dynamic> GetReviewsCount(ReviewFilterOptions? filterOptions = null)
+    {
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var timeout = TimeSpan.FromSeconds(10);
+
+        object reviewParam = new { };
+        string reviewWhereCondition = GetWhereCondition(filterOptions, "r", "rt");
+        string reviewSql =
+@"select distinct count(r.id) as reviewsCount
+    from [reviewing].Reviews        as r
+    left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
+    " + reviewWhereCondition;
+        IEnumerable<dynamic> reviewsCount = await connection.QueryAsync<dynamic>(reviewSql, reviewParam, commandTimeout: timeout.Seconds);
+
+        return reviewsCount;
+    }
+
     public async Task<dynamic> GetReviewsShortDescription(
         PaginationOptions paginationOptions, 
         ReviewSortOptions? sortOptions = null, 
@@ -70,7 +88,7 @@ select top 1
         var timeout = TimeSpan.FromSeconds(10);
 
         object reviewParam = new { };
-        string reviewWhereCondition = GetWhereCondition(filterOptions, "r", "lc");
+        string reviewWhereCondition = GetWhereCondition(filterOptions, "r", "rt");
         string reviewOrderCondition = GetOrderCondition(sortOptions, paginationOptions, "r", "lc");
         string reviewSql =
 @"with likes_count (ReviewId, likesCount) as (
@@ -115,67 +133,6 @@ select distinct
         }
 
         return reviews;
-
-        #region Query Builders
-        string GetWhereCondition(ReviewFilterOptions? filterOptions, params object[] tableAlias)
-        {
-            string whereCondition = "";
-            if (filterOptions is not null)
-            {
-                string where = "where ";
-                List<string> conditions = new();
-
-                if (!string.IsNullOrEmpty(filterOptions.Name))
-                {
-                    string condition = $"{tableAlias[0]}.[Name] = {filterOptions.Name}";
-                    conditions.Add(condition);
-                }
-
-                if (!string.IsNullOrEmpty(filterOptions.Status))
-                {
-                    string condition = $"{tableAlias[0]}.[Status] = {filterOptions.Status}";
-                    conditions.Add(condition);
-                }
-
-                if (!string.IsNullOrEmpty(filterOptions.SubjectName))
-                {
-                    string condition = $"{tableAlias[0]}.[Subject_Name] = {filterOptions.SubjectName}";
-                    conditions.Add(condition);
-                }
-
-                if (filterOptions.Tags is not null && filterOptions.Tags.Count > 0)
-                {
-                    string condition = $"{tableAlias[1]}.[TagsName] is null or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags)})";
-                    conditions.Add(condition);
-                }
-
-                if (conditions.Count > 0)
-                    whereCondition = where + string.Join('\n', conditions);
-            }
-
-            return whereCondition;
-        }
-
-        string GetOrderCondition(ReviewSortOptions? sortOptions, PaginationOptions pagination, params object[] tableAlias)
-        {
-            string sortCondition = "";
-            if (sortOptions is not null)
-            {
-                string tableFieldName = ReviewSortOptions.GetTableFieldName(sortOptions.SortField);
-                string tableAs = sortOptions.SortField == SortFields.Likes ? tableAlias[1].ToString()! : tableAlias[0].ToString()!;
-                sortCondition = $"order by {tableAs}.{tableFieldName} {sortOptions.SortType.GetDisplayName()}";
-            }
-            else
-            {
-                sortCondition = $"order by {tableAlias[0]}.PublishedDate desc";
-            }
-
-            int offset = pagination.PageNumber * pagination.PageSize;
-            sortCondition += $"\n offset({offset}) rows fetch next({pagination.PageSize}) rows only";
-
-            return sortCondition;
-        }
-        #endregion
     }
 
     public async Task<dynamic> GetTags(string startWith = "")
@@ -197,4 +154,65 @@ select distinct
 
         return tags;
     }
+
+    #region Query Builders
+    string GetWhereCondition(ReviewFilterOptions? filterOptions, params object[] tableAlias)
+    {
+        string whereCondition = "";
+        if (filterOptions is not null)
+        {
+            string where = "where ";
+            List<string> conditions = new();
+
+            if (!string.IsNullOrEmpty(filterOptions.Name))
+            {
+                string condition = $"{tableAlias[0]}.[Name] = {filterOptions.Name}";
+                conditions.Add(condition);
+            }
+
+            if (!string.IsNullOrEmpty(filterOptions.Status))
+            {
+                string condition = $"{tableAlias[0]}.[Status] = {filterOptions.Status}";
+                conditions.Add(condition);
+            }
+
+            if (!string.IsNullOrEmpty(filterOptions.SubjectName))
+            {
+                string condition = $"{tableAlias[0]}.[Subject_Name] = {filterOptions.SubjectName}";
+                conditions.Add(condition);
+            }
+
+            if (filterOptions.Tags is not null && filterOptions.Tags.Count > 0)
+            {
+                string condition = $"{tableAlias[1]}.[TagsName] is null or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags)})";
+                conditions.Add(condition);
+            }
+
+            if (conditions.Count > 0)
+                whereCondition = where + string.Join('\n', conditions);
+        }
+
+        return whereCondition;
+    }
+
+    string GetOrderCondition(ReviewSortOptions? sortOptions, PaginationOptions pagination, params object[] tableAlias)
+    {
+        string sortCondition = "";
+        if (sortOptions is not null)
+        {
+            string tableFieldName = ReviewSortOptions.GetTableFieldName(sortOptions.SortField);
+            string tableAs = sortOptions.SortField == SortFields.Likes ? tableAlias[1].ToString()! : tableAlias[0].ToString()!;
+            sortCondition = $"order by {tableAs}.{tableFieldName} {sortOptions.SortType.GetDisplayName()}";
+        }
+        else
+        {
+            sortCondition = $"order by {tableAlias[0]}.PublishedDate desc";
+        }
+
+        int offset = pagination.PageNumber * pagination.PageSize;
+        sortCondition += $"\n offset({offset}) rows fetch next({pagination.PageSize}) rows only";
+
+        return sortCondition;
+    }
+    #endregion
 }

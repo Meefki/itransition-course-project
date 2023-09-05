@@ -11,4 +11,6 @@ public interface IReviewQueries
         ReviewFilterOptions? filterOptions = null);
 
     Task<dynamic> GetReview(string reviewId);
+
+    Task<dynamic> GetReviewsCount(ReviewFilterOptions? filterOptions = null);
 }

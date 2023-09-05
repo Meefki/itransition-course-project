@@ -37,6 +37,26 @@ namespace Reviewing.API.Controllers
         }
 
         [HttpGet]
+        [Route("count")]
+        public async Task<dynamic> GetReviewsCount([FromQuery] Dictionary<string, List<string>>? filterFields = null)
+        {
+            ReviewFilterOptions? filter = null;
+            if (filterFields != null)
+            {
+                var lowerKeys = filterFields.Keys.ToDictionary(k => k.ToLower(), k => k);
+                filter = new()
+                {
+                    Name = lowerKeys.ContainsKey("name") ? filterFields[lowerKeys["name"]].First().Trim() : null,
+                    Status = lowerKeys.ContainsKey("status") ? filterFields[lowerKeys["status"]].First().Trim() : null,
+                    SubjectName = lowerKeys.ContainsKey("subjectname") ? filterFields[lowerKeys["subjectname"]].First().Trim() : null,
+                    Tags = lowerKeys.ContainsKey("tags") ? filterFields[lowerKeys["tags"]] : null
+                };
+            }
+
+            return await reviewQueries.GetReviewsCount(filter);
+        }
+
+        [HttpGet]
         public async Task<dynamic> GetReviewShortDesriptions(
             int pageSize = 10,
             int pageNumber = 0,
