@@ -49,7 +49,7 @@ function Header() {
                                         </ul>
                                     ]},
             { tag: 'auth', value: <hr key="menu-item-6" className="dropdown-divider" /> },
-            { tag: 'auth', value: <button key="menu-item-7" className={`${isActive ? '' : 'disabled'} btn btn-link`} onClick={() => logout()}>{t('logout_btn')}</button> }    
+            { tag: 'auth', value: <button key="menu-item-7" className={`${isActive ? '' : 'disabled'} btn btn-link dropdown-item`} onClick={() => logout()}>{t('logout_btn')}</button> }    
         ]
     } 
     
@@ -109,7 +109,7 @@ function Header() {
                         <MDBDropdownToggle id='dd-toggle' split/>
                         {
                             isAuthorized ?
-                                <MDBBtn>{t('profile_nav_item')}</MDBBtn> :
+                                <a href="/profile" className="btn btn-primary">{t('profile_nav_item')}</a> :
                                 <MDBBtn onClick={() => login()}>{t('login_btn')}</MDBBtn>
                         }
                         <MDBDropdownMenu className="shadow-lg">

@@ -7,6 +7,7 @@ import ThemeLayout from "../Layouts/ThemeLayout";
 import WithoutLayout from "../Layouts/WithoutLayout";
 import MainLayout from "../Layouts/MainLayout";
 import { RenderRoutes } from "./RenderRoutes";
+import UserProfile from "../Identity/UserProfile";
 
 const AppRoutes = [
     {
@@ -56,6 +57,13 @@ const AppRoutes = [
                 path: '/',
                 component: <Main />,
                 isPublic: true
+            },
+            {
+                name: 'profile',
+                title: 'Profile page',
+                path: '/profile',
+                component: <UserProfile />,
+                isPublic: false
             }
         ]
     }
