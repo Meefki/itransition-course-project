@@ -26,11 +26,10 @@ export class UserInteraction {
     }
 
     isAuthorized = async () => {
-        const result = this.mgr.getUser().then((user) => {
-            const isAuthorized = user !== null;
-            return isAuthorized;
-        });
+        const user = await this.mgr.getUser();
+        if (user)
+            return true;
 
-        return result;
+        return false;
     }
 }

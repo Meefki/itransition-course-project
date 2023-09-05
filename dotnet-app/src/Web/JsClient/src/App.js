@@ -5,7 +5,7 @@ import { UserManager } from 'oidc-client';
 import { useState, useMemo, useEffect } from "react";
 
 function App() {
-  const userManager = useMemo(() => new UserManager(config), [config]);
+  const userManager = useMemo(() => new UserManager(config), []);
   const [pageLoadingStage, setPageLoadingStage] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
@@ -19,7 +19,7 @@ function App() {
     setIsAuthorized(isAuth);
     setPageLoadingStage(false);
   })
- }, [])
+ }, [userManager])
 
   return (
     <UserManagerContext.Provider value={userManager}>
