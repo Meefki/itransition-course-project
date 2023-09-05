@@ -92,11 +92,13 @@ function Header() {
     return pageLoadingStage ? '' :
         <div id="header" className="header pt-2 pb-2 border-bottom-2 shadow">
             <div className="d-flex flex-row">
-                <img 
-                    style={{width: imgSize, height: imgSize}}
-                    alt=""
-                    src="https://placehold.co/50x50"
-                    className="rounded-circle ms-3"/>
+                <a href="/">
+                    <img 
+                        style={{width: imgSize, height: imgSize}}
+                        alt=""
+                        src="https://placehold.co/50x50"
+                        className="rounded-circle ms-3"/>
+                </a>
                 <nav className="w-100 d-flex align-items-center justify-content-between ms-4 me-4">
                     <ul className="m-0 p-0">
                         <li className="d-inline me-5">{t('categories_nav_item')}</li>
@@ -109,7 +111,7 @@ function Header() {
                         <MDBDropdownToggle id='dd-toggle' split/>
                         {
                             isAuthorized ?
-                                <a href="/profile" className="btn btn-primary">{t('profile_nav_item')}</a> :
+                                <a className="btn btn-primary" href="/profile">{t('profile_nav_item')}</a> :
                                 <MDBBtn onClick={() => login()}>{t('login_btn')}</MDBBtn>
                         }
                         <MDBDropdownMenu className="shadow-lg">
