@@ -87,7 +87,7 @@ select distinct
         ,r.ImageUrl       as imageUrl
         ,r.Subject_Name   as subjectName
         ,r.Subject_Grade  as subjectGrage
-        ,cast(r.PublishedDate as datetime)  as publishedDate
+        ,r.PublishedDate  as publishedDate
         ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
     from [reviewing].Reviews        as r
