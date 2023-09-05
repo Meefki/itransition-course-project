@@ -51,6 +51,8 @@ using (var scope = app.Services.CreateScope())
     await context.Database.MigrateAsync();
 }
 
+DapperSetup.Init();
+
 if (app.Environment.IsDevelopment())
     app.Run();
 else

@@ -2,6 +2,6 @@
 
 public class TagVM
 {
-    public string reviewId { get; set; } = null!;
+    public Guid reviewId { get; set; }
     public string name { get; set; } = null!;
 }

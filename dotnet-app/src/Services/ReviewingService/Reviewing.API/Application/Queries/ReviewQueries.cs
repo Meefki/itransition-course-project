@@ -74,8 +74,9 @@ select top 1
         string reviewOrderCondition = GetOrderCondition(sortOptions, paginationOptions, "r", "lc");
         string reviewSql =
 @"with likes_count (ReviewId, likesCount) as (
-    select count(rl.UserId)
+    select rl.ReviewId, count(rl.UserId)
         from [reviewing].ReviewLikes as rl
+        group by rl.ReviewId
 )
 select distinct
          r.Id             as [id]
@@ -86,29 +87,32 @@ select distinct
         ,r.ImageUrl       as imageUrl
         ,r.Subject_Name   as subjectName
         ,r.Subject_Grade  as subjectGrage
+        ,cast(r.PublishedDate as datetime)  as publishedDate
         ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
     from [reviewing].Reviews        as r
     join [reviewing].SubjectGroups  as sg on sg.ReviewId = r.Id
     left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
-    join likes_count                as lc on lc.ReviewId = r.Id
-    " + reviewWhereCondition + @"
-    " + reviewOrderCondition;
+    left join likes_count           as lc on lc.ReviewId = r.Id
+    " + reviewWhereCondition + " " + reviewOrderCondition;
         IEnumerable<ReviewVM> reviews = await connection.QueryAsync<ReviewVM>(reviewSql, reviewParam, commandTimeout: timeout.Seconds);
-
-        string tagsSql =
+        if (reviews.Any())
+        {
+            string tagsSql =
 @$"select 
          rt.TagsName as [name]
         ,rt.ReviewId as reviewId
     from [reviewing].ReviewTag as rt
-    where rt.ReviewId in ({string.Join(", ", reviews.Select(r => r.id))})";
-        IEnumerable<TagVM> reviewsTags = await connection.QueryAsync<TagVM>(tagsSql, tagsSql, commandTimeout: timeout.Seconds);
+    where rt.ReviewId in ({string.Join(", ", reviews.Select(r => $"'{r.id}'"))})";
 
-        foreach (var review in reviews)
-            review.tags = reviewsTags
-                .Where(t => t.reviewId == review.id)
-                .Select(t => t.name)
-                .ToList();
+            IEnumerable<TagVM> reviewsTags = await connection.QueryAsync<TagVM>(tagsSql, tagsSql, commandTimeout: timeout.Seconds);
+
+            foreach (var review in reviews)
+                review.tags = reviewsTags
+                    .Where(t => t.reviewId == review.id)
+                    .Select(t => t.name)
+                    .ToList();
+        }
 
         return reviews;
 

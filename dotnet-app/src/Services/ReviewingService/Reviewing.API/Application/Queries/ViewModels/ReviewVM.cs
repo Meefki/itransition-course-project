@@ -7,16 +7,17 @@ public class ReviewVM
         tags = new();
     }
 
-    public string id { get; set; } = null!;
+    public Guid id { get; set; }
     public string name { get; set; } = null!;
-    public string authorUserId { get; set; } = null!;
+    public Guid authorUserId { get; set; }
     public string content { get; set; } = null!;
     public string status { get; set; } = null!;
     public string? imageUrl { get; set; }
     public string subjectName { get; set; } = null!;
     public int subjectGrade { get; set; }
     public string subjectGroupName { get; set; } = null!;
-    public int likesCount { get; set; }
+    public int? likesCount { get; set; }
+    public DateTime publishedDate { get; set; }
     public List<string> tags { get; set; }
 
 }
