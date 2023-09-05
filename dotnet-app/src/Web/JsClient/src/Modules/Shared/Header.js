@@ -10,8 +10,11 @@ import { UserManagerContext } from '../../Contexts/UserManagerContext'
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { UserInteraction } from "../../Services/UserInteraction";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+    const navigate = useNavigate();
+
     const [pageLoadingStage, setPageLoadingStage] = useState(true);
     const ns = "header";
     const { t, i18n } = useTranslation(ns);
@@ -92,13 +95,12 @@ function Header() {
     return pageLoadingStage ? '' :
         <div id="header" className="header pt-2 pb-2 border-bottom-2 shadow">
             <div className="d-flex flex-row">
-                <a href="/">
-                    <img 
-                        style={{width: imgSize, height: imgSize}}
-                        alt=""
-                        src="https://placehold.co/50x50"
-                        className="rounded-circle ms-3"/>
-                </a>
+                <img 
+                    style={{width: imgSize, height: imgSize}}
+                    alt=""
+                    src="https://placehold.co/50x50"
+                    className="rounded-circle ms-3"
+                    onClick={() => navigate("/")}/>
                 <nav className="w-100 d-flex align-items-center justify-content-between ms-4 me-4">
                     <ul className="m-0 p-0">
                         <li className="d-inline me-5">{t('categories_nav_item')}</li>
@@ -111,7 +113,7 @@ function Header() {
                         <MDBDropdownToggle id='dd-toggle' split/>
                         {
                             isAuthorized ?
-                                <a className="btn btn-primary" href="/profile">{t('profile_nav_item')}</a> :
+                                <MDBBtn onClick={() => navigate("/profile")}>{t('profile_nav_item')}</MDBBtn> :
                                 <MDBBtn onClick={() => login()}>{t('login_btn')}</MDBBtn>
                         }
                         <MDBDropdownMenu className="shadow-lg">
