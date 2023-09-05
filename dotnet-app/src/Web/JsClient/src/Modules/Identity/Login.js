@@ -101,6 +101,9 @@ export function Login() {
             .then(() => {
                 setPageLoadingStage(false);
             });
+        i18n.isInitialized &&
+        i18n.hasLoadedNamespace(ns) &&
+            setPageLoadingStage(false);
     }, [i18n.isInitialized]);
     /* eslint-enable */
 

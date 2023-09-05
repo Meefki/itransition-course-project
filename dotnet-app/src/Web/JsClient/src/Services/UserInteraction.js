@@ -2,6 +2,7 @@ export class UserInteraction {
     constructor(userManager) {
         this.mgr = userManager;
     }
+
     login = async () => {
         this.mgr.signinRedirect()
 
@@ -22,5 +23,14 @@ export class UserInteraction {
         })
 
         return false
+    }
+
+    isAuthorized = async () => {
+        const result = this.mgr.getUser().then((user) => {
+            const isAuthorized = user !== null;
+            return isAuthorized;
+        });
+
+        return result;
     }
 }

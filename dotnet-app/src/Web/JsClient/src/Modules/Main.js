@@ -18,13 +18,10 @@ export function Main() {
     const [isActive, setIsAvtive] = useState(true);
 
     useEffect(() => {
-        mgr.getUser().then(function (user) {
-            if (user)
-              setIsAuthorized(true)
-            else
-              setIsAuthorized(false)
-        })
-    }, [mgr])
+        userInteraction.isAuthorized().then((isAuth) => {
+            setIsAuthorized(isAuth);
+        });
+    })
 
     /* eslint-disable */
     useEffect(() => {
@@ -34,18 +31,12 @@ export function Main() {
             .then(() => {
                 setPageLoadingStage(false);
             });
+
+        i18n.isInitialized &&
+        i18n.hasLoadedNamespace(ns) &&
+            setPageLoadingStage(false);
     }, [i18n.isInitialized])
     /* eslint-enable */
-
-    async function login() {
-        await userInteraction.login()
-        setIsAvtive(false)
-    }
-
-    async function logout() {
-        await userInteraction.logout()
-        setIsAvtive(false)
-    }
 
     async function getTags() {
         setTags(await reviewingService.getTags());
@@ -55,8 +46,6 @@ export function Main() {
         <div className="container d-flex flex-row">
             <div className="align-items-baseline justify-content-start">
                 <button className="btn btn-primary m-3" onClick={() => getTags()}>Get Tags</button>
-                {!isAuthorized && <button className="btn btn-primary m-3" disabled={!isActive} onClick={() => login()}>{t('login_btn', { ns: 'reviews' })}</button>}
-                {isAuthorized && <button className="btn btn-primary m-3" disabled={!isActive} onClick={() => logout()}>Logout</button>}
             </div>
 
             <div>

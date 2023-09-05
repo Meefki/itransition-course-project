@@ -16,8 +16,8 @@ i18next
   fallbackLng: 'en',
   defaultNS: ['reviews'],
   detection: {
-    order: ['localStorage', 'cookie', 'subdomain'],
-    caches: ['localStorage', 'cookie'],
+    order: ['cookie', 'localStorage', 'subdomain'],
+    caches: ['cookie', 'localStorage' ],
     cookieMinutes: 60,
     cookieDomain: 'reviews'
   },
