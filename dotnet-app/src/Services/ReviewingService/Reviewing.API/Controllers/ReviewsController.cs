@@ -60,7 +60,7 @@ namespace Reviewing.API.Controllers
         public async Task<dynamic> GetReviewShortDesriptions(
             int pageSize = 10,
             int pageNumber = 0,
-            string? sortField = null,
+            [FromQuery] Dictionary<string, string>? sortOptions = null,
             string? sortType = null, 
             [FromQuery] Dictionary<string, List<string>>? filterFields = null)
         {
@@ -68,16 +68,15 @@ namespace Reviewing.API.Controllers
             {
                 if (filterFields.ContainsKey(nameof(pageSize))) filterFields.Remove(nameof(pageSize));
                 if (filterFields.ContainsKey(nameof(pageNumber))) filterFields.Remove(nameof(pageNumber));
-                if (filterFields.ContainsKey(nameof(sortField))) filterFields.Remove(nameof(sortField));
-                if (filterFields.ContainsKey(nameof(sortType))) filterFields.Remove(nameof(sortType));
+                if (filterFields.ContainsKey(nameof(sortOptions))) filterFields.Remove(nameof(sortOptions));
             }
 
             PaginationOptions pagination = new(pageSize, pageNumber);
-            ReviewSortOptions sort = new()
+            List<ReviewSortOptions> sort = new(sortOptions?.Select(x => new ReviewSortOptions()
             {
-                SortField = ReviewSortOptions.MapStringToSortField(sortField?.ToLower() ?? ""),
-                SortType = ReviewSortOptions.MapStringToSortType(sortType?.ToLower() ?? "")
-            };
+                SortField = ReviewSortOptions.MapStringToSortField(x.Key.ToLower()),
+                SortType = ReviewSortOptions.MapStringToSortType(x.Value.ToLower())
+            }) ?? new List<ReviewSortOptions>());
             ReviewFilterOptions? filter = null;
             if (filterFields != null)
             {
@@ -85,6 +84,7 @@ namespace Reviewing.API.Controllers
                 filter = new()
                 {
                     Name = lowerKeys.ContainsKey("name") ? filterFields[lowerKeys["name"]].First().Trim() : null,
+                    Content = lowerKeys.ContainsKey("content") ? filterFields[lowerKeys["content"]].First().Trim() : null,
                     Status = lowerKeys.ContainsKey("status") ? filterFields[lowerKeys["status"]].First().Trim() : null,
                     SubjectName = lowerKeys.ContainsKey("subjectname") ? filterFields[lowerKeys["subjectname"]].First().Trim() : null,
                     Tags = lowerKeys.ContainsKey("tags") ? filterFields[lowerKeys["tags"]] : null

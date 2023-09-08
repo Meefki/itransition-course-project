@@ -71,8 +71,8 @@ select top 1
         string reviewSql =
 @"select distinct count(r.id) as reviewsCount
     from [reviewing].Reviews        as r
-    left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
-    " + reviewWhereCondition;
+    " + (filterOptions?.Tags is not null ? @" left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
+    " : "") + reviewWhereCondition;
         IEnumerable<dynamic> reviewsCount = await connection.QueryAsync<dynamic>(reviewSql, reviewParam, commandTimeout: timeout.Seconds);
 
         return reviewsCount;
@@ -80,7 +80,7 @@ select top 1
 
     public async Task<dynamic> GetReviewsShortDescription(
         PaginationOptions paginationOptions, 
-        ReviewSortOptions? sortOptions = null, 
+        List<ReviewSortOptions>? sortOptions = null, 
         ReviewFilterOptions? filterOptions = null)
     {
         using var connection = new SqlConnection(connectionString);
@@ -195,14 +195,20 @@ select distinct
         return whereCondition;
     }
 
-    string GetOrderCondition(ReviewSortOptions? sortOptions, PaginationOptions pagination, params object[] tableAlias)
+    string GetOrderCondition(List<ReviewSortOptions>? sortOptions, PaginationOptions pagination, params object[] tableAlias)
     {
         string sortCondition = "";
-        if (sortOptions is not null)
+        if (sortOptions is not null && sortOptions.Any())
         {
-            string tableFieldName = ReviewSortOptions.GetTableFieldName(sortOptions.SortField);
-            string tableAs = sortOptions.SortField == SortFields.Likes ? tableAlias[1].ToString()! : tableAlias[0].ToString()!;
-            sortCondition = $"order by {tableAs}.{tableFieldName} {sortOptions.SortType.GetDisplayName()}";
+            string orderBy = "order by ";
+            foreach (ReviewSortOptions sortOption in sortOptions)
+            {
+                string tableFieldName = ReviewSortOptions.GetTableFieldName(sortOption.SortField);
+                string tableAs = sortOption.SortField == SortFields.Likes ? tableAlias[1].ToString()! : tableAlias[0].ToString()!;
+                sortCondition += string.IsNullOrEmpty(sortCondition) ? "" : ", ";
+                sortCondition += $"{tableAs}.{tableFieldName} {sortOption.SortType.GetDisplayName()} ";
+            }
+            sortCondition = string.IsNullOrEmpty(sortCondition) ? "" : (orderBy + sortCondition);
         }
         else
         {

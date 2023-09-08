@@ -7,7 +7,7 @@ public interface IReviewQueries
     Task<dynamic> GetTags(string startWith = "");
     Task<dynamic> GetReviewsShortDescription(
         PaginationOptions paginationOptions,
-        ReviewSortOptions? sortOptions = null,
+        List<ReviewSortOptions>? sortOptions = null,
         ReviewFilterOptions? filterOptions = null);
 
     Task<dynamic> GetReview(string reviewId);
