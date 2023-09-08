@@ -6,9 +6,9 @@ function applyTheme() {
         key: light, 
         cssPaths: { 
             main: 'css/mdb.min.css',
-            header: 'css/header/header.css'
+            custom: 'css/custom/light.css'
         }
     };
     document.getElementById('theme').setAttribute('href', theme.cssPaths.main);
-    document.getElementById('headerTheme').setAttribute('href', theme.cssPaths.header);
+    document.getElementById('custom').setAttribute('href', theme.cssPaths.custom);
 }

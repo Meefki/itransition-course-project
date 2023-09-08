@@ -10,7 +10,7 @@ const ThemeLayout = () => {
             key: light, 
             cssPaths: {
                 main: 'css/mdb.min.css', 
-                header: 'css/header/header.css'
+                custom: 'css/custom/light.css'
             }, 
             icon: 'sun'
         },
@@ -18,7 +18,7 @@ const ThemeLayout = () => {
             key: dark, 
             cssPaths: {
                 main: 'css/mdb.dark.min.css',
-                header: 'css/header/header.dark.css'
+                custom: 'css/custom/dark.css'
             }, 
             icon: 'moon'
         }
@@ -36,7 +36,7 @@ const ThemeLayout = () => {
 
     const changeTheme = (theme) => {
         document.getElementById('theme').setAttribute('href', theme.cssPaths.main);
-        document.getElementById('headerTheme').setAttribute('href', theme.cssPaths.header);
+        document.getElementById('custom').setAttribute('href', theme.cssPaths.custom);
         localStorage.setItem('theme', JSON.stringify(theme));
     }
 
@@ -55,7 +55,7 @@ const ThemeLayout = () => {
         <div>
             <Outlet />
 
-            <div className='position-absolute bottom-0 end-0 m-3'>
+            <div className='position-fixed bottom-0 end-0 m-3'>
                 <div className='d-flex flex-column justify-content-center align-items-center border rounded p-2'>
                     <MDBIcon icon={theme.icon} className='mb-3' size='2x' title={theme.key}/>
                     <MDBSwitch title='Change theme here!' checked={theme.key === dark} onChange={(e) => toggleButton(e.target.checked)}/>
