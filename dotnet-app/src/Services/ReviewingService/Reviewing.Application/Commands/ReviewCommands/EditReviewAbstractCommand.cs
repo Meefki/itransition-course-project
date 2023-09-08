@@ -4,6 +4,7 @@ public abstract record EditReviewAbstractCommand(
     string ReviewId,
     string Name,
     string Content,
+    string ShortDesc,
     string? ImageUrl,
     string SubjectName,
     string SubjectGroupName,

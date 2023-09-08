@@ -10,7 +10,7 @@ public class ReviewVM
     public Guid id { get; set; }
     public string name { get; set; } = null!;
     public Guid authorUserId { get; set; }
-    public string content { get; set; } = null!;
+    public string shortDesc { get; set; } = null!;
     public string status { get; set; } = null!;
     public string? imageUrl { get; set; }
     public string subjectName { get; set; } = null!;

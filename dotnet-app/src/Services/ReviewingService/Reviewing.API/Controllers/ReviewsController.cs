@@ -98,7 +98,7 @@ namespace Reviewing.API.Controllers
         [Authorize]
         public async Task<dynamic> Publish([FromBody] ReviewOptions opt)
         {
-            PublishReviewCommand command = new(opt.Name, opt.AuthorUserId, opt.Content, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
+            PublishReviewCommand command = new(opt.Name, opt.AuthorUserId, opt.Content, opt.ShortDesc, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
             CommandResponse<string> response = await mediator.Send(command);
 
             return response;
@@ -107,7 +107,7 @@ namespace Reviewing.API.Controllers
         [HttpPut]
         public async Task<CommandResponse> Edit([FromBody] ReviewOptions opt)
         {
-            EditReviewCommand command = new(opt.Id!, opt.Name, opt.Content, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
+            EditReviewCommand command = new(opt.Id!, opt.Name, opt.Content, opt.ShortDesc, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
             CommandResponse response = await mediator.Send(command);
 
             return response;

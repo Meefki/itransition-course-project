@@ -100,7 +100,7 @@ select distinct
          r.Id             as [id]
         ,r.[Name]         as [name]
         ,r.AuthorUserId   as [authorUserId]
-        ,r.Content        as content
+        ,r.ShortDesc      as shortDesc
         ,r.[Status]       as [status]
         ,r.ImageUrl       as imageUrl
         ,r.Subject_Name   as subjectName

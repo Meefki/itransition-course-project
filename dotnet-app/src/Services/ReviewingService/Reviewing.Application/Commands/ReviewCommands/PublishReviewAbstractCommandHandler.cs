@@ -36,6 +36,7 @@ public abstract class PublishReviewAbstractCommandHandler<TRequest>
                 userId,
                 subject, 
                 request.Content, 
+                request.ShortDesc,
                 request.ImageUrl, 
                 new HashSet<Tag>(request.Tags.Select(t => new Tag(t))));
 

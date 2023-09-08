@@ -16,6 +16,7 @@ public sealed class Review
         UserId authorUserId,
         Subject subject,
         string content,
+        string shortDesc,
         string? imageUrl,
         ISet<Tag> tags)
         : base(ReviewId.Create<ReviewId>(Guid.NewGuid()))
@@ -24,6 +25,7 @@ public sealed class Review
         AuthorUserId = authorUserId;
         Subject = subject;
         Content = content;
+        ShortDesc = shortDesc;
         ImageUrl = imageUrl;
         Status = ReviewStatuses.Published;
         PublishedDate = DateTime.UtcNow;
@@ -52,6 +54,12 @@ public sealed class Review
     public void ChangeSubject(Subject subject)
     {
         Subject = subject;
+    }
+
+    public string ShortDesc { get; private set; }
+    public void ChangeShortDesc(string shortdesc)
+    {
+        ShortDesc = shortdesc;
     }
 
     public string Content { get; private set; }

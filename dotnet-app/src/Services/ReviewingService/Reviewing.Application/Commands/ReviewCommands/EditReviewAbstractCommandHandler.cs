@@ -65,6 +65,12 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
             isChanged = true;
         }
 
+        if (review.ShortDesc != request.ShortDesc)
+        {
+            review.ChangeShortDesc(request.ShortDesc);
+            isChanged = true;
+        }
+
         if (review.ImageUrl != request.ImageUrl)
         {
             review.ChangeImage(request.ImageUrl);
