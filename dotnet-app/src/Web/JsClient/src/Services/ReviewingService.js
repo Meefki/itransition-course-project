@@ -1,26 +1,11 @@
-const fetchGet = async (url) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-}
-
-const getSearch = (params) => {
-    const notNullParams = params.filter(param => param.value);
-
-    let searchString = '';
-    if (notNullParams && notNullParams.length > 0) {
-        searchString = notNullParams.map(param => param.name + '=' + param.value).join('&');
-    }
-
-    if (searchString)
-        searchString = '?' + searchString;
-    else
-        searchString = '';
-
-    return searchString
-}
+import {fetchGet, getSearch} from "./QueryHelper";
+import { UserService } from "./UserService";
 
 export class ReviewingService {
+
+    constructor() {
+        this.userService = new UserService();
+    }
 
     getTags = async (startWith) => {
         const params = [
@@ -38,13 +23,35 @@ export class ReviewingService {
         return await fetchGet(url);
     }
 
-    getReviewsDescription = async (pageSize, pageNumber) => {
+    getShortReviewsDescriptions = async (pageSize, pageNumber, sortOptions, filterOptions) => {
         const params = [
             {name: 'pageSize', value: pageSize },
-            {name: 'pageNumber', value: pageNumber }
+            {name: 'pageNumber', value: pageNumber },
+            {name: 'sortOptions', value: sortOptions},
+            {name: 'filterOptions', value: filterOptions},
         ]
 
         const url = process.env.REACT_APP_REVIEWING_API + '/reviews' + getSearch(params);
-        return await fetchGet(url);
+        const reviews = await fetchGet(url);
+
+        if (reviews) {
+            const userIds = reviews.map((review) => review.authorUserId)
+            const userNames = await this.userService.getUserNames(userIds)
+            const reviewsWithAuthors = reviews.map((review) => {
+                const userName = userNames.filter(x => x.id?.toLowerCase() === review.authorUserId);
+                review.userName = userName[0]?.userName;
+                return review;
+            });
+            return reviewsWithAuthors;
+        }
+
+        return [];
+    };
+
+    getCount = async () => {
+        const url = process.env.REACT_APP_REVIEWING_API + '/reviews/count';
+        const response = await fetchGet(url);
+        const count = response[0].reviewsCount;
+        return count;
     }
 }
