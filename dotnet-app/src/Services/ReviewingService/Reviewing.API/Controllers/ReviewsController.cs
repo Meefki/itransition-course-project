@@ -61,7 +61,6 @@ namespace Reviewing.API.Controllers
             int pageSize = 10,
             int pageNumber = 0,
             [FromQuery] Dictionary<string, string>? sortOptions = null,
-            string? sortType = null, 
             [FromQuery] Dictionary<string, List<string>>? filterFields = null)
         {
             if (filterFields is not null)
