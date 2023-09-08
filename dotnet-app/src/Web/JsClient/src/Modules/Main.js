@@ -1,59 +1,110 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
-import { UserManagerContext } from "../Contexts/UserManagerContext";
-import { ReviewingService } from "../Services/ReviewingService";
-import { UserInteraction } from "../Services/UserInteraction";
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from "react";
+import { MDBContainer } from "mdb-react-ui-kit";
+import ReviewList from "./Reviews/ReviewList";
+import ReviewCarousel from './Reviews/ReviewCarousel'
+import HrStyle from '../Assets/Css/hr'
 
 export function Main() {
+    
+    const [scrollTop, setScrollTop] = useState(0);
+    const [lastScrollTop, setLastScrollTop] = useState(0);
+    const [lastScrollDirection, setLastScrollDirection] = useState(true);
 
-    const ns = 'reviews';
-    const { t, i18n } = useTranslation(ns);
-    const [pageLoadingStage, setPageLoadingStage] = useState(true);
-
-    const mgr = useContext(UserManagerContext);
-    const [isAuthorized, setIsAuthorized] = useState(false);
-    const [tags, setTags] = useState([]);
-    const reviewingService = new ReviewingService();
-    const userInteraction = new UserInteraction(useContext(UserManagerContext));
-    const [isActive, setIsAvtive] = useState(true);
-
-    useEffect(() => {
-        userInteraction.isAuthorized().then((isAuth) => {
-            setIsAuthorized(isAuth);
-        });
-    })
+    const handleOnScroll = () => {
+        const height = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+        setScrollTop(height);
+    }
 
     /* eslint-disable */
     useEffect(() => {
-        i18n.isInitialized &&
-        !i18n.hasLoadedNamespace(ns) && 
-            i18n.loadNamespaces(ns)
-            .then(() => {
-                setPageLoadingStage(false);
-            });
+        const getFloat = (px) => {
+            return parseFloat(px?.replace(/px/, ''));
+        }
 
-        i18n.isInitialized &&
-        i18n.hasLoadedNamespace(ns) &&
-            setPageLoadingStage(false);
-    }, [i18n.isInitialized])
+        const scrollDirection = scrollTop >= lastScrollTop;
+        setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
+
+        const col = document.getElementById('second-column');
+        const header = document.getElementById('header');
+        const doc = document.documentElement;
+
+        if (col)
+        if (scrollDirection) {
+            if (scrollDirection === lastScrollDirection) {
+                if (col.style.position === 'relative' && getFloat(col.style.marginTop) + col.clientHeight - doc?.clientHeight <= scrollTop) {
+                    col.style.position = 'sticky';
+                    col.style.top = `${doc?.clientHeight - col.clientHeight}px`;
+                    col.style.marginTop = '0px';
+                }
+                if (col.style.position === 'sticky' && header?.clientHeight <= scrollTop && (header?.clientHeight + col.clientHeight - doc?.clientHeight) >= scrollTop) {
+                    col.style.position = 'relative';
+                }
+            } else {
+                if (col.style.position === 'relative') {
+                    if (getFloat(col.style.marginTop) + col.clientHeight >= scrollTop) {
+                        col.style.position = 'sticky';
+                        col.style.top = `${doc?.clientHeight - col.clientHeight}px`;
+                        col.style.marginTop = '0px';
+                    }
+                } else {
+                    col.style.position = 'relative';
+                    col.style.marginTop = `${scrollTop}px`;
+                    col.style.top = '0px';
+                }
+            }
+        } else {
+            if (scrollDirection === lastScrollDirection) {
+                if (col.style.position === 'relative' && getFloat(col.style.marginTop) >= scrollTop) {
+                    col.style.position = 'sticky';
+                    col.style.top = `${header?.clientHeight}px`;
+                    col.style.marginTop = '0px';
+                }
+            } else {
+                if (col.style.position === 'sticky') {
+                    col.style.position = 'relative';
+                    col.style.marginTop = `${scrollTop + doc?.clientHeight - col.clientHeight}px`;
+                    col.style.top = '0px';
+                } else {
+                    if (getFloat(col.style.marginTop) >= scrollTop) {
+                        col.style.position = 'sticky';
+                        col.style.top = `${header?.clientHeight}px`;
+                        col.style.marginTop = '0px';
+                    }
+                }
+            }
+        }
+
+        setLastScrollDirection(scrollDirection);
+            
+    }, [scrollTop])
     /* eslint-enable */
 
-    async function getTags() {
-        setTags(await reviewingService.getTags());
-    }
+    useEffect(() => {
+        window.addEventListener('scroll', handleOnScroll);
 
-    return pageLoadingStage ? '' :
-        <div className="container d-flex flex-row">
-            <div className="align-items-baseline justify-content-start">
-                <button className="btn btn-primary m-3" onClick={() => getTags()}>Get Tags</button>
-            </div>
+        return () => {
+            window.removeEventListener('scroll', handleOnScroll);
+        }
+    }, [])
 
-            <div>
-                <ul>
-                    {
-                        (tags ? tags.map(tag =>  <li key={tag}>{tag}</li>) : "")
-                    }
-                </ul>
-            </div>
+    return(
+        <div>
+            <MDBContainer className="d-flex justify-content-start">
+                <div className="col-12 col-lg-7 col-xl-8 col-xxl-8 d-flex" style={{minHeight: `calc(100vh - ${lastScrollDirection ? '0px' : '66px'})`}}>
+                    <ReviewList/>
+                    <div className="d-none d-lg-block" style={HrStyle.verticalHrStyle}/>
+                </div>
+                <div className="col-lg-5 col-xl-4 col-xxl-4 d-none d-lg-block">
+                    <div id="second-column" className="" style={{position: 'sticky', marginTop: '0px'}}>
+                        <div className="" style={{minHeight: `calc(100vh - ${lastScrollDirection ? '0px' : '66px'})`}}>
+                            <div style={{minHeight: '100vh - 66px'}}>
+                                <ReviewCarousel />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </MDBContainer>
         </div>
+        
+    );
 }

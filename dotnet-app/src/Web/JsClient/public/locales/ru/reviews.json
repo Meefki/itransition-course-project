@@ -1,3 +1,4 @@
 {
-    "login_btn": "ВХОД"
+    "published-date": "{{date, DATE_LONG}}",
+    "most-popular-reviews": "Самые популярные обзоры:"
 }

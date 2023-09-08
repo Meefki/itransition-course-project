@@ -11,9 +11,15 @@ import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { UserInteraction } from "../../Services/UserInteraction";
 import { useNavigate } from "react-router-dom";
+import logol from '../../Assets/Img/logo-l-1.png'
+import HrStyle from "../../Assets/Css/hr";
 
 function Header() {
     const navigate = useNavigate();
+
+    const [scrollDirection, setScrollDirection] = useState(true);
+    const [lastScrollTop, setLastScrollTop] = useState(0);
+    const [scrollTop, setScrollTop] = useState(0);
 
     const [pageLoadingStage, setPageLoadingStage] = useState(true);
     const ns = "header";
@@ -90,26 +96,45 @@ function Header() {
         i18n.hasLoadedNamespace(ns) &&
             setPageLoadingStage(false);
     }, [i18n.isInitialized]);
+
+    useEffect(() => {
+        if (scrollTop > lastScrollTop) {
+            setScrollDirection(false);
+        } else if (scrollTop < lastScrollTop) {
+            setScrollDirection(true);
+        }
+        setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
+    }, [scrollTop])
     /* eslint-enable */
 
+    const handleOnScroll = () => {
+        setScrollTop(window.scrollY || document.documentElement.scrollTop);
+    }
+
+    useEffect(() => {
+        const header = document.getElementById('header');
+        if (header?.style) {
+            header.style.top = scrollDirection ? "0px" : `-${header.clientHeight}px`;
+        }
+    }, [scrollDirection])
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleOnScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleOnScroll);
+        }
+    }, [])
+
     return pageLoadingStage ? '' :
-        <div id="header" className="header pt-2 pb-2 border-bottom-2 shadow">
-            <div className="d-flex flex-row">
-                <img 
-                    style={{width: imgSize, height: imgSize}}
-                    alt=""
-                    src="https://placehold.co/50x50"
-                    className="rounded-circle ms-3"
-                    onClick={() => navigate("/")}/>
+        <div id="header" className="header">
+            <div className="d-flex flex-row py-2">
+                <img src={logol} alt="" width={imgSize} height={imgSize} className="rounded-circle ms-3" onClick={() => navigate("/")}/>
                 <nav className="w-100 d-flex align-items-center justify-content-between ms-4 me-4">
                     <ul className="m-0 p-0">
-                        <li className="d-inline me-5">{t('categories_nav_item')}</li>
-                        <li className="d-inline me-5">{t('categories_nav_item')}</li>
-                        <li className="d-inline me-5">{t('categories_nav_item')}</li>
-                        <li className="d-inline me-5">{t('categories_nav_item')}</li>
                     </ul>
                     
-                    <MDBDropdown dropleft group>
+                    <MDBDropdown group>
                         <MDBDropdownToggle id='dd-toggle' split/>
                         {
                             isAuthorized ?
@@ -126,6 +151,7 @@ function Header() {
                     </MDBDropdown>
                 </nav>
             </div>
+            <div style={HrStyle.horizontalHrStyle}/>
         </div>
 }
 

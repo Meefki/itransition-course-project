@@ -8,6 +8,7 @@ import WithoutLayout from "../Layouts/WithoutLayout";
 import MainLayout from "../Layouts/MainLayout";
 import { RenderRoutes } from "./RenderRoutes";
 import UserProfile from "../Identity/UserProfile";
+import Review from "../Reviews/Review";
 
 const AppRoutes = [
     {
@@ -64,7 +65,21 @@ const AppRoutes = [
                 path: '/profile',
                 component: <UserProfile />,
                 isPublic: false
-            }
+            },
+            {
+                name: 'public-profile',
+                title: 'Profile page',
+                path: '/profile/:id',
+                component: <UserProfile />,
+                isPublic: true
+            },
+            {
+                name: 'review',
+                title: 'Review page',
+                path: '/review/:id',
+                component: <Review />,
+                isPublic: true
+            },
         ]
     }
 ]
