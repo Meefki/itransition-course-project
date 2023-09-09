@@ -38,18 +38,20 @@ namespace Reviewing.API.Controllers
 
         [HttpGet]
         [Route("count")]
-        public async Task<dynamic> GetReviewsCount([FromQuery] Dictionary<string, List<string>>? filterFields = null)
+        public async Task<dynamic> GetReviewsCount([FromQuery] Dictionary<string, string>? filterOptions = null, [FromQuery] List<string>? tags = null)
         {
             ReviewFilterOptions? filter = null;
-            if (filterFields != null)
+            if (filterOptions != null)
             {
-                var lowerKeys = filterFields.Keys.ToDictionary(k => k.ToLower(), k => k);
+                var lowerKeys = filterOptions.Keys.ToDictionary(k => k.ToLower(), k => k);
                 filter = new()
                 {
-                    Name = lowerKeys.ContainsKey("name") ? filterFields[lowerKeys["name"]].First().Trim() : null,
-                    Status = lowerKeys.ContainsKey("status") ? filterFields[lowerKeys["status"]].First().Trim() : null,
-                    SubjectName = lowerKeys.ContainsKey("subjectname") ? filterFields[lowerKeys["subjectname"]].First().Trim() : null,
-                    Tags = lowerKeys.ContainsKey("tags") ? filterFields[lowerKeys["tags"]] : null
+                    Name = lowerKeys.ContainsKey("name") ? filterOptions[lowerKeys["name"]].Trim() : null,
+                    AuthorUserId = lowerKeys.ContainsKey("authoruserid") ? filterOptions[lowerKeys["authoruserid"]].Trim() : null,
+                    Content = lowerKeys.ContainsKey("content") ? filterOptions[lowerKeys["content"]].Trim() : null,
+                    Status = lowerKeys.ContainsKey("status") ? filterOptions[lowerKeys["status"]].Trim() : null,
+                    SubjectName = lowerKeys.ContainsKey("subjectname") ? filterOptions[lowerKeys["subjectname"]].Trim() : null,
+                    Tags = tags
                 };
             }
 
@@ -61,32 +63,40 @@ namespace Reviewing.API.Controllers
             int pageSize = 10,
             int pageNumber = 0,
             [FromQuery] Dictionary<string, string>? sortOptions = null,
-            [FromQuery] Dictionary<string, List<string>>? filterFields = null)
+            [FromQuery] Dictionary<string, string>? filterOptions = null,
+            [FromQuery] List<string>? tags = null)
         {
-            if (filterFields is not null)
+            if (filterOptions is not null)
             {
-                if (filterFields.ContainsKey(nameof(pageSize))) filterFields.Remove(nameof(pageSize));
-                if (filterFields.ContainsKey(nameof(pageNumber))) filterFields.Remove(nameof(pageNumber));
-                if (filterFields.ContainsKey(nameof(sortOptions))) filterFields.Remove(nameof(sortOptions));
+                if (filterOptions.ContainsKey(nameof(pageSize))) filterOptions.Remove(nameof(pageSize));
+                if (filterOptions.ContainsKey(nameof(pageNumber))) filterOptions.Remove(nameof(pageNumber));
+                if (filterOptions.ContainsKey(nameof(sortOptions))) filterOptions.Remove(nameof(sortOptions));
+            }
+
+            if (sortOptions is not null)
+            {
+                if (sortOptions.ContainsKey(nameof(pageSize))) sortOptions.Remove(nameof(pageSize));
+                if (sortOptions.ContainsKey(nameof(pageNumber))) sortOptions.Remove(nameof(pageNumber));
             }
 
             PaginationOptions pagination = new(pageSize, pageNumber);
             List<ReviewSortOptions> sort = new(sortOptions?.Select(x => new ReviewSortOptions()
             {
                 SortField = ReviewSortOptions.MapStringToSortField(x.Key.ToLower()),
-                SortType = ReviewSortOptions.MapStringToSortType(x.Value.ToLower())
+                SortType = ReviewSortOptions.MapStringToSortType(x.Value?.ToLower() ?? string.Empty)
             }) ?? new List<ReviewSortOptions>());
             ReviewFilterOptions? filter = null;
-            if (filterFields != null)
+            if (filterOptions != null)
             {
-                var lowerKeys = filterFields.Keys.ToDictionary(k => k.ToLower(), k => k);
+                var lowerKeys = filterOptions.Keys.ToDictionary(k => k.ToLower(), k => k);
                 filter = new()
                 {
-                    Name = lowerKeys.ContainsKey("name") ? filterFields[lowerKeys["name"]].First().Trim() : null,
-                    Content = lowerKeys.ContainsKey("content") ? filterFields[lowerKeys["content"]].First().Trim() : null,
-                    Status = lowerKeys.ContainsKey("status") ? filterFields[lowerKeys["status"]].First().Trim() : null,
-                    SubjectName = lowerKeys.ContainsKey("subjectname") ? filterFields[lowerKeys["subjectname"]].First().Trim() : null,
-                    Tags = lowerKeys.ContainsKey("tags") ? filterFields[lowerKeys["tags"]] : null
+                    Name = lowerKeys.ContainsKey("name") ? filterOptions[lowerKeys["name"]].Trim() : null,
+                    AuthorUserId = lowerKeys.ContainsKey("authoruserid") ? filterOptions[lowerKeys["authoruserid"]].Trim() : null,
+                    Content = lowerKeys.ContainsKey("content") ? filterOptions[lowerKeys["content"]].Trim() : null,
+                    Status = lowerKeys.ContainsKey("status") ? filterOptions[lowerKeys["status"]].Trim() : null,
+                    SubjectName = lowerKeys.ContainsKey("subjectname") ? filterOptions[lowerKeys["subjectname"]].Trim() : null,
+                    Tags = tags
                 };
             }
 

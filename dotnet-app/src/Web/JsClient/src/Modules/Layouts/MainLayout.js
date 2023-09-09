@@ -4,7 +4,7 @@ import Header from '../Shared/Header'
 
 const MainLayout = () => {
     return (
-        <div style={{height: '100vh'}}>
+        <div>
             <Header />
             <ThemeLayout>
                 <Outlet />

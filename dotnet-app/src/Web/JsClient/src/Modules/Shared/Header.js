@@ -20,6 +20,7 @@ function Header() {
     const [scrollDirection, setScrollDirection] = useState(true);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [scrollTop, setScrollTop] = useState(0);
+    const [headerPos, setHeaderPos] = useState(0);
 
     const [pageLoadingStage, setPageLoadingStage] = useState(true);
     const ns = "header";
@@ -114,7 +115,7 @@ function Header() {
     useEffect(() => {
         const header = document.getElementById('header');
         if (header?.style) {
-            header.style.top = scrollDirection ? "0px" : `-${header.clientHeight}px`;
+            setHeaderPos(scrollDirection ? 0 : -header.clientHeight);
         }
     }, [scrollDirection])
 
@@ -127,7 +128,11 @@ function Header() {
     }, [])
 
     return pageLoadingStage ? '' :
-        <div id="header" className="header">
+        <div id="header" className="header" style={{
+            transform: `translateY(${headerPos ?? 0}px)`,
+            top: '0px',
+            transition: '.15s linear'
+        }}>
             <div className="d-flex flex-row py-2">
                 <img src={logol} alt="" width={imgSize} height={imgSize} className="rounded-circle ms-3" onClick={() => navigate("/")}/>
                 <nav className="w-100 d-flex align-items-center justify-content-between ms-4 me-4">

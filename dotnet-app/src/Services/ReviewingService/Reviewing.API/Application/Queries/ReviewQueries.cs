@@ -170,6 +170,12 @@ select distinct
                 conditions.Add(condition);
             }
 
+            if (!string.IsNullOrEmpty(filterOptions.AuthorUserId))
+            {
+                string condition = $"{tableAlias[0]}.[AuthorUserId] = '{filterOptions.AuthorUserId}'";
+                conditions.Add(condition);
+            }
+
             if (!string.IsNullOrEmpty(filterOptions.Status))
             {
                 string condition = $"{tableAlias[0]}.[Status] = {filterOptions.Status}";

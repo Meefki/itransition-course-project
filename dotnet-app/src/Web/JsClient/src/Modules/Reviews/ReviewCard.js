@@ -47,14 +47,14 @@ function ReviewCard({ reviewDesc }) {
                         <p>{reviewDesc?.shortDesc}</p>
                     </div>
                 </MDBCol>
-                <MDBCol size="4" sm="3" md="3" lg="3" className="d-flex justify-content-end "> 
+                <MDBCol size="4" sm="3" md="3" lg="3" className="d-flex justify-content-end d-none d-sm-flex"> 
                     <img
                         src={reviewDesc?.imageUrl ?? "https://placehold.co/200x200"}
                         role="button"
                         width="112px" 
                         height="112px" 
                         alt=''
-                        className="me-4 m-z"
+                        className="me-0 me-lg-4"
                         onClick={() => navigate("/review/" + reviewDesc?.id)}/>
                 </MDBCol>
             </MDBRow>

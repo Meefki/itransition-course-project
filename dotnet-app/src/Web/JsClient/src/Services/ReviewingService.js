@@ -23,12 +23,13 @@ export class ReviewingService {
         return await fetchGet(url);
     }
 
-    getShortReviewsDescriptions = async (pageSize, pageNumber, sortOptions, filterOptions) => {
+    getShortReviewsDescriptions = async (pageSize, pageNumber, sortOptions, filterOptions, tags) => {
         const params = [
             {name: 'pageSize', value: pageSize },
             {name: 'pageNumber', value: pageNumber },
             {name: 'sortOptions', value: sortOptions},
             {name: 'filterOptions', value: filterOptions},
+            {name: 'tags', value: tags},
         ]
 
         const url = process.env.REACT_APP_REVIEWING_API + '/reviews' + getSearch(params);
@@ -48,8 +49,13 @@ export class ReviewingService {
         return [];
     };
 
-    getCount = async () => {
-        const url = process.env.REACT_APP_REVIEWING_API + '/reviews/count';
+    getCount = async (filterOptions, tags) => {
+        const params = [
+            {name: 'filterOptions', value: filterOptions},
+            {name: 'tags', value: tags},
+        ]
+
+        const url = process.env.REACT_APP_REVIEWING_API + '/reviews/count' + getSearch(params);
         const response = await fetchGet(url);
         const count = response[0].reviewsCount;
         return count;

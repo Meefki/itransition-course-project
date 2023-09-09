@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { ReviewingService } from '../../Services/ReviewingService'
 import ReviewCard from "./ReviewCard";
-import HrStyle from '../../Assets/Css/hr'
 
-function ReviewList({ filters }) {
+function ReviewList({ sort, filters, isSelection = false }) {
 
     const pageSize = 10; // TODO: might get it from params or env
     const reviewingService = useMemo(() => new ReviewingService(), []);
@@ -11,14 +10,19 @@ function ReviewList({ filters }) {
     const [currentPage, setCurrentPage] = useState(0);
     const [reviewsDesc, setReviewsDesc] = useState([]);
     const [scrollTop, setScrollTop] = useState(0);
+    const [reviewsCount, setReviewsCount] = useState(0);
+    const [filterOptions, setFilterOptions] = useState(null);
     
+    /* eslint-disable */
     useEffect(() => {
         setDataLoading(true);
-        const sortOptions = [
-            { name: "publishedDate", value: "desc" },
-            { name: "name", value: "asc" }
-        ]
-        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, sortOptions)
+        const filterOpts = Object.getOwnPropertyNames(filters)?.length === 0 ? null :
+            Object.getOwnPropertyNames(filters)?.map((key) => {
+                return { name: key, value: filters[key] }
+            })
+        setFilterOptions(filterOpts);
+
+        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, sort, filterOpts?.filter((option) => option.name !== "tags"), filterOpts?.tags)
             .then((reviews) => {
                 setReviewsDesc((current) => [...current, ...(reviews
                     .filter((review) => !current.map((curr) => curr.id).includes(review.id))
@@ -26,25 +30,24 @@ function ReviewList({ filters }) {
                 setDataLoading(false);
             })
     }, [currentPage, reviewingService]);
-    const [reviewsCount, setReviewsCount] = useState(0);
-
-    const loadMore = () => {
-        const page = Math.floor(reviewsDesc.length / pageSize)
-        setCurrentPage(page);
-    }
 
     useEffect(() => {
-        reviewingService.getCount().then(count => {
-            setReviewsCount(count);
-        });
+        if (!((reviewsDesc?.length ?? 0) > 0))
+            return;
+
+        const filretOpts = filterOptions ? filterOptions : 
+        Object.getOwnPropertyNames(filters)?.length === 0 ? null :
+            Object.getOwnPropertyNames(filters)?.map((key) => {
+                return { name: key, value: filters[key] }
+            })
+
+        reviewingService
+            .getCount(filretOpts?.filter(opt => opt.name !== 'tags'), filretOpts?.tags)
+            .then(count => {
+                setReviewsCount(count);
+            });
     }, [reviewsDesc, reviewingService])
 
-    const handleOnScroll = () => {
-        const height = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-        setScrollTop(height);
-    }
-
-    /* eslint-disable */
     useEffect(() => {
         const clientHeight = document.documentElement.clientHeight;
         const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
@@ -53,6 +56,16 @@ function ReviewList({ filters }) {
             loadMore();
     }, [scrollTop]);
     /* eslint-enable */
+
+    const loadMore = () => {
+        const page = Math.floor(reviewsDesc?.length / pageSize)
+        setCurrentPage(page);
+    }
+
+    const handleOnScroll = () => {
+        const height = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+        setScrollTop(height);
+    }
 
     useEffect(() => {
         window.addEventListener('scroll', handleOnScroll);
@@ -63,19 +76,25 @@ function ReviewList({ filters }) {
     }, [])
 
     return(
-        <div>
+        <div className="w-100">
             <div id="review-list" className="d-flex flex-row">
-                <div className="pe-5">
+                <div className="pe-0 pe-lg-5 w-100">
                     {reviewsDesc && reviewsDesc.length > 0 ? (
                         <div className="d-flex align-items-start flex-column">
-                            {reviewsDesc.map((reviewDesc) => <div key={reviewDesc.id} className="w-100"><ReviewCard reviewDesc={reviewDesc}>{JSON.stringify(reviewDesc)}</ReviewCard></div>)}
+                            {!isSelection && reviewsDesc.map((reviewDesc) => <div key={reviewDesc.id} className="w-100"><ReviewCard reviewDesc={reviewDesc}/></div>)}
+                            {isSelection && reviewsDesc.map((reviewDesc) => {
+                                return( 
+                                    <div key={reviewDesc.id} className="w-100">
+                                        <ReviewCard reviewDesc={reviewDesc}/>
+                                    </div>
+                                )
+                            })}
                         </div>
                     ) :
                     (
-                        dataLoading ? <div>Loading...</div> : <div>No reviews yet</div>
+                        dataLoading ? <div className="w-100 text-center">Loading...</div> : <div className="w-100 text-center">No reviews yet</div>
                     )}
                 </div>
-                {(!dataLoading || reviewsDesc?.length !== 0) && <div className="d-none d-lg-block d-xl-block" style={HrStyle.verticalHrStyle}/>}  
             </div>
         </div>
     )

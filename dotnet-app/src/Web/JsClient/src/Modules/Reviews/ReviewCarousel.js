@@ -26,7 +26,7 @@ function ReviewCarousel() {
             { name: "publishedDate", value: "desc" }
         ]
 
-        reviewingService.getShortReviewsDescriptions(pageSize, pageNumber, sortOptions, null)
+        reviewingService.getShortReviewsDescriptions(pageSize, pageNumber, sortOptions, null, null)
             .then((reviews) => {
                 setItems(reviews);
             })
@@ -52,7 +52,7 @@ function ReviewCarousel() {
     /* eslint-enable */
 
     return (items?.length && items?.length > 0) && !pageLoadingStage ?
-        <div className="carousel slide carousel-fade d-flex flex-column align-items-center" mdb-data-ride="carousel">
+        <div className="mt-3 carousel slide carousel-fade d-flex flex-column align-items-center" mdb-data-ride="carousel">
             <h3 className="text-center">{t('most-popular-reviews')}</h3>
             <div className="carousel-inner">
                 {
@@ -87,7 +87,7 @@ function ReviewCarousel() {
             <button className="carousel-control-next" type="button" onClick={() => setActiveSlide(current => (current + 1) % 10)}>
                 <span className="carousel-control-next-icon carousel-dark-custom" aria-hidden="true"></span>
             </button>
-        </div> : 'Loading...'
+        </div> : <div className="w-100 text-center">Loading...</div>
 }
 
 export default ReviewCarousel;
