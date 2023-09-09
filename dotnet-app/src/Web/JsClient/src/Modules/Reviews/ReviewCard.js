@@ -1,5 +1,5 @@
 import { 
-    MDBCol, MDBRow
+    MDBCol, MDBRow, MDBBadge
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import { horizontalHrStyle } from "../../Assets/Css/hr";
@@ -45,6 +45,9 @@ function ReviewCard({ reviewDesc }) {
                     <div onClick={() => navigate("/review/" + reviewDesc?.id)} role="button">
                         <h5>{reviewDesc?.name}</h5>
                         <p>{reviewDesc?.shortDesc}</p>
+                    </div>
+                    <div>
+                        {reviewDesc?.tags?.map((tag) => <MDBBadge className="me-2">tag</MDBBadge>)}
                     </div>
                 </MDBCol>
                 <MDBCol size="4" sm="3" md="3" lg="3" className="d-flex justify-content-end d-none d-sm-flex"> 
