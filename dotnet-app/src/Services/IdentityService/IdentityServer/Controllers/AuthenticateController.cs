@@ -5,8 +5,10 @@ using IdentityServer4;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using IdentityServer.ReturnUrlParsers;
 using IdentityModel;
+using IdentityServer.IdentityServer.ReturnUrlParsers;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer.Controllers
 {
@@ -34,15 +36,27 @@ namespace IdentityServer.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterVM vm)
         {
             var user = dbContext.Users.FirstOrDefault(x => x.Email == vm.Email && x.PasswordHash == vm.PasswordHash);
+            var role = dbContext.Roles.FirstOrDefault(x => x.Name.ToLower() == "user");
+            if (role is null)
+            {
+                role = new()
+                {
+                    Name = "user",
+                    NormalizedName = "user",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
+                };
+                role = (await dbContext.Roles.AddAsync(role)).Entity;
+            }
+
 
             if (user is not null)
             {
                 if (user.Email == vm.Email)
                 {
-                    return BadRequest("User already exists");
+                    return new JsonResult(new { Error = "User already exists", IsOk = false });
                 }
 
-                return BadRequest("User with this login already exists");
+                return new JsonResult(new { Error = "User with this login already exists", IsOk = false });
             }
 
             user = new()
@@ -51,7 +65,19 @@ namespace IdentityServer.Controllers
                 PasswordHash = vm.PasswordHash,
                 Email = vm.Email,
             };
-            await dbContext.Users.AddAsync(user);
+            user = (await dbContext.Users.AddAsync(user)).Entity;
+            IdentityUserRole<string> userRole = new()
+            {
+                UserId = user.Id,
+                RoleId = role!.Id
+            };
+            await dbContext.UserRoles.AddAsync(userRole);
+            IdentityUserClaim<string> userClaim = new()
+            {
+                UserId = user.Id,
+                ClaimType = ClaimTypes.Role,
+                ClaimValue = "user"
+            };
             await dbContext.SaveChangesAsync();
 
             LoginVM loginVM = new()
@@ -81,7 +107,11 @@ namespace IdentityServer.Controllers
 
                 AuthenticationProperties? props = null;
                 if (vm.RememberMe) props = new AuthenticationProperties { IsPersistent = true };
-                var isuser = new IdentityServerUser(user.Id) { DisplayName = user.UserName };
+                var userClaimRoles = dbContext.UserClaims.Where(x => x.UserId == user.Id && x.ClaimType.ToLower() == ClaimTypes.Role).Select(cr => new Claim(ClaimTypes.Role, cr.ClaimValue)).ToList();
+                List<Claim> customClaims = new();
+                customClaims.AddRange(userClaimRoles);
+                customClaims.Add(new Claim(ClaimTypes.Email, user.Email));
+                var isuser = new IdentityServerUser(user.Id) { DisplayName = user.UserName, AdditionalClaims = customClaims };
 
                 await HttpContext.SignInAsync(isuser, props);
                 string redirectUrl = QueryParamParser.GetParam<string>(returnUrl, OidcConstants.AuthorizeRequest.RedirectUri) ?? "/";
