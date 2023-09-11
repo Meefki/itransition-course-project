@@ -106,6 +106,15 @@ function Header() {
         }
         setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
     }, [scrollTop])
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleOnScroll);
+        mgr.clearStaleState();
+
+        return () => {
+            window.removeEventListener('scroll', handleOnScroll);
+        }
+    }, [])
     /* eslint-enable */
 
     const handleOnScroll = () => {
@@ -118,15 +127,6 @@ function Header() {
             setHeaderPos(scrollDirection ? 0 : -header.clientHeight);
         }
     }, [scrollDirection])
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleOnScroll);
-        mgr.clearStaleState();
-
-        return () => {
-            window.removeEventListener('scroll', handleOnScroll);
-        }
-    }, [])
 
     return pageLoadingStage ? '' :
         <div id="header" className="header" style={{

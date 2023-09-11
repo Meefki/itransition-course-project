@@ -3,8 +3,9 @@ import { UserService } from "./UserService";
 
 export class ReviewingService {
 
-    constructor() {
+    constructor(/*mgr*/) {
         this.userService = new UserService();
+        // this.userManager = mgr;
     }
 
     getTags = async (startWith) => {
@@ -33,7 +34,9 @@ export class ReviewingService {
         ]
 
         const url = process.env.REACT_APP_REVIEWING_API + '/reviews' + getSearch(params);
-        const reviews = await fetchGet(url);
+        // const token = (await this.userManager?.getUser())?.access_token;
+        // const headers = token && { "Authorization": "Bearer " + token };
+        const reviews = await fetchGet(url); //headers ? headers : {}
 
         if (reviews) {
             const userIds = reviews.map((review) => review.authorUserId)
@@ -55,6 +58,7 @@ export class ReviewingService {
             {name: 'tags', value: tags},
         ]
 
+        //const user = await this.userManager.getUser();
         const url = process.env.REACT_APP_REVIEWING_API + '/reviews/count' + getSearch(params);
         const response = await fetchGet(url);
         const count = response[0].reviewsCount;

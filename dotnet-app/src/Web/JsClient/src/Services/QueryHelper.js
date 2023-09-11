@@ -1,5 +1,5 @@
-export const fetchGet = async (url) => {
-    const response = await fetch(url);
+export const fetchGet = async (url, headers = {}) => {
+    const response = await fetch(url, { method: 'GET', headers: headers });
     const data = await response.json();
     return data;
 }

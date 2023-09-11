@@ -28,7 +28,6 @@ function UserInfo({ owner = false }) {
         i18n.hasLoadedNamespace(ns) &&
             setPageLoadingStage(false);
     }, [i18n.isInitialized]);
-    /* eslint-enable */
 
     useEffect(() => {
         setUserInfo({});
@@ -55,6 +54,7 @@ function UserInfo({ owner = false }) {
             }
         }
     }, [id]);
+    /* eslint-enable */
 
     return pageLoadingStage ? '' :
         <div className="mx-4 mb-4 d-flex flex-column">
