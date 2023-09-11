@@ -1,8 +1,3 @@
-#header {
-    position: sticky;
-    z-index: 1000;
-}
-
 #second-column {
     position: sticky; 
     top: 0; 
