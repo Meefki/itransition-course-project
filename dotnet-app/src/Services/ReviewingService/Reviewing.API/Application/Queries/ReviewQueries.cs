@@ -166,7 +166,13 @@ select distinct
 
             if (!string.IsNullOrEmpty(filterOptions.Name))
             {
-                string condition = $"{tableAlias[0]}.[Name] = {filterOptions.Name}";
+                string condition = $"{tableAlias[0]}.[Name] = '{filterOptions.Name}'";
+                conditions.Add(condition);
+            }
+
+            if (!string.IsNullOrEmpty(filterOptions.Content))
+            {
+                string condition = $"{tableAlias[0]}.[Content] = '{filterOptions.Content}'";
                 conditions.Add(condition);
             }
 
@@ -178,19 +184,19 @@ select distinct
 
             if (!string.IsNullOrEmpty(filterOptions.Status))
             {
-                string condition = $"{tableAlias[0]}.[Status] = {filterOptions.Status}";
+                string condition = $"{tableAlias[0]}.[Status] = '{filterOptions.Status}'";
                 conditions.Add(condition);
             }
 
             if (!string.IsNullOrEmpty(filterOptions.SubjectName))
             {
-                string condition = $"{tableAlias[0]}.[Subject_Name] = {filterOptions.SubjectName}";
+                string condition = $"{tableAlias[0]}.[Subject_Name] = '{filterOptions.SubjectName}'";
                 conditions.Add(condition);
             }
 
             if (filterOptions.Tags is not null && filterOptions.Tags.Count > 0)
             {
-                string condition = $"{tableAlias[1]}.[TagsName] is null or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags)})";
+                string condition = $"{tableAlias[1]}.[TagsName] is null or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags.Select(x => $"'{x}'"))})";
                 conditions.Add(condition);
             }
 
