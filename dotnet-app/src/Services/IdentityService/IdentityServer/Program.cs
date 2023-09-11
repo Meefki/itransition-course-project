@@ -1,5 +1,4 @@
 using IdentityServer.Extentions;
-using IdentityServer4.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsProduction())

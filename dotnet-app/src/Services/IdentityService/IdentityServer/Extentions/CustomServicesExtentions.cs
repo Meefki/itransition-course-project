@@ -1,9 +1,12 @@
 ﻿using IdentityServer.Data;
-using IdentityServer.ReturnUrlParsers;
+using IdentityServer.IdentityServer;
+using IdentityServer.IdentityServer.ReturnUrlParsers;
 using IdentityServer4.Configuration;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 
 namespace IdentityServer.Extentions;
@@ -42,12 +45,15 @@ public static class CustomServicesExtentions
 
     public static IServiceCollection AddCustomIdentityServer(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<IProfileService, ProfileService>();
+
         PasswordOptions passwordOptions = configuration.GetSection("Identity:Password").Get<PasswordOptions>(); 
         services
             .AddIdentity<IdentityUser, IdentityRole>(config =>
             {
                 config.Password = passwordOptions;
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
 

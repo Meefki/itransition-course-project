@@ -8,9 +8,9 @@ using System.Diagnostics;
 using IdentityServer4.Stores;
 using IdentityModel;
 
-namespace IdentityServer.ReturnUrlParsers;
+namespace IdentityServer.IdentityServer.ReturnUrlParsers;
 
-public class CustomReturnUrlParser 
+public class CustomReturnUrlParser
     : IReturnUrlParser
 {
     public static class ProtocolRoutePaths
@@ -41,7 +41,7 @@ public class CustomReturnUrlParser
 
     public async Task<AuthorizationRequest?> ParseAsync(string returnUrl)
     {
-        if (IsValidReturnUrl(returnUrl)) 
+        if (IsValidReturnUrl(returnUrl))
         {
             var parameters = returnUrl.ReadQueryStringAsNameValueCollection();
             var user = await _userSession.GetUserAsync();

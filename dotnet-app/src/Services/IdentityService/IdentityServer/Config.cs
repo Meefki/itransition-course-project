@@ -1,5 +1,8 @@
-﻿using IdentityServer4;
+﻿using IdentityModel;
+using IdentityServer.IdentityServer;
+using IdentityServer4;
 using IdentityServer4.Models;
+using System.Security.Claims;
 
 namespace IdentityServer;
 
@@ -61,6 +64,7 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Email,
                     "reviewing"
                 }
             }
@@ -77,5 +81,6 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResources.Email()
         };
 }

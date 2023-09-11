@@ -1,4 +1,4 @@
-﻿namespace IdentityServer.ReturnUrlParsers;
+﻿namespace IdentityServer.IdentityServer.ReturnUrlParsers;
 
 public static class QueryParamParser
 {
