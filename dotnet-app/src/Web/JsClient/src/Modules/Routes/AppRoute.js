@@ -14,6 +14,22 @@ import ReviewsFilter from "../Reviews/ReviewsFilter";
 import ReviewActions from "../Identity/User/ReviewActions";
 import UserActions from "../Identity/User/UserActions";
 import UserInfo from "../Identity/User/UserInfo";
+import { UserManager } from "oidc-client";
+import { config } from "../../Contexts/UserManagerContext";
+import { UserService } from "../../Services/UserService";
+
+const mgr = new UserManager(config);
+const userService = new UserService();
+const publicProfileSideComponents = () => {
+    mgr.getUser().then(async (user) => {
+        if (user) {
+            const userInfo = await userService.getUser(user.profile.sub);
+            if (userInfo?.role?.toLowerCase() === "admin")
+                return [<UserInfo owner={false} />, <ReviewActions />, <UserActions />];
+
+        return [<UserInfo owner={false} />]
+    }});
+}
 
 const AppRoutes = [
     {
@@ -81,8 +97,8 @@ const AppRoutes = [
                 title: 'Profile page',
                 path: '/profile/:id',
                 component: <TwoColumnLayout 
-                mainComponents={[<ReviewsFilter />, <ReviewList table={true}/>]}
-                sideComponents={[<UserInfo owner={false} />]}
+                mainComponents={[<ReviewsFilter immutableFilters={["authorUserId"]} />, <ReviewList table={true}/>]}
+                sideComponents={publicProfileSideComponents()} //<UserInfo owner={false} />
                 hideSecondCol={false}/>,
                 isPublic: true
             },
