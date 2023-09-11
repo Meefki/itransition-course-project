@@ -67,7 +67,7 @@ export function Login() {
           window.location = data.redirectUrl;
         }
         else {
-            setError('Wrong email or password');
+            setError(data?.error ?? 'Something went wrong');
             setLoadingState(false);
         }
     }
@@ -247,6 +247,8 @@ export function Login() {
                                     setPassword(event.target.value)
                                     setPassHash(generatedPassHash);
                                 }}/>
+
+                            {error ? <span className="text-danger w-100">{error}</span> : ''}
 
                             <MDBBtn disabled={loadingState} className="mb-4 w-100" type="submit">
                                 {loadingState && <MDBSpinner className='me-2' size='sm'></MDBSpinner>}
