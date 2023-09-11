@@ -5,7 +5,10 @@ export const fetchGet = async (url) => {
 }
 
 export const getSearch = (params) => {
-    const notNullParams = params.filter(param => param?.value);
+    const notNullParams = 
+    params
+    .filter(param => param?.value)
+    .filter(param => !(JSON.stringify(param?.value) === '{}'));
 
     let searchString = '';
     if (notNullParams && notNullParams.length > 0) {

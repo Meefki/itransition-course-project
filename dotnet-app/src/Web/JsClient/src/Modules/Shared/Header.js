@@ -33,8 +33,8 @@ function Header() {
 
     const imgSize = '50px';
     const languages = [
-        { code: 'en', title: 'English', country_code: 'america'},
-        { code: 'ru', title: 'Русский', country_code: 'russia'}
+        { code: 'en', title: 'English', image_code: 'america'},
+        { code: 'ru', title: 'Русский', image_code: 'russia'}
     ]
 
     const menuItems = () => {
@@ -45,13 +45,13 @@ function Header() {
             { tag: 'noAuth', value: [
                                         <span key="menu-item-4" className="dropdown-item">{t('language_menu_item')}</span>,
                                         <ul key="menu-item-5" className="dropdown-menu dropdown-submenu-left shadow-lg btn-group-vertical">
-                                            {languages.map(({code, title, country_code}) => (
+                                            {languages.map(({code, title, image_code}) => (
                                                 <li key={code}>
                                                     <span 
                                                         className={`dropdown-item ${i18n.language === code ? 'disabled' : ''}`} 
                                                         tag={code} 
                                                         onClick={(e) => changeCountry(e.target.attributes['tag'].value)}>
-                                                        <MDBIcon flag={country_code} className="mx-2" styles={i18n.language === code ? { opacity: '.5' } : {}}/>
+                                                        <MDBIcon flag={image_code} className="mx-2" styles={i18n.language === code ? { opacity: '.5' } : {}}/>
                                                         {title}
                                                     </span>
                                                 </li>
@@ -121,6 +121,7 @@ function Header() {
 
     useEffect(() => {
         window.addEventListener('scroll', handleOnScroll);
+        mgr.clearStaleState();
 
         return () => {
             window.removeEventListener('scroll', handleOnScroll);
@@ -130,8 +131,10 @@ function Header() {
     return pageLoadingStage ? '' :
         <div id="header" className="header" style={{
             transform: `translateY(${headerPos ?? 0}px)`,
+            position: 'sticky',
             top: '0px',
-            transition: '.15s linear'
+            zIndex: 1000,
+            transition: 'transform .1s linear'
         }}>
             <div className="d-flex flex-row py-2">
                 <img src={logol} alt="" width={imgSize} height={imgSize} className="rounded-circle ms-3" onClick={() => navigate("/")}/>
@@ -143,7 +146,7 @@ function Header() {
                         <MDBDropdownToggle id='dd-toggle' split/>
                         {
                             isAuthorized ?
-                                <MDBBtn onClick={() => navigate("/profile")}>{t('profile_nav_item')}</MDBBtn> :
+                                <MDBBtn onClick={() => navigate("/profile/me")}>{t('profile_nav_item')}</MDBBtn> :
                                 <MDBBtn onClick={() => login()}>{t('login_btn')}</MDBBtn>
                         }
                         <MDBDropdownMenu className="shadow-lg">
@@ -158,6 +161,7 @@ function Header() {
             </div>
             <div style={HrStyle.horizontalHrStyle}/>
         </div>
+        
 }
 
 export default Header;

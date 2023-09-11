@@ -62,8 +62,7 @@ const AppRoutes = [
             {
                 name: 'profile',
                 title: 'Profile page',
-                path: '/profile',
-                component: <UserProfile />,
+                path: '/profile/me',
                 isPublic: false
             },
             {

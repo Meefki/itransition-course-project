@@ -44,7 +44,7 @@ export function Main() {
                 }
                 if (carouselPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
                     setCarouselPos('relative');
-                    setCarouselMgTop(scrollTop); // + (header?.clientHeight/2 ?? 0)
+                    setCarouselMgTop(scrollTop);
                     setCarouselTop(0);
                 }
             } else {
@@ -56,7 +56,7 @@ export function Main() {
                     }
                 } else {
                     setCarouselPos('relative');
-                    setCarouselMgTop(scrollTop); // + (header?.clientHeight/2 ?? 0)
+                    setCarouselMgTop(scrollTop);
                     setCarouselTop(0);
                 }
             }
@@ -106,17 +106,12 @@ export function Main() {
                 <div className="col-lg-5 col-xl-4 col-xxl-4 d-none d-lg-block">
                     <div id="second-column" className="" style={
                         {
-                            // position: 'sticky', 
-                            // marginTop: '0px', 
                             position: carouselPos,
                             marginTop: `${carouselMgTop}px`,
-                            top: `${carouselTop}px`,
-                            // transition: '.15s linear'
+                            top: `${carouselTop}px`
                         }}>
                         <div className="mt-5" style={{minHeight: `calc(100vh - ${lastScrollDirection ? '0px' : headerHeight})`}}>
                             <div style={{minHeight: `calc(100vh - ${lastScrollDirection ? '0px' : headerHeight})`}}>
-                                <ReviewCarousel />
-                                <ReviewCarousel />
                                 <ReviewCarousel />
                             </div>
                         </div>
