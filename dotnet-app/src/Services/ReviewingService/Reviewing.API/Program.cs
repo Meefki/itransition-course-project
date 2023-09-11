@@ -1,3 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Reviewing.API.Authorization;
+using System.Security.Claims;
+
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsProduction())
 {
@@ -9,6 +14,20 @@ var services = builder.Services;
 services.AddControllers();
 //builder.Services.AddDefaultOpenApi(config);
 services.AddDefaultAuthentication(config);
+services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", builder =>
+    {
+        builder.RequireClaim(ClaimTypes.Role, "admin");
+    });
+    options.AddPolicy("Review_edit", builder =>
+    {
+        builder.RequireClaim(ClaimTypes.Role, "admin", "user");
+        builder.AddRequirements(new ReviewEditRequirenment());
+    });
+});
+services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+services.AddSingleton<IAuthorizationHandler, ReviewEditHandler>();
 if (builder.Environment.IsDevelopment())
 {
     services.AddSwaggerGen();

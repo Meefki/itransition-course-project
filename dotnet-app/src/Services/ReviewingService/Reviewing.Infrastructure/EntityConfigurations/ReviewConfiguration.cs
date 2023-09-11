@@ -33,22 +33,59 @@ public class ReviewConfiguration
 
         builder.OwnsOne(x => x.Subject, subjectBuidler =>
         {
-            subjectBuidler.OwnsOne(x => x.Group, groupBuilder =>
-            {
-                groupBuilder.ToTable("SubjectGroups", ReviewingDbContext.DEFAULT_SCHEMA);
-                const string foreignKey = "ReviewId";
-                groupBuilder.WithOwner().HasForeignKey(foreignKey);
-                groupBuilder.Property(x => x.Id)
-                    .ValueGeneratedNever()
-                    .IsRequired();
-                groupBuilder.HasKey(x => x.Id);
+            subjectBuidler.Ignore(x => x.Group);
+                //.HasConversion(
+                //    group => group.Id,
+                //    value => Enumeration.FromValue<SubjectGroups>(value))
+                //.HasColumnName("Subject_Group");
 
-                groupBuilder.Property(x => x.Name)
-                    .HasMaxLength(50)
-                    .IsRequired();
-                groupBuilder.HasIndex(x => x.Name)
-                    .IsUnique();
-            });
+            //subjectBuidler.OwnsOne(x => x.Group, groupBuilder =>
+            //{
+            //    groupBuilder.ToTable("SubjectGroups", ReviewingDbContext.DEFAULT_SCHEMA);
+
+            //    groupBuilder.OwnsMany<Review>("ReviewId", subBuilder =>
+            //    {
+            //        subBuilder.HasOne(x => x.Subject.Group)
+            //            .WithMany()
+            //            .HasForeignKey("Subject_Group");
+            //    });
+
+            //    //const string foreignKey = "Id";
+            //    //groupBuilder.WithOwner().HasForeignKey(foreignKey);
+
+            //    groupBuilder.Property(x => x.Id)
+            //        .ValueGeneratedNever()
+            //        .IsRequired();
+            //    groupBuilder.HasKey(x => x.Id);
+
+            //    groupBuilder.Property(x => x.Name)
+            //        .HasMaxLength(50)
+            //        .IsRequired();
+            //    groupBuilder.HasIndex(x => x.Name)
+            //        .IsUnique();
+            //});
+
+            //subjectBuidler.OwnsMany<SubjectGroups>(nameof(Subject.Group), subjectGroupBuilder =>
+            //{
+
+            //});
+
+            //subjectBuidler.OwnsOne(x => x.Group, groupBuilder =>
+            //{
+            //    groupBuilder.ToTable("SubjectGroups", ReviewingDbContext.DEFAULT_SCHEMA);
+            //    const string foreignKey = "Id";
+            //    groupBuilder.WithOwner().HasForeignKey(foreignKey);
+            //    groupBuilder.Property(x => x.Id)
+            //        .ValueGeneratedNever()
+            //        .IsRequired();
+            //    groupBuilder.HasKey(x => x.Id);
+
+            //    groupBuilder.Property(x => x.Name)
+            //        .HasMaxLength(50)
+            //        .IsRequired();
+            //    groupBuilder.HasIndex(x => x.Name)
+            //        .IsUnique();
+            //});
         });
 
         builder.OwnsMany(x => x.Comments, commentBuilder =>

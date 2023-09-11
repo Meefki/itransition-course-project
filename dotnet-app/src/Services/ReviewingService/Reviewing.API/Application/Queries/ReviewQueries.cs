@@ -39,7 +39,7 @@ select top 1
         ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
     from [reviewing].Reviews       as r
-    join [reviewing].SubjectGroups as sg on sg.ReviewId = r.Id
+    join [reviewing].SubjectGroups as sg.Id = r.Subject_Group
     cross join likes_count         as lc
     where r.Id = @reviewId";
         string tagsSql =
@@ -109,7 +109,7 @@ select distinct
         ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
     from [reviewing].Reviews        as r
-    join [reviewing].SubjectGroups  as sg on sg.ReviewId = r.Id
+    join [reviewing].SubjectGroups  as sg on sg.Id       = r.Subject_Group
     left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
     left join likes_count           as lc on lc.ReviewId = r.Id
     " + reviewWhereCondition + " " + reviewOrderCondition;

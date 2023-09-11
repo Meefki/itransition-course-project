@@ -105,6 +105,7 @@ namespace Reviewing.API.Controllers
 
         [HttpPost]
         [Authorize]
+        [Authorize(Policy = "Review_edit")]
         public async Task<dynamic> Publish([FromBody] ReviewOptions opt)
         {
             PublishReviewCommand command = new(opt.Name, opt.AuthorUserId, opt.Content, opt.ShortDesc, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
@@ -114,6 +115,7 @@ namespace Reviewing.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Review_edit")]
         public async Task<CommandResponse> Edit([FromBody] ReviewOptions opt)
         {
             EditReviewCommand command = new(opt.Id!, opt.Name, opt.Content, opt.ShortDesc, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
@@ -123,6 +125,7 @@ namespace Reviewing.API.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Review_edit")]
         public async Task<CommandResponse> Delete(string reviewId)
         {
             DeleteReviewCommand command = new(reviewId);
