@@ -5,10 +5,12 @@ import { SortOptionsContext } from '../../Contexts/SortOptionsContext';
 import ReviewCard from "./ReviewCard";
 import { MDBCheckbox, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
 import ReviewTr from "./ReviewTr";
+// import { UserManagerContext } from "../../Contexts/UserManagerContext";
 
 function ReviewList({ table = false }) {
 
     const pageSize = 10; // TODO: might get it from params or env
+    //const mgr = useContext(UserManagerContext);
     const reviewingService = useMemo(() => new ReviewingService(), []);
     const [dataLoading, setDataLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
@@ -24,13 +26,8 @@ function ReviewList({ table = false }) {
     /* eslint-disable */
     useEffect(() => {
         setDataLoading(true);
-        let needUseDefaultSort = false;
-        const sortPropNames = Object.getOwnPropertyNames(sortOptions ?? {})
-        if (sortPropNames.length === 0)
-            needUseDefaultSort = true;
-        needUseDefaultSort && setSortOptions(defaultSortOptions);
 
-        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, needUseDefaultSort ? defaultSortOptions : sortOptions, filterOptions?.filter((option) => option.name !== "tags"), filterOptions?.tags)
+        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, (filterOptions && filterOptions.length !== 0) ? filterOptions?.filter((option) => option.name !== "tags") : null, (filterOptions && filterOptions.length !== 0) ? filterOptions?.tags : null)
             .then((reviews) => {
                 setReviewsDesc((current) => [...current, ...(reviews
                     .filter((review) => !current.map((curr) => curr.id).includes(review.id)))]);
