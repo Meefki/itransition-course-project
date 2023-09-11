@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ReviewingService } from '../../Services/ReviewingService'
+import { FilterOptionsContext } from '../../Contexts/FilterOptionsContext';
+import { SortOptionsContext } from '../../Contexts/SortOptionsContext';
 import ReviewCard from "./ReviewCard";
+import { MDBCheckbox, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
+import ReviewTr from "./ReviewTr";
 
-function ReviewList({ sort, filters, isSelection = false }) {
+function ReviewList({ table = false }) {
 
     const pageSize = 10; // TODO: might get it from params or env
     const reviewingService = useMemo(() => new ReviewingService(), []);
@@ -11,38 +15,35 @@ function ReviewList({ sort, filters, isSelection = false }) {
     const [reviewsDesc, setReviewsDesc] = useState([]);
     const [scrollTop, setScrollTop] = useState(0);
     const [reviewsCount, setReviewsCount] = useState(0);
-    const [filterOptions, setFilterOptions] = useState(null);
-    
+    const { filterOptions } = useContext(FilterOptionsContext);
+    const { sortOptions, setSortOptions } = useContext(SortOptionsContext);
+    const defaultSortOptions = [
+        { name: "publishedDate", value: "desc" }
+    ]
+
     /* eslint-disable */
     useEffect(() => {
         setDataLoading(true);
-        const filterOpts = Object.getOwnPropertyNames(filters)?.length === 0 ? null :
-            Object.getOwnPropertyNames(filters)?.map((key) => {
-                return { name: key, value: filters[key] }
-            })
-        setFilterOptions(filterOpts);
+        let needUseDefaultSort = false;
+        const sortPropNames = Object.getOwnPropertyNames(sortOptions ?? {})
+        if (sortPropNames.length === 0)
+            needUseDefaultSort = true;
+        needUseDefaultSort && setSortOptions(defaultSortOptions);
 
-        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, sort, filterOpts?.filter((option) => option.name !== "tags"), filterOpts?.tags)
+        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, needUseDefaultSort ? defaultSortOptions : sortOptions, filterOptions?.filter((option) => option.name !== "tags"), filterOptions?.tags)
             .then((reviews) => {
                 setReviewsDesc((current) => [...current, ...(reviews
-                    .filter((review) => !current.map((curr) => curr.id).includes(review.id))
-                    .sort((left, right) => left.publishedDate - right.publishedDate))]);
+                    .filter((review) => !current.map((curr) => curr.id).includes(review.id)))]);
                 setDataLoading(false);
             })
-    }, [currentPage, reviewingService]);
+    }, [filterOptions, sortOptions, currentPage, reviewingService]);
 
     useEffect(() => {
         if (!((reviewsDesc?.length ?? 0) > 0))
             return;
 
-        const filretOpts = filterOptions ? filterOptions : 
-        Object.getOwnPropertyNames(filters)?.length === 0 ? null :
-            Object.getOwnPropertyNames(filters)?.map((key) => {
-                return { name: key, value: filters[key] }
-            })
-
         reviewingService
-            .getCount(filretOpts?.filter(opt => opt.name !== 'tags'), filretOpts?.tags)
+            .getCount(filterOptions?.filter(opt => opt.name !== 'tags'), filterOptions?.tags)
             .then(count => {
                 setReviewsCount(count);
             });
@@ -81,14 +82,24 @@ function ReviewList({ sort, filters, isSelection = false }) {
                 <div className="pe-0 pe-lg-5 w-100">
                     {reviewsDesc && reviewsDesc.length > 0 ? (
                         <div className="d-flex align-items-start flex-column">
-                            {!isSelection && reviewsDesc.map((reviewDesc) => <div key={reviewDesc.id} className="w-100"><ReviewCard reviewDesc={reviewDesc}/></div>)}
-                            {isSelection && reviewsDesc.map((reviewDesc) => {
-                                return( 
-                                    <div key={reviewDesc.id} className="w-100">
-                                        <ReviewCard reviewDesc={reviewDesc}/>
-                                    </div>
-                                )
-                            })}
+                            {!table && reviewsDesc.map((reviewDesc) => <div key={reviewDesc.id} className="w-100"><ReviewCard reviewDesc={reviewDesc}/></div>)}
+                            {table && 
+                            <MDBTable>
+                                <MDBTableHead>
+                                    <tr>
+                                        <th><MDBCheckbox id="check-al" /></th>
+                                        <th>Review Name:</th>
+                                        <th>Status:</th>
+                                        <th>Publish Date:</th>
+                                        <th>Likes:</th>
+                                    </tr>
+                                </MDBTableHead>
+                                <MDBTableBody>
+                                    {reviewsDesc.map((reviewDesc) => {
+                                        return <ReviewTr key={reviewDesc.id} reviewDesc={reviewDesc}/>
+                                    })}
+                                </MDBTableBody>
+                            </MDBTable>}
                         </div>
                     ) :
                     (
