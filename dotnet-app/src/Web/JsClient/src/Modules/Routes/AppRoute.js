@@ -1,14 +1,19 @@
 import { Callback } from "../Identity/Callback";
-import { Main } from "../Main";
 import { Login } from "../Identity/Login"
 import { Logout } from "../Identity/Logout"
 import { Error } from "../Shared/Error"
 import ThemeLayout from "../Layouts/ThemeLayout";
 import WithoutLayout from "../Layouts/WithoutLayout";
-import MainLayout from "../Layouts/MainLayout";
+import CommonLayout from "../Layouts/CommonLayout";
 import { RenderRoutes } from "./RenderRoutes";
-import UserProfile from "../Identity/UserProfile";
 import Review from "../Reviews/Review";
+import TwoColumnLayout from "../Layouts/TwoColumnLayout";
+import ReviewList from "../Reviews/ReviewList";
+import ReviewCarousel from "../Reviews/ReviewCarousel";
+import ReviewsFilter from "../Reviews/ReviewsFilter";
+import ReviewActions from "../Identity/User/ReviewActions";
+import UserActions from "../Identity/User/UserActions";
+import UserInfo from "../Identity/User/UserInfo";
 
 const AppRoutes = [
     {
@@ -50,26 +55,35 @@ const AppRoutes = [
         ]
     },
     {
-        layout: <MainLayout />,
+        layout: <CommonLayout />,
         routes: [
             {
                 name: 'main',
                 title: 'Main page',
                 path: '/',
-                component: <Main />,
+                component: <TwoColumnLayout 
+                    mainComponents={[<ReviewList />]} 
+                    sideComponents={[<ReviewCarousel />]} />,
                 isPublic: true
             },
             {
                 name: 'profile',
                 title: 'Profile page',
                 path: '/profile/me',
+                component: <TwoColumnLayout 
+                    mainComponents={[<ReviewsFilter />, <ReviewList table={true}/>]}
+                    sideComponents={[<UserInfo owner={true} />, <ReviewActions />, <UserActions />]}
+                    hideSecondCol={false}/>,
                 isPublic: false
             },
             {
                 name: 'public-profile',
                 title: 'Profile page',
                 path: '/profile/:id',
-                component: <UserProfile />,
+                component: <TwoColumnLayout 
+                mainComponents={[<ReviewsFilter />, <ReviewList table={true}/>]}
+                sideComponents={[<UserInfo owner={false} />]}
+                hideSecondCol={false}/>,
                 isPublic: true
             },
             {
