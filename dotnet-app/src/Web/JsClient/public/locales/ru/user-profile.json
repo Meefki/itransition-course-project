@@ -1,6 +1,16 @@
 {
-    "username": "Логин:",
-    "email": "Электронная почта:",
-    "reviews": "Обзоры:",
-    "user-info": "Основная информация:"
+    "user_profile_user_info": "Основное:",
+    "user_profile_user_info_username": "Логин:",
+    "user_profile_user_info_name": "Имя:",
+    "user_profile_user_info_email": "Эл. почта:",
+    "user_profile_user_info_role": "Роль:",
+
+    "user_profile_review_actions": "Обзоры:",
+    "user_profile_review_action_create": "Создать",
+    "user_profile_review_action_edit": "Изменить",
+    "user_profile_review_action_delete": "Удалить",
+
+    "user_profile_user_actions": "Профиль:",
+    "user_profile_user_action_edit": "Изменить",
+    "user_profile_user_action_delete": "Удалить"
 }

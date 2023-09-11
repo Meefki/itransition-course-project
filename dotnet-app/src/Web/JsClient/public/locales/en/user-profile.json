@@ -1,6 +1,16 @@
 {
-    "username": "Username:",
-    "email": "Email:",
-    "reviews": "Rewievs:",
-    "user-info": "General user information:"
+    "user_profile_user_info": "General:",
+    "user_profile_user_info_username": "Username:",
+    "user_profile_user_info_name": "Full name:",
+    "user_profile_user_info_email": "Email:",
+    "user_profile_user_info_role": "Role:",
+
+    "user_profile_review_actions": "Review actions:",
+    "user_profile_review_action_create": "Create",
+    "user_profile_review_action_edit": "Edit",
+    "user_profile_review_action_delete": "Delete",
+
+    "user_profile_user_actions": "Profile actions:",
+    "user_profile_user_action_edit": "Edit",
+    "user_profile_user_action_delete": "Delete"
 }
