@@ -12,6 +12,7 @@ export const config = {
     client_secret: process.env.REACT_APP_IDENTITY_CLIENT_SECRET,
     //monitorSession: true,
     automaticSilentRenew: true,
+    loadUserInfo: true,
     userStore: new WebStorageStateStore({ store: localStorage })
 };
 
