@@ -45,6 +45,10 @@ function UserInfo({ owner = false }) {
             })
         } else {
             if (id) {
+                mgr.getUser()
+                    .then((user) => { 
+                        user && user.profile?.sub.toLowerCase() === id.toLowerCase() && navigate("/profile/me");
+                    })
                 userService.getUser(id)
                     .then((userInfo) => {
                         if (userInfo) {
