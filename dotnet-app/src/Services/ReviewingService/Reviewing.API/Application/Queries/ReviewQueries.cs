@@ -69,10 +69,13 @@ select top 1
         object reviewParam = new { };
         string reviewWhereCondition = GetWhereCondition(filterOptions, "r", "rt");
         string reviewSql =
-@"select distinct count(r.id) as reviewsCount
-    from [reviewing].Reviews        as r
-    " + (filterOptions?.Tags is not null ? @" left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
-    " : "") + reviewWhereCondition;
+@"select count(t.Id) as reviewsCount
+  from (
+    select distinct r.Id
+      from [reviewing].[Reviews]        as r
+      " + ((filterOptions?.Tags is not null && filterOptions.Tags.Count > 0) ? @"left join [reviewing].[ReviewTag] as rt on rt.ReviewId = r.Id
+      " : "") + reviewWhereCondition + @"
+    ) as t";
         IEnumerable<dynamic> reviewsCount = await connection.QueryAsync<dynamic>(reviewSql, reviewParam, commandTimeout: timeout.Seconds);
 
         return reviewsCount;
