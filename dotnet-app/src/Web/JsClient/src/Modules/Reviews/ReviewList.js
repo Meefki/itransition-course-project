@@ -45,7 +45,8 @@ function ReviewList({ table = false }) {
                 currentPage, 
                 (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, 
                 (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null, 
-                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null)
+                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null,
+                !table)
             .then((reviews) => {
                 setReviewsDesc((current) => [...current, ...(reviews
                     .filter((review) => !current.map((curr) => curr.id).includes(review.id)))]);
@@ -69,7 +70,8 @@ function ReviewList({ table = false }) {
                 0, 
                 (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, 
                 (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null,
-                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null)
+                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null,
+                !table)
             .then((reviews) => {
                 setReviewsDesc(reviews);
                 setDataLoading(false);
@@ -82,7 +84,9 @@ function ReviewList({ table = false }) {
             return;
 
         reviewingService
-            .getCount(filterOptions?.filter(opt => opt.name !== 'tags'), filterOptions?.tags)
+            .getCount(
+                (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null,
+                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null)
             .then(count => {
                 setReviewsCount(count);
             });

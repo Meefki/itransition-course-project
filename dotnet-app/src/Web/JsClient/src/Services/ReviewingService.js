@@ -26,7 +26,7 @@ export class ReviewingService {
         return await fetchGet(url);
     }
 
-    getShortReviewsDescriptions = async (pageSize, pageNumber, sortOptions, filterOptions, tags) => {
+    getShortReviewsDescriptions = async (pageSize, pageNumber, sortOptions, filterOptions, tags, withUsernames = false) => {
         const params = [
             { name: 'pageSize', value: pageSize },
             { name: 'pageNumber', value: pageNumber },
@@ -41,14 +41,19 @@ export class ReviewingService {
         const reviews = await fetchGet(url); //headers ? headers : {}
 
         if (reviews) {
-            const userIds = reviews.map((review) => review.authorUserId)
-            const userNames = await this.userService.getUserNames(userIds)
-            const reviewsWithAuthors = reviews.map((review) => {
-                const userName = userNames.filter(x => x.id?.toLowerCase() === review.authorUserId);
-                review.userName = userName[0]?.userName;
-                return review;
-            });
-            return reviewsWithAuthors;
+            if (withUsernames) {
+                const userIds = reviews.map((review) => review.authorUserId)
+            
+                const userNames = await this.userService.getUserNames(userIds)
+                const reviewsWithAuthors = reviews.map((review) => {
+                    const userName = userNames.filter(x => x.id?.toLowerCase() === review.authorUserId);
+                    review.userName = userName[0]?.userName;
+                    return review;
+                });
+                return reviewsWithAuthors;
+            }
+
+            return reviews;
         }
 
         return [];
