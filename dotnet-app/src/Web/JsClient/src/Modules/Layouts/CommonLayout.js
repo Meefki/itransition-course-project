@@ -3,15 +3,21 @@ import ThemeLayout from './ThemeLayout';
 import Header from '../Shared/Header'
 import { FilterOptionsContext } from '../../Contexts/FilterOptionsContext';
 import { SortOptionsContext } from '../../Contexts/SortOptionsContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CommonLayout = () => {
     const [filters, setFilters] = useState([]);
     const [sort, setSort] = useState([]);
+    const [valid, setValid] = useState(true);
+
+    useEffect(() => {
+        // setFilters([]);
+        // setValid(true);
+    }, []);
 
     return (
         <div className='h-100'>
-            <FilterOptionsContext.Provider value={{ filterOptions: filters, setFilterOptions: setFilters }}>
+            <FilterOptionsContext.Provider value={{ filterOptions: filters, setFilterOptions: setFilters, valid: valid, setValid: setValid }}>
             <SortOptionsContext.Provider value={{ sortOptions: sort, setSortOptions: setSort }}>
                 <Header />
                 <ThemeLayout>

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import HrStyle from '../../../Assets/Css/hr';
 import { UserManagerContext } from "../../../Contexts/UserManagerContext";
 import { UserService } from "../../../Services/UserService";
+import { FilterOptionsContext } from "../../../Contexts/FilterOptionsContext";
 
 function UserInfo({ owner = false }) {
     const ns = "user-profile";
@@ -14,7 +15,10 @@ function UserInfo({ owner = false }) {
     const mgr = useContext(UserManagerContext);
     const userService = useMemo(() => new UserService(), []);
     const [userInfo, setUserInfo] = useState({});
+    const [isFirstRender, setIsFirstRender] = useState(true);
     const navigate = useNavigate();
+
+    const { setFilterOptions, setValid } = useContext(FilterOptionsContext);
 
     /* eslint-disable */
     useMemo(() => {
@@ -30,7 +34,7 @@ function UserInfo({ owner = false }) {
     }, [i18n.isInitialized]);
 
     useEffect(() => {
-        setUserInfo({});
+        // setValid(false);
         if (owner) {
             mgr.getUser()
             .then((user) => {
@@ -57,8 +61,43 @@ function UserInfo({ owner = false }) {
                     })
             }
         }
+
+        setIsFirstRender(false);
     }, [id]);
-    /* eslint-enable */
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setValid(false);
+            return;
+        }
+
+        setFilterOptions(current => {
+            let filters = Array.isArray(current) ? [...current] : [];
+            const obj = filters?.find((o, i) => {
+                if (o.name === 'authorUserId') {
+                    filters[i] = { name: 'authorUserId', value: userInfo?.id }
+                    return true;
+                }
+            })
+            if (!obj) {
+                filters?.push({ name: 'authorUserId', value: userInfo?.id });
+            }
+            if (userInfo?.id)
+                setValid(true);
+            return filters;
+        });
+    }, [userInfo]);
+
+    useEffect(() => {
+
+        return () => {
+            setFilterOptions(current => { 
+                let filters =  [...current.filter(f => f.name !== 'authorUserId')]
+                return filters;
+            });
+        }
+    }, [])
+    /* eslint-enable */    
 
     return pageLoadingStage ? '' :
         <div className="mx-4 mb-4 d-flex flex-column">

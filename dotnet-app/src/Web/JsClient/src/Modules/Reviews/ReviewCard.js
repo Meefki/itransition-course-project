@@ -47,7 +47,7 @@ function ReviewCard({ reviewDesc }) {
                         <p>{reviewDesc?.shortDesc}</p>
                     </div>
                     <div>
-                        {reviewDesc?.tags?.map((tag) => <MDBBadge className="me-2">tag</MDBBadge>)}
+                        {reviewDesc?.tags?.map((tag) => <MDBBadge className="me-2">{tag}</MDBBadge>)}
                     </div>
                 </MDBCol>
                 <MDBCol size="4" sm="3" md="3" lg="3" className="d-flex justify-content-end d-none d-sm-flex"> 

@@ -1,4 +1,5 @@
 {
     "published-date": "{{date, DATE_LONG}}",
-    "most-popular-reviews": "Most popular reviews:"
+    "most-popular-reviews": "Most popular reviews:",
+    "filter_tags_input_placeholder": "Enter a tag"
 }

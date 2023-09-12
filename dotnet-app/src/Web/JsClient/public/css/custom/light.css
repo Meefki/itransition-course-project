@@ -5,3 +5,7 @@
 .carousel-dark-custom {
     filter: invert(1) grayscale(100);
 }
+
+.link-button {
+    color: rgb(57, 57, 179);
+}

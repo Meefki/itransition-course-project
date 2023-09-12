@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { MDBContainer } from "mdb-react-ui-kit";
 import HrStyle from '../../Assets/Css/hr'
 
-function TwoColumnLayout({mainComponents, sideComponents, hideSecondCol = true}) {
+function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true}) {
     
     const [scrollTop, setScrollTop] = useState(0);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [lastScrollDirection, setLastScrollDirection] = useState(true);
     const [headerHeight, setHeaderHeight] = useState(67);
 
-    const [carouselPos, setCarouselPos] = useState('sticky');
-    const [carouselTop, setCarouselTop] = useState(0);
-    const [carouselMgTop, setCarouselMgTop] = useState(0);
+    const [secondColPos, setSecondColPos] = useState('sticky');
+    const [secondColTop, setSecondColTop] = useState(0);
+    const [secondColMgTop, setSecondColMgTop] = useState(0);
     const error = 25;
 
     const colClasses = {
@@ -38,52 +38,52 @@ function TwoColumnLayout({mainComponents, sideComponents, hideSecondCol = true})
         setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
 
         const col = document.getElementById('second-column');
-        const header = document.getElementById('header');
+        //const header = document.getElementById('header');
         const doc = document.documentElement;
 
         if (col)
         if (scrollDirection) {
             if (scrollDirection === lastScrollDirection) {
-                if (carouselPos === 'relative' && carouselMgTop + col.clientHeight - doc?.clientHeight <= scrollTop) {
-                    setCarouselPos('sticky');
-                    setCarouselTop(doc?.clientHeight - col.clientHeight);
-                    setCarouselMgTop('0px');
+                if (secondColPos === 'relative' && secondColMgTop + col.clientHeight - doc?.clientHeight <= scrollTop) {
+                    setSecondColPos('sticky');
+                    setSecondColTop(doc?.clientHeight - col.clientHeight);
+                    setSecondColMgTop('0px');
                 }
-                if (carouselPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
-                    setCarouselPos('relative');
-                    setCarouselMgTop(scrollTop);
-                    setCarouselTop(0);
+                if (secondColPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
+                    setSecondColPos('relative');
+                    setSecondColMgTop(scrollTop);
+                    setSecondColTop(0);
                 }
             } else {
-                if (carouselPos === 'relative') {
-                    if (carouselMgTop + col.clientHeight - doc?.clientHeight - error <= scrollTop) {
-                        setCarouselPos('sticky');
-                        setCarouselTop(doc?.clientHeight - col.clientHeight);
-                        setCarouselMgTop(0);
+                if (secondColPos === 'relative') {
+                    if (secondColMgTop + col.clientHeight - doc?.clientHeight - error <= scrollTop) {
+                        setSecondColPos('sticky');
+                        setSecondColTop(doc?.clientHeight - col.clientHeight);
+                        setSecondColMgTop(0);
                     }
                 } else {
-                    setCarouselPos('relative');
-                    setCarouselMgTop(scrollTop);
-                    setCarouselTop(0);
+                    setSecondColPos('relative');
+                    setSecondColMgTop(scrollTop);
+                    setSecondColTop(0);
                 }
             }
         } else {
             if (scrollDirection === lastScrollDirection) {
-                if (carouselPos === 'relative' && (carouselMgTop + error) >= scrollTop) {
-                    setCarouselPos('sticky');
-                    setCarouselTop(header?.clientHeight);
-                    setCarouselMgTop(0);
+                if (secondColPos === 'relative' && (secondColMgTop + error) >= scrollTop) {
+                    setSecondColPos('sticky');
+                    setSecondColTop(headerHeight);
+                    setSecondColMgTop(0);
                 }
             } else {
-                if (carouselPos === 'sticky') {
-                    setCarouselPos('relative');
-                    setCarouselMgTop(scrollTop + doc?.clientHeight - header?.clientHeight - col.clientHeight);
-                    setCarouselTop(0);
+                if (secondColPos === 'sticky') {
+                    setSecondColPos('relative');
+                    setSecondColMgTop(scrollTop + doc?.clientHeight - headerHeight - col.clientHeight);
+                    setSecondColTop(0);
                 } else {
-                    if (carouselMgTop >= scrollTop) {
-                        setCarouselPos('sticky');
-                        setCarouselTop(header?.clientHeight);
-                        setCarouselMgTop(0);
+                    if (secondColMgTop >= scrollTop) {
+                        setSecondColPos('sticky');
+                        setSecondColTop(headerHeight);
+                        setSecondColMgTop(0);
                     }
                 }
             }
@@ -105,25 +105,22 @@ function TwoColumnLayout({mainComponents, sideComponents, hideSecondCol = true})
 
     return(
         <div>
-            <MDBContainer className={hideSecondCol ? colClasses.hide.parent : colClasses.show.parent}> 
-            {/* "d-flex justify-content-center" */}
+            <MDBContainer className={hideSecondCol ? colClasses.hide.parent : colClasses.show.parent}>
                 <div className={hideSecondCol ? colClasses.hide.first : colClasses.show.first} style={{minHeight: `calc(100vh - ${document.getElementById('header')?.clientHeight}px)`}}>
-                {/* "col-12 col-lg-7 col-xl-8 col-xxl-8 d-flex flex-row" */}
                     <div className="mt-5 flex-fill">
                         {mainComponents && mainComponents?.map((c, index) => <div key={index}>{c}</div>)}
                     </div>
                     <div className="d-none d-lg-block" style={HrStyle.verticalHrStyle}/>
                 </div>
                 <div className={hideSecondCol ? colClasses.hide.second : colClasses.show.second}>
-                {/* "col-lg-5 col-xl-4 col-xxl-4 d-none d-lg-block" */}
                     <div id="second-column" className="" style={document.documentElement.clientWidth < 992 ? {} :
                         {
-                            position: carouselPos,
-                            marginTop: `${carouselMgTop}px`,
-                            top: `${carouselTop}px`,
+                            position: secondColPos,
+                            marginTop: `${secondColMgTop}px`,
+                            top: `${secondColTop}px`,
                             minHeight: `calc(100vh - ${headerHeight}px)`
                         }}>
-                        <div className={lastScrollDirection ? 'mt-5' : 'pt-5'}>
+                        <div className='pt-5'>
                             <div>
                                 {sideComponents && sideComponents?.map((c, index) => 
                                     <div key={index}>

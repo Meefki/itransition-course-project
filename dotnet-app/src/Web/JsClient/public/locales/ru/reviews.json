@@ -1,4 +1,5 @@
 {
     "published-date": "{{date, DATE_LONG}}",
-    "most-popular-reviews": "Самые популярные обзоры:"
+    "most-popular-reviews": "Самые популярные обзоры:",
+    "filter_tags_input_placeholder": "Введите тег"
 }

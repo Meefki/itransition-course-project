@@ -1,0 +1,2 @@
+npm run build
+serve --ssl-cert D:\Projects\Itransition\tasks\CourseProject\dotnet-app\src\Web\cert\cert.crt --ssl-key D:\Projects\Itransition\tasks\CourseProject\dotnet-app\src\Web\cert\cert.key -s build

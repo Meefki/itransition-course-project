@@ -12,28 +12,70 @@ function ReviewList({ table = false }) {
     const pageSize = 10; // TODO: might get it from params or env
     //const mgr = useContext(UserManagerContext);
     const reviewingService = useMemo(() => new ReviewingService(), []);
-    const [dataLoading, setDataLoading] = useState(true);
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    const [dataLoading, setDataLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [reviewsDesc, setReviewsDesc] = useState([]);
     const [scrollTop, setScrollTop] = useState(0);
     const [reviewsCount, setReviewsCount] = useState(0);
-    const { filterOptions } = useContext(FilterOptionsContext);
-    const { sortOptions, setSortOptions } = useContext(SortOptionsContext);
+    const { filterOptions, valid } = useContext(FilterOptionsContext);
+    const [isValid, setIsValid] = useState(false);
+    const { sortOptions, /*setSortOptions*/ } = useContext(SortOptionsContext);
     const defaultSortOptions = [
         { name: "publishedDate", value: "desc" }
     ]
 
     /* eslint-disable */
     useEffect(() => {
-        setDataLoading(true);
+        if (isFirstRender)
+            return;
 
-        reviewingService.getShortReviewsDescriptions(pageSize, currentPage, (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, (filterOptions && filterOptions.length !== 0) ? filterOptions?.filter((option) => option.name !== "tags") : null, (filterOptions && filterOptions.length !== 0) ? filterOptions?.tags : null)
+        setIsValid(valid);
+    }, [valid, isFirstRender]);
+
+    useEffect(() => {
+        if (isFirstRender) {
+            return;
+        }
+
+        if (Array.isArray(filterOptions) && isValid) {
+            setDataLoading(true);
+            reviewingService.getShortReviewsDescriptions(
+                pageSize, 
+                currentPage, 
+                (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, 
+                (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null, 
+                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null)
             .then((reviews) => {
                 setReviewsDesc((current) => [...current, ...(reviews
                     .filter((review) => !current.map((curr) => curr.id).includes(review.id)))]);
                 setDataLoading(false);
             })
-    }, [filterOptions, sortOptions, currentPage, reviewingService]);
+        }
+    }, [currentPage]);
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        if (Array.isArray(filterOptions) && isValid) {
+            setDataLoading(true);
+            setCurrentPage(0);
+
+            reviewingService.getShortReviewsDescriptions(
+                pageSize, 
+                0, 
+                (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, 
+                (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null,
+                (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null)
+            .then((reviews) => {
+                setReviewsDesc(reviews);
+                setDataLoading(false);
+            })
+        }
+    }, [filterOptions, sortOptions, isValid]);
 
     useEffect(() => {
         if (!((reviewsDesc?.length ?? 0) > 0))
@@ -75,6 +117,18 @@ function ReviewList({ table = false }) {
 
     return(
         <div className="w-100">
+            {/* <div className="d-flex flex-column">
+                {filterOptions?.map((f, index) => 
+                <div key={index} className="d-flex flex-row justify-content-between">
+                    <span>{f?.name}:</span>
+                    {Array.isArray(f?.value) ? 
+                    <div className="d-flex flex-column">
+                        {f?.value?.map((v, index) => <span key={index}>{v}</span>)}
+                    </div> :
+                    <span>{f?.value}</span>}
+                </div>)}
+            </div> */}
+
             <div id="review-list" className="d-flex flex-row">
                 <div className="pe-0 pe-lg-5 w-100">
                     {reviewsDesc && reviewsDesc.length > 0 ? (

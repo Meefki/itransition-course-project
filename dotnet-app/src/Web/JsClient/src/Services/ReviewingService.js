@@ -8,8 +8,10 @@ export class ReviewingService {
         // this.userManager = mgr;
     }
 
-    getTags = async (startWith) => {
+    getTags = async (startWith, pageSize, pageNumber) => {
         const params = [
+            { name: 'pageSize', value: pageSize },
+            { name: 'pageNumber', value: pageNumber },
             { name: 'startWith', value: startWith }
         ]
 
@@ -26,11 +28,11 @@ export class ReviewingService {
 
     getShortReviewsDescriptions = async (pageSize, pageNumber, sortOptions, filterOptions, tags) => {
         const params = [
-            {name: 'pageSize', value: pageSize },
-            {name: 'pageNumber', value: pageNumber },
-            {name: 'sortOptions', value: sortOptions},
-            {name: 'filterOptions', value: filterOptions},
-            {name: 'tags', value: tags},
+            { name: 'pageSize', value: pageSize },
+            { name: 'pageNumber', value: pageNumber },
+            { name: 'sortOptions', value: sortOptions },
+            { name: 'filterOptions', value: filterOptions },
+            { name: 'tags', value: tags },
         ]
 
         const url = process.env.REACT_APP_REVIEWING_API + '/reviews' + getSearch(params);
@@ -54,8 +56,8 @@ export class ReviewingService {
 
     getCount = async (filterOptions, tags) => {
         const params = [
-            {name: 'filterOptions', value: filterOptions},
-            {name: 'tags', value: tags},
+            { name: 'filterOptions', value: filterOptions },
+            { name: 'tags', value: tags },
         ]
 
         //const user = await this.userManager.getUser();
