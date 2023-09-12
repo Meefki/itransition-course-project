@@ -112,7 +112,7 @@ select distinct
     join [reviewing].SubjectGroups  as sg on sg.Id       = r.Subject_Group
     left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
     left join likes_count           as lc on lc.ReviewId = r.Id
-    " + reviewWhereCondition + " " + reviewOrderCondition;
+    " + reviewWhereCondition + "\n    " + reviewOrderCondition;
         IEnumerable<ReviewVM> reviews = await connection.QueryAsync<ReviewVM>(reviewSql, reviewParam, commandTimeout: timeout.Seconds);
         if (reviews.Any())
         {
@@ -196,12 +196,12 @@ select distinct
 
             if (filterOptions.Tags is not null && filterOptions.Tags.Count > 0)
             {
-                string condition = $"{tableAlias[1]}.[TagsName] is null or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags.Select(x => $"'{x}'"))})";
+                string condition = $"({tableAlias[1]}.[TagsName] is null \n       or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags.Select(x => $"'{x}'"))}))";
                 conditions.Add(condition);
             }
 
             if (conditions.Count > 0)
-                whereCondition = where + string.Join('\n', conditions);
+                whereCondition = where + string.Join("\n      and ", conditions);
         }
 
         return whereCondition;
@@ -228,7 +228,7 @@ select distinct
         }
 
         int offset = pagination.PageNumber * pagination.PageSize;
-        sortCondition += $"\n offset({offset}) rows fetch next({pagination.PageSize}) rows only";
+        sortCondition += $"\n    offset({offset}) rows fetch next({pagination.PageSize}) rows only";
 
         return sortCondition;
     }

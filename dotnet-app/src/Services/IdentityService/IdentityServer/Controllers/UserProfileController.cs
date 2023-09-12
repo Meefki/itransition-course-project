@@ -48,11 +48,15 @@ namespace IdentityServer.Controllers
             {
                 object param = new { };
                 string sql =
-    @$"select top 1
-         u.Id       as id
-        ,u.UserName as userName
-        ,u.Email    as email
-    from [dbo].[users] as u
+    @$"select
+       u.Id                   as id
+      ,u.UserName             as userName
+      ,u.Email                as email
+      ,u.[NormalizedUserName] as [name]
+      ,r.[Name]               as [role]
+    from [dbo].[users]          as u
+    left join [dbo].[UserRoles] as ur on ur.UserId = u.Id
+    left join [dbo].[Roles]     as r  on r.Id = ur.RoleId
     where u.id in ('{id}')";
                 dynamic result = await connection.QueryAsync<dynamic>(sql, param, commandTimeout: timeout.Seconds);
                 return result is null ? new { } : (result[0] ?? new { });
