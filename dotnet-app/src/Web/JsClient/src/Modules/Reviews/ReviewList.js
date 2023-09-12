@@ -143,10 +143,10 @@ function ReviewList({ table = false }) {
                                 <MDBTableHead>
                                     <tr>
                                         <th><MDBCheckbox id="check-al" /></th>
-                                        <th>Review Name:</th>
-                                        <th>Status:</th>
-                                        <th>Publish Date:</th>
-                                        <th>Likes:</th>
+                                        <th className="th-lg">Review Name:</th>
+                                        <th className="th-sm">Status:</th>
+                                        <th className="th-lg text-nowrap">Publish Date:</th>
+                                        <th className="th-sm">Likes:</th>
                                     </tr>
                                 </MDBTableHead>
                                 <MDBTableBody>
