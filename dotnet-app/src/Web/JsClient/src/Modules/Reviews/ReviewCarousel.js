@@ -26,7 +26,7 @@ function ReviewCarousel() {
             { name: "publishedDate", value: "desc" }
         ]
 
-        reviewingService.getShortReviewsDescriptions(pageSize, pageNumber, sortOptions, null, null)
+        reviewingService.getShortReviewsDescriptions(pageSize, pageNumber, sortOptions, null, null, true)
             .then((reviews) => {
                 setItems(reviews);
             })
@@ -59,11 +59,11 @@ function ReviewCarousel() {
                     items.map((item, index) => {
                         return(
                             <div className={`px-5 carousel-item ${index === activeSlide ? 'active' : ''}`} key={index}>
-                                <div style={{height: "450px"}} className="px-3 d-flex flex-column align-items-center justify-content-between">
+                                <div style={{height: "300px"}} className="px-3 d-flex flex-column align-items-center justify-content-between">
                                     <div onClick={() => navigate(`/review/${item.id}`)} className="px-3 d-flex flex-column align-items-center justify-content-center">
                                         <img className="mb-2" role="button" height={112} width={112} src={item.imageUrl} alt={item.imageUrl}/>
                                         <h4 className="text-center" role="button">{item.name}</h4>
-                                        <p className="text-center" role="button">{item.shortDesc}</p>
+                                        {/* <p className="text-center" role="button">{item.shortDesc}</p> */}
                                     </div>
                                     <div>
                                         <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>
