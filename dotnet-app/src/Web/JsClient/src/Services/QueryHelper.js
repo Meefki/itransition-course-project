@@ -28,7 +28,6 @@ export const getSearch = (params) => {
     }
 
     let searchString = '';
-    console.log(searchParams.toString(), searchParams);
     if (searchParams.toString())
         searchString = '?' + searchParams.toString();
     else
