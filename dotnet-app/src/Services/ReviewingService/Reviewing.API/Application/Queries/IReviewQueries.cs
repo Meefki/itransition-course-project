@@ -5,6 +5,7 @@ namespace Reviewing.API.Application.Queries;
 public interface IReviewQueries
 {
     Task<dynamic> GetTags(string startWith = "");
+    Task<dynamic> GetMostPopularTags(int pageSize = 10);
     Task<dynamic> GetReviewsShortDescription(
         PaginationOptions paginationOptions,
         List<ReviewSortOptions>? sortOptions = null,

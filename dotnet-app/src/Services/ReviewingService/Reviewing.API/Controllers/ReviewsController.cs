@@ -8,7 +8,7 @@ namespace Reviewing.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class ReviewsController 
+    public class ReviewsController
         : ControllerBase
     {
         private readonly IMediator mediator;
@@ -27,6 +27,13 @@ namespace Reviewing.API.Controllers
         public async Task<dynamic> GetTags(string? startWith = "")
         {
             return await reviewQueries.GetTags(startWith!);
+        }
+
+        [HttpGet]
+        [Route("tags/popular")]
+        public async Task<dynamic> GetMostPopularTags(int? pageSize = 10)
+        {
+            return await reviewQueries.GetMostPopularTags(pageSize!.Value);
         }
 
         [HttpGet]

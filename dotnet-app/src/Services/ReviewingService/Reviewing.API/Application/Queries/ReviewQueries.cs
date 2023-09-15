@@ -158,6 +158,33 @@ select distinct
         return tags;
     }
 
+    public async Task<dynamic> GetMostPopularTags(int pageSize = 10)
+    {
+        var timeout = TimeSpan.FromSeconds(3); // TODO: set from config
+        string sql =
+@$"select top {pageSize} 
+     t.[Name]
+    ,t.[Count] from (
+  select 
+       t.[Name]
+      ,count(rt.ReviewId) as [Count]
+    from [reviewing].[reviewing].[Tags]           as t
+    left join [reviewing].[reviewing].[ReviewTag] as rt on rt.TagsName = t.[Name]
+    group by t.[Name]
+  ) as t
+  order by t.[Count] desc";
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        dynamic tags = await connection.QueryAsync<dynamic>(sql, commandTimeout: timeout.Seconds);
+
+        //List<dynamic> tags = new();
+        //foreach (dynamic item in response)
+        //    tags.Add(item.name);
+
+        return tags;
+    }
+
     #region Query Builders
     string GetWhereCondition(ReviewFilterOptions? filterOptions, params object[] tableAlias)
     {
@@ -199,7 +226,7 @@ select distinct
 
             if (filterOptions.Tags is not null && filterOptions.Tags.Count > 0)
             {
-                string condition = $"({tableAlias[1]}.[TagsName] is null \n       or {tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags.Select(x => $"'{x}'"))}))";
+                string condition = $"{tableAlias[1]}.[TagsName] in ({string.Join(", ", filterOptions.Tags.Select(x => $"'{x}'"))})";
                 conditions.Add(condition);
             }
 
