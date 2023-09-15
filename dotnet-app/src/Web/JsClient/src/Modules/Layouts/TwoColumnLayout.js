@@ -40,50 +40,62 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
         const col = document.getElementById('second-column');
         const doc = document.documentElement;
 
-        if (col)
-        if (scrollDirection) {
-            if (scrollDirection === lastScrollDirection) {
-                if (secondColPos === 'relative' && secondColMgTop + col.clientHeight - doc?.clientHeight <= scrollTop) {
-                    setSecondColPos('sticky');
-                    setSecondColTop(doc?.clientHeight - col.clientHeight);
-                    setSecondColMgTop(0);
-                }
-                if (secondColPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
-                    setSecondColPos('relative');
-                    setSecondColMgTop(scrollTop);
-                    setSecondColTop(0);
-                }
-            } else {
-                if (secondColPos === 'relative') {
-                    if (secondColMgTop + col.clientHeight - doc?.clientHeight - error <= scrollTop) {
-                        setSecondColPos('sticky');
-                        setSecondColTop(doc?.clientHeight - col.clientHeight);
-                        setSecondColMgTop(0);
+        if (col) {
+            if (col.clientHeight > doc.clientHeight) {
+                col.style.transition = 'none';
+                if (scrollDirection) {
+                    if (scrollDirection === lastScrollDirection) {
+                        if (secondColPos === 'relative' && secondColMgTop + col.clientHeight - doc?.clientHeight <= scrollTop) {
+                            setSecondColPos('sticky');
+                            setSecondColTop(doc?.clientHeight - col.clientHeight);
+                            setSecondColMgTop(0);
+                        }
+                        if (secondColPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
+                            setSecondColPos('relative');
+                            setSecondColMgTop(scrollTop);
+                            setSecondColTop(0);
+                        }
+                    } else {
+                        if (secondColPos === 'relative') {
+                            if (secondColMgTop + col.clientHeight - doc?.clientHeight - error <= scrollTop) {
+                                setSecondColPos('sticky');
+                                setSecondColTop(doc?.clientHeight - col.clientHeight);
+                                setSecondColMgTop(0);
+                            }
+                        } else {
+                            setSecondColPos('relative');
+                            setSecondColMgTop(scrollTop);
+                            setSecondColTop(0);
+                        }
                     }
                 } else {
-                    setSecondColPos('relative');
-                    setSecondColMgTop(scrollTop);
-                    setSecondColTop(0);
+                    if (scrollDirection === lastScrollDirection) {
+                        if (secondColPos === 'relative' && (secondColMgTop + error) >= scrollTop) {
+                            setSecondColPos('sticky');
+                            setSecondColTop(headerHeight);
+                            setSecondColMgTop(0);
+                        }
+                    } else {
+                        if (secondColPos === 'sticky') {
+                            setSecondColPos('relative');
+                            setSecondColMgTop(scrollTop + doc?.clientHeight - headerHeight - col.clientHeight);
+                            setSecondColTop(0);
+                        } else {
+                            if (secondColMgTop >= scrollTop) {
+                                setSecondColPos('sticky');
+                                setSecondColTop(headerHeight);
+                                setSecondColMgTop(0);
+                            }
+                        }
+                    }
                 }
-            }
-        } else {
-            if (scrollDirection === lastScrollDirection) {
-                if (secondColPos === 'relative' && (secondColMgTop + error) >= scrollTop) {
-                    setSecondColPos('sticky');
+            } else {
+                col.style.transition = 'top .1s ease';
+                setSecondColPos('sticky');
+                if (scrollDirection) {
+                    setSecondColTop(0);
+                } else {
                     setSecondColTop(headerHeight);
-                    setSecondColMgTop(0);
-                }
-            } else {
-                if (secondColPos === 'sticky') {
-                    setSecondColPos('relative');
-                    setSecondColMgTop(scrollTop + doc?.clientHeight - headerHeight - col.clientHeight);
-                    setSecondColTop(0);
-                } else {
-                    if (secondColMgTop >= scrollTop) {
-                        setSecondColPos('sticky');
-                        setSecondColTop(headerHeight);
-                        setSecondColMgTop(0);
-                    }
                 }
             }
         }

@@ -17,6 +17,7 @@ import UserInfo from "../Identity/User/UserInfo";
 import { UserManager } from "oidc-client";
 import { config } from "../../Contexts/UserManagerContext";
 import PopularTags from "../Reviews/PopularTags";
+import TagsCloud from "../Reviews/TagCloud";
 
 const mgr = new UserManager(config);
 const publicProfileSideComponents = async () => {
@@ -68,22 +69,24 @@ const AppRoutes = [
         ]
     },
     {
-        layout: <CommonLayout />,
+        layout: <CommonLayout/>,
         routes: [
             {
                 name: 'main',
                 title: 'Main page',
                 path: '/',
-                component: <TwoColumnLayout 
-                    mainComponents={[<PopularTags />, <ReviewList />]} 
-                    sideComponents={[<ReviewCarousel />]} />,
+                component: <TwoColumnLayout
+                    key="main"
+                    mainComponents={[<PopularTags />, <ReviewList table={false}/>]}
+                    sideComponents={[<ReviewCarousel />, <TagsCloud />]} />,
                 isPublic: true
             },
             {
                 name: 'profile',
                 title: 'Profile page',
                 path: '/profile/me',
-                component: <TwoColumnLayout 
+                component: <TwoColumnLayout
+                    key="profile"
                     mainComponents={[<ReviewsFilter immutableFilters={["authorUserId"]}/>, <ReviewList table={true}/>]}
                     sideComponents={[<UserInfo owner={true} />, <ReviewActions />, <UserActions />]}
                     hideSecondCol={false}/>,

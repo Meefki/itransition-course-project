@@ -92,19 +92,23 @@ function PopularTags() {
         setScrollDirection(scrollTop >= lastScrollTop);
         setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
     }, [scrollTop])
-    /* eslint-enable */
 
     useEffect(() => {
-        window.addEventListener('scroll', handleOnScroll);
         reviewingService.getMostPopularTags(pageSize)
             .then((tags) => {
                 setTags(tags);
             })
+        window.addEventListener('scroll', handleOnScroll);
 
         return () => {
+            setFilterOptions(current => {
+                let filter = [...current]?.filter(f => f.name !== 'tags');
+                return filter;
+            })
             window.removeEventListener('scroll', handleOnScroll);
         }
     }, [])
+    /* eslint-enable */
 
     return (
         <div id="tag-header" className="header d-flex" style={styles.header}>
@@ -118,9 +122,9 @@ function PopularTags() {
                                 <div className="me-4" style={{width: '34px'}}/>
                                 {
                                     tags.map(t =>
-                                        <div key={t.Name} className="pb-2 me-4" style={{minWidth: 'max-content'}}>
+                                        <div key={t.value} className="pb-2 me-4" style={{minWidth: 'max-content'}}>
                                             <div className="d-block text-center" role="button" onClick={(e) => handleTagClick(e)} style={{minWidth: '50px'}}>
-                                                {t.Name}
+                                                {t.value}
                                             </div>
                                         </div>
                                     )

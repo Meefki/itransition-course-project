@@ -29,8 +29,6 @@ export class ReviewingService {
     }
 
     getReview = async (reviewId) => {
-        if (!reviewId) return;
-
         const url = process.env.REACT_APP_REVIEWING_API + '/reviews/' + reviewId;
         return await fetchGet(url);
     }

@@ -1,5 +1,5 @@
 import { 
-    MDBCol, MDBRow, MDBBadge
+    MDBCol, MDBRow, MDBBadge, MDBIcon
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import { horizontalHrStyle } from "../../Assets/Css/hr";
@@ -33,9 +33,15 @@ function ReviewCard({ reviewDesc }) {
                 <div className="d-flex justify-content-start">
                     <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + reviewDesc?.authorUserId)}>{reviewDesc?.userName ?? ''}</span>
                     <span>&#x2022;</span>
-                    <span className="mx-1">{reviewDesc?.likesCount ?? 0}</span>
+                    <span className="mx-1">
+                        {reviewDesc?.likesCount ?? 0}
+                        <MDBIcon className="mx-1" icon="thumbs-up"/>
+                    </span>
                     <span>&#x2022;</span>
-                    <span className="mx-1">{reviewDesc?.subjectGrade ?? 0}</span>
+                    <span className="mx-1">
+                        {reviewDesc?.subjectGrade ?? 0}
+                        <MDBIcon className="mx-1" icon="star"/>
+                    </span>
                     {reviewDesc?.publishedDate && <span>&#x2022;</span>}
                     {reviewDesc?.publishedDate &&<span className="mx-1">{t('published-date', { date: reviewDesc?.publishedDate ?? ''})}</span>}
                 </div>

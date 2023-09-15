@@ -63,12 +63,10 @@ function ReviewList({ table = false }) {
                 setReviewsDesc((current) => [...current, ...(reviews
                     .filter((review) => !current.map((curr) => curr.id).includes(review.id)))]);
                 setDataLoading(false);
+                getCount();
             })
-
-            
         }
 
-        getCount();
     }, [currentPage]);
 
     useEffect(() => {
@@ -91,10 +89,9 @@ function ReviewList({ table = false }) {
             .then((reviews) => {
                 setReviewsDesc(reviews);
                 setDataLoading(false);
+                getCount();
             })
         }
-
-        getCount();
     }, [filterOptions, sortOptions, isValid]);
 
     useEffect(() => {
@@ -137,7 +134,7 @@ function ReviewList({ table = false }) {
     }, [])
 
     return pageLoadingStage ? '' :
-    <div id="review-list">
+    <div id="review-list" className="pt-3">
         <div className="w-100"> 
             {reviewsDesc && reviewsDesc.length > 0 ? (
                 !table ?

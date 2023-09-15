@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import HrStyle from "../../Assets/Css/hr";
 import { UserService } from "../../Services/UserService";
 import { useTranslation } from "react-i18next";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 function ReviewCarousel() {
     const pageSize = 10;
@@ -52,7 +53,7 @@ function ReviewCarousel() {
     /* eslint-enable */
 
     return (items?.length && items?.length > 0) && !pageLoadingStage ?
-        <div className="pt-3 carousel slide carousel-fade d-flex flex-column align-items-center" mdb-data-ride="carousel">
+        <div className="pt-3 px-3 carousel slide carousel-fade d-flex flex-column align-items-center" mdb-data-ride="carousel">
             <h3 className="text-center">{t('most-popular-reviews')}</h3>
             <div className="carousel-inner">
                 {
@@ -67,9 +68,15 @@ function ReviewCarousel() {
                                     <div>
                                         <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>
                                         <span>&#x2022;</span>
-                                        <span className="mx-1">{item?.likesCount ?? 0}</span>
+                                        <span className="mx-1">
+                                            {item?.likesCount ?? 0}
+                                            <MDBIcon className="mx-1" icon="thumbs-up"/>    
+                                        </span>
                                         <span>&#x2022;</span>
-                                        <span className="mx-1">{item?.subjectGrade ?? 0}</span>
+                                        <span className="mx-1">
+                                            {item?.subjectGrade ?? 0}
+                                            <MDBIcon className="mx-1" icon="star"/>
+                                        </span>
                                         {item?.publishedDate && <span>&#x2022;</span>}
                                         {item?.publishedDate && <span className="mx-1">{t('published-date', { date: item?.publishedDate ?? ''})}</span>}
                                     </div>
