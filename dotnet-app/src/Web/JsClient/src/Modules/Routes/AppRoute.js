@@ -16,6 +16,7 @@ import UserActions from "../Identity/User/UserActions";
 import UserInfo from "../Identity/User/UserInfo";
 import { UserManager } from "oidc-client";
 import { config } from "../../Contexts/UserManagerContext";
+import PopularTags from "../Reviews/PopularTags";
 
 const mgr = new UserManager(config);
 const publicProfileSideComponents = async () => {

@@ -4,7 +4,6 @@ import { FilterOptionsContext } from "../../Contexts/FilterOptionsContext";
 import TagInput from "./TagInput";
 import { Tag } from "antd";
 import { ReviewingService } from "../../Services/ReviewingService";
-// import { useNavigate } from "react-router-dom";
 
 const styles = {
     a: {
@@ -96,33 +95,37 @@ function ReviewsFilter({ immutableFilters = [] }) {
         getTags("");
 
         return () => {
-            setFilterOptions(current => current.filter(f => f.name !== 'tags'))
+            setFilterOptions(current => current?.filter(f => f.name !== 'tags'))
         }
     }, [])
     /* eslint-enable */
 
+    useEffect(() => {
+        setSelectedTags(filterOptions?.find(f => f.name === 'tags')?.value ?? []);
+    }, [filterOptions])
+
     // render
     return pageLoadingStage ? '' :
-        <div className="d-flex flex-row">
-            <div className="card mb-3 col-4">
-                <TagInput tags={filterTags()} getTags={getTags} addTag={addTag} inputPlaceholder={t('filter_tags_input_placeholder')}/>
-                <div style={styles.tagsArea} className="overflow-auto">
-                {
-                    selectedTags.map((tag) => 
-                    <span
-                        style={styles.a}
-                        className="text-decoration-none"
-                        key={tag}
-                        onClick={() => removeTag({tag})}>
-                            <Tag className="m-1" color="#55acee">
-                                {tag}
-                            </Tag>
-                    </span>)
-                }
+        <div className="d-flex flex-column">
+            <h5>{t('filter_header')}</h5>
+            <div className="d-flex flex-column flex-md-row">
+                <div className="card mb-3 col-12 col-sm-6 col-md-4">
+                    <TagInput tags={filterTags()} getTags={getTags} addTag={addTag} inputPlaceholder={t('filter_tags_input_placeholder')}/>
+                    <div style={styles.tagsArea} className="overflow-auto">
+                    {
+                        selectedTags.map((tag) => 
+                        <span
+                            style={styles.a}
+                            className="text-decoration-none"
+                            key={tag}
+                            onClick={() => removeTag({tag})}>
+                                <Tag className="m-1" color="#55acee">
+                                    {tag}
+                                </Tag>
+                        </span>)
+                    }
+                    </div>
                 </div>
-            </div>
-            <div className="col-8">
-
             </div>
             {/* dropdown with tags */}
             {/* dropdown with existing subjects */}

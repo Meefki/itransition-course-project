@@ -134,7 +134,7 @@ function Header() {
             position: 'sticky',
             top: '0px',
             zIndex: 1000,
-            transition: 'transform .1s linear'
+            transition: 'transform .1s ease',
         }}>
             <div className="d-flex flex-row py-2">
                 <img src={logol} alt="" width={imgSize} height={imgSize} className="rounded-circle ms-3" onClick={() => navigate("/")}/>

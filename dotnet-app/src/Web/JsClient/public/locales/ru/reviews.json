@@ -1,5 +1,14 @@
 {
     "published-date": "{{date, DATE_LONG}}",
-    "most-popular-reviews": "Самые популярные обзоры:",
-    "filter_tags_input_placeholder": "Введите тег"
+    "most-popular-reviews": "Самые популярные обзоры",
+    "filter_tags_input_placeholder": "Введите тег",
+
+    "review_list_review_name": "Имя обзора",
+    "review_list_status": "Статус",
+    "review_list_publish_date": "Дата публикации",
+    "review_list_likes": "Лайки",
+    "review_list_tags": "Теги",
+    "review_list_count": "Обзоры",
+
+    "filter_header": "Фильтры"
 }

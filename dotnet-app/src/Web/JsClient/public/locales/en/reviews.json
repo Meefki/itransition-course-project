@@ -1,5 +1,14 @@
 {
     "published-date": "{{date, DATE_LONG}}",
-    "most-popular-reviews": "Most popular reviews:",
-    "filter_tags_input_placeholder": "Enter a tag"
+    "most-popular-reviews": "Most popular reviews",
+    "filter_tags_input_placeholder": "Enter a tag",
+
+    "review_list_review_name": "Review Name",
+    "review_list_status": "Status",
+    "review_list_publish_date": "Publish Date",
+    "review_list_likes": "Likes",
+    "review_list_tags": "Tags",
+    "review_list_count": "Reviews",
+
+    "filter_header": "Filters"
 }
