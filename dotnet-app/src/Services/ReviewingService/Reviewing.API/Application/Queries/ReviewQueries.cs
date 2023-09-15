@@ -28,7 +28,7 @@ public class ReviewQueries
         where rl.ReviewId = @reviewId
 )
 select top 1 
-            r.Id             as [id]
+         r.Id             as [id]
         ,r.[Name]         as [name]
         ,r.AuthorUserId   as [authorUserId]
         ,r.Content        as content
@@ -36,10 +36,11 @@ select top 1
         ,r.ImageUrl       as imageUrl
         ,r.Subject_Name   as subjectName
         ,r.Subject_Grade  as subjectGrage
+        ,r.PublishedDate  as publishedDate
         ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
     from [reviewing].Reviews       as r
-    join [reviewing].SubjectGroups as sg.Id = r.Subject_Group
+    join [reviewing].SubjectGroups as sg on sg.Id = r.Subject_Group
     cross join likes_count         as lc
     where r.Id = @reviewId";
         string tagsSql =
@@ -49,7 +50,7 @@ select top 1
 
         using var connection = new SqlConnection(connectionString);
         connection.Open();
-        dynamic review = await connection.QueryAsync<dynamic>(reviewSql, param, commandTimeout: timeout.Seconds);
+        ReviewVM review = (await connection.QueryAsync<ReviewVM>(reviewSql, param, commandTimeout: timeout.Seconds)).Single();
         dynamic reviewTags = await connection.QueryAsync<dynamic>(tagsSql, param, commandTimeout: timeout.Seconds);
 
         List<string> tags = new();
@@ -163,8 +164,9 @@ select distinct
         var timeout = TimeSpan.FromSeconds(3); // TODO: set from config
         string sql =
 @$"select top {pageSize} 
-     t.[Name]
-    ,t.[Count] from (
+     t.[Name]  as [value]
+    ,t.[Count] as [count]
+  from (
   select 
        t.[Name]
       ,count(rt.ReviewId) as [Count]

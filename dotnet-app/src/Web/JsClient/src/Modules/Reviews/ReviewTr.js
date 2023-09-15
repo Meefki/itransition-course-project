@@ -52,7 +52,7 @@ function ReviewTr({reviewDesc, check}) {
     return pageLoadingStage ? '' :
     <tr className="align-middle">
         <td><MDBCheckbox checked={isCheched} onChange={() => onCheck()} id={"review-checkbox-" + reviewDesc.id} /></td>
-        <td><span role="button" className="link-button" onClick={() => navigate("/review/" + reviewDesc?.id)}>{reviewDesc.name}</span></td>
+        <td><span role="button" className="link-primary" onClick={() => navigate("/review/" + reviewDesc?.id)}>{reviewDesc.name}</span></td>
         <td>{reviewDesc.status}</td>
         <td className="text-nowrap">{t('published-date', { date: reviewDesc?.publishedDate ?? ''})}</td>
         <td className="text-end">{reviewDesc.likes ?? 0}</td>

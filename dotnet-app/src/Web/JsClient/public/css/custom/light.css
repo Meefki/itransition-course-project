@@ -6,10 +6,6 @@
     filter: invert(1) grayscale(100);
 }
 
-.link-button {
-    color: rgb(57, 57, 179);
-}
-
 .tbb {
     border-bottom: 1px solid rgb(36, 36, 36);
 }

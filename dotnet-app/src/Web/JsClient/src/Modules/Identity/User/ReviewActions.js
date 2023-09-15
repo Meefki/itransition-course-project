@@ -27,9 +27,9 @@ function ReviewActions() {
     return pageLoadingStage ? '' :
         <div className="mx-4 mb-4 d-flex flex-column">
             <h5>{t('user_profile_review_actions')}</h5>
-            <span className="link-button" type="button" aria-disabled="true">{t('user_profile_review_action_create')}</span>
-            <span className="link-button" type="button" aria-disabled="true">{t('user_profile_review_action_edit')}</span>
-            <span className="link-button" type="button" aria-disabled="true">{t('user_profile_review_action_delete')}</span>
+            <span className="link-primary" type="button" aria-disabled="true">{t('user_profile_review_action_create')}</span>
+            <span className="link-primary" type="button" aria-disabled="true">{t('user_profile_review_action_edit')}</span>
+            <span className="link-primary" type="button" aria-disabled="true">{t('user_profile_review_action_delete')}</span>
             <div style={HrStyle.horizontalHrStyle}/>
         </div>
 }

@@ -61,16 +61,22 @@ function ReviewCarousel() {
                         return(
                             <div className={`px-5 carousel-item ${index === activeSlide ? 'active' : ''}`} key={index}>
                                 <div style={{height: "300px"}} className="px-3 d-flex flex-column align-items-center justify-content-between">
+                                    <div>
+                                        <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>
+                                        <span>&#x2022;</span>
+                                        <span className="mx-1">
+                                            0
+                                            <MDBIcon className="mx-1" icon="thumbs-up"/>    
+                                        </span>
+                                    </div>
                                     <div onClick={() => navigate(`/review/${item.id}`)} className="px-3 d-flex flex-column align-items-center justify-content-center">
                                         <img className="mb-2" role="button" height={112} width={112} src={item.imageUrl} alt={item.imageUrl}/>
                                         <h4 className="text-center" role="button">{item.name}</h4>
                                     </div>
                                     <div>
-                                        <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>
-                                        <span>&#x2022;</span>
                                         <span className="mx-1">
                                             {item?.likesCount ?? 0}
-                                            <MDBIcon className="mx-1" icon="thumbs-up"/>    
+                                            <MDBIcon className="mx-1" icon="thumbs-up"/>  
                                         </span>
                                         <span>&#x2022;</span>
                                         <span className="mx-1">

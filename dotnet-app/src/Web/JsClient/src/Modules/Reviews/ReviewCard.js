@@ -1,10 +1,11 @@
 import { 
-    MDBCol, MDBRow, MDBBadge, MDBIcon
+    MDBCol, MDBRow, MDBIcon
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import { horizontalHrStyle } from "../../Assets/Css/hr";
 import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
+import { Tag } from "antd";
 
 function ReviewCard({ reviewDesc }) {
 
@@ -34,16 +35,9 @@ function ReviewCard({ reviewDesc }) {
                     <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + reviewDesc?.authorUserId)}>{reviewDesc?.userName ?? ''}</span>
                     <span>&#x2022;</span>
                     <span className="mx-1">
-                        {reviewDesc?.likesCount ?? 0}
+                        0{/* summ likes count for all user reviews */}
                         <MDBIcon className="mx-1" icon="thumbs-up"/>
                     </span>
-                    <span>&#x2022;</span>
-                    <span className="mx-1">
-                        {reviewDesc?.subjectGrade ?? 0}
-                        <MDBIcon className="mx-1" icon="star"/>
-                    </span>
-                    {reviewDesc?.publishedDate && <span>&#x2022;</span>}
-                    {reviewDesc?.publishedDate &&<span className="mx-1">{t('published-date', { date: reviewDesc?.publishedDate ?? ''})}</span>}
                 </div>
             </MDBRow>
             <MDBRow>
@@ -52,8 +46,21 @@ function ReviewCard({ reviewDesc }) {
                         <h5>{reviewDesc?.name}</h5>
                         <p>{reviewDesc?.shortDesc}</p>
                     </div>
+                    <div className="d-flex justify-content-start">
+                        <span className="mx-1">
+                            {reviewDesc?.likesCount ?? 0}
+                            <MDBIcon className="mx-1" icon="thumbs-up"/>
+                        </span>
+                        <span>&#x2022;</span>
+                        <span className="mx-1">
+                            {reviewDesc?.subjectGrade ?? 0}
+                            <MDBIcon className="mx-1" icon="star"/>
+                        </span>
+                        {reviewDesc?.publishedDate && <span>&#x2022;</span>}
+                        {reviewDesc?.publishedDate &&<span className="mx-1">{t('published-date', { date: reviewDesc?.publishedDate ?? ''})}</span>}
+                    </div>
                     <div>
-                        {reviewDesc?.tags?.map((tag) => <MDBBadge className="me-2" key={tag}>{tag}</MDBBadge>)}
+                        {reviewDesc?.tags?.map((tag) => <Tag color="#55acee" className="me-2" key={tag}>{tag}</Tag>)}
                     </div>
                 </MDBCol>
                 <MDBCol size="4" sm="3" md="3" lg="3" className="d-flex justify-content-end d-none d-sm-flex"> 

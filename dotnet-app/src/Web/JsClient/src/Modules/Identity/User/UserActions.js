@@ -27,8 +27,8 @@ function UserActions() {
     return pageLoadingStage ? '' :
         <div className="mx-4 mb-4 d-flex flex-column">
             <h5>{t('user_profile_user_actions')}</h5>
-            <span className="link-button" type="button" aria-disabled="true">{t('user_profile_user_action_edit')}</span>
-            <span className="link-button" type="button" aria-disabled="true">{t('user_profile_user_action_delete')}</span>
+            <span className="link-primary" type="button" aria-disabled="true">{t('user_profile_user_action_edit')}</span>
+            <span className="link-primary" type="button" aria-disabled="true">{t('user_profile_user_action_delete')}</span>
             <div style={HrStyle.horizontalHrStyle}/>
         </div>
 }
