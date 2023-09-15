@@ -52,7 +52,7 @@ function ReviewCarousel() {
     /* eslint-enable */
 
     return (items?.length && items?.length > 0) && !pageLoadingStage ?
-        <div className="mt-3 carousel slide carousel-fade d-flex flex-column align-items-center" mdb-data-ride="carousel">
+        <div className="pt-3 carousel slide carousel-fade d-flex flex-column align-items-center" mdb-data-ride="carousel">
             <h3 className="text-center">{t('most-popular-reviews')}</h3>
             <div className="carousel-inner">
                 {
@@ -63,7 +63,6 @@ function ReviewCarousel() {
                                     <div onClick={() => navigate(`/review/${item.id}`)} className="px-3 d-flex flex-column align-items-center justify-content-center">
                                         <img className="mb-2" role="button" height={112} width={112} src={item.imageUrl} alt={item.imageUrl}/>
                                         <h4 className="text-center" role="button">{item.name}</h4>
-                                        {/* <p className="text-center" role="button">{item.shortDesc}</p> */}
                                     </div>
                                     <div>
                                         <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>

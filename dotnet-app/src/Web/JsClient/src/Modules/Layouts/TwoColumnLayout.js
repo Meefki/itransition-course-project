@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { MDBContainer } from "mdb-react-ui-kit";
 import HrStyle from '../../Assets/Css/hr'
 
@@ -12,7 +12,7 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
     const [secondColPos, setSecondColPos] = useState('sticky');
     const [secondColTop, setSecondColTop] = useState(0);
     const [secondColMgTop, setSecondColMgTop] = useState(0);
-    const error = 25;
+    const error = 20;
 
     const colClasses = {
         hide: {
@@ -33,12 +33,11 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
     }
 
     /* eslint-disable */
-    useEffect(() => {
+    useLayoutEffect(() => {
         const scrollDirection = scrollTop >= lastScrollTop;
         setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
 
         const col = document.getElementById('second-column');
-        //const header = document.getElementById('header');
         const doc = document.documentElement;
 
         if (col)
@@ -47,7 +46,7 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
                 if (secondColPos === 'relative' && secondColMgTop + col.clientHeight - doc?.clientHeight <= scrollTop) {
                     setSecondColPos('sticky');
                     setSecondColTop(doc?.clientHeight - col.clientHeight);
-                    setSecondColMgTop('0px');
+                    setSecondColMgTop(0);
                 }
                 if (secondColPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
                     setSecondColPos('relative');
@@ -107,8 +106,8 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
         <div>
             <MDBContainer className={hideSecondCol ? colClasses.hide.parent : colClasses.show.parent}>
                 <div className={hideSecondCol ? colClasses.hide.first : colClasses.show.first} style={{minHeight: `calc(100vh - ${document.getElementById('header')?.clientHeight}px)`}}>
-                    <div className="mt-5 flex-fill">
-                        {mainComponents && mainComponents?.map((c, index) => <div key={index}>{c}</div>)}
+                    <div className="px-4 flex-fill w-100">
+                        {mainComponents && mainComponents?.map((c, index) => React.cloneElement(c, {key: index}))}
                     </div>
                     <div className="d-none d-lg-block" style={HrStyle.verticalHrStyle}/>
                 </div>
@@ -120,7 +119,7 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
                             top: `${secondColTop}px`,
                             minHeight: `calc(100vh - ${headerHeight}px)`
                         }}>
-                        <div className='pt-5'>
+                        <div>
                             <div>
                                 {sideComponents && sideComponents?.map((c, index) => 
                                     <div key={index}>

@@ -74,7 +74,7 @@ const AppRoutes = [
                 title: 'Main page',
                 path: '/',
                 component: <TwoColumnLayout 
-                    mainComponents={[<ReviewList />]} 
+                    mainComponents={[<PopularTags />, <ReviewList />]} 
                     sideComponents={[<ReviewCarousel />]} />,
                 isPublic: true
             },

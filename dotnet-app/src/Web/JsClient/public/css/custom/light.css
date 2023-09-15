@@ -9,3 +9,24 @@
 .link-button {
     color: rgb(57, 57, 179);
 }
+
+.tbb {
+    border-bottom: 1px solid rgb(36, 36, 36);
+}
+
+.al {
+    background-image: url('../../icons/right-arrow-black.svg');
+    transform: rotate(180deg);
+}
+
+.ar {
+    background-image: url('../../icons/right-arrow-black.svg');
+}
+
+.anl {
+    background: linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.75) 25%, rgba(255, 255, 255, 0.9) 50%, rgb(255, 255, 255) 75%);
+}
+
+.anr {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.75) 25%, rgba(255, 255, 255, 0.9) 50%, rgb(255, 255, 255) 75%);
+}

@@ -39,8 +39,28 @@
 .dropdown-menu::before {
     display: none;
 }
-@media (max-width: 768px) {
-    .m-z {
-        margin: 0px !important;
-    }
+
+.zero-scroll::-webkit-scrollbar {
+    background: transparent;
+    width: 0px;
+}
+
+.anl {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.anr {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+#scroller-items {
+    transition: margin .2s ease-in;
 }

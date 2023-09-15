@@ -19,6 +19,15 @@ export class ReviewingService {
         return await fetchGet(url);
     }
 
+    getMostPopularTags = async (pageSize) => {
+        const params = [
+            { name: 'pageSize', value: pageSize}
+        ]
+
+        const url = process.env.REACT_APP_REVIEWING_API + '/reviews/tags/popular' + getSearch(params);
+        return await fetchGet(url);
+    }
+
     getReview = async (reviewId) => {
         if (!reviewId) return;
 

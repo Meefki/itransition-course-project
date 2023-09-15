@@ -78,6 +78,7 @@ function UserInfo({ owner = false }) {
                     filters[i] = { name: 'authorUserId', value: userInfo?.id }
                     return true;
                 }
+                return false;
             })
             if (!obj) {
                 filters?.push({ name: 'authorUserId', value: userInfo?.id });
