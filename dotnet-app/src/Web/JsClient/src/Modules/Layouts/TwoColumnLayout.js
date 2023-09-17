@@ -32,6 +32,12 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
         setScrollTop(height);
     }
 
+    function setSecondColParams(position, top, marginTop) {
+        setSecondColPos(position);
+        setSecondColTop(top);
+        setSecondColMgTop(marginTop);
+    }
+
     /* eslint-disable */
     useLayoutEffect(() => {
         const scrollDirection = scrollTop >= lastScrollTop;
@@ -46,45 +52,31 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
                 if (scrollDirection) {
                     if (scrollDirection === lastScrollDirection) {
                         if (secondColPos === 'relative' && secondColMgTop + col.clientHeight - doc?.clientHeight <= scrollTop) {
-                            setSecondColPos('sticky');
-                            setSecondColTop(doc?.clientHeight - col.clientHeight);
-                            setSecondColMgTop(0);
+                            setSecondColParams('sticky', doc?.clientHeight - col.clientHeight, 0);
                         }
                         if (secondColPos === 'sticky' && (col.clientHeight - doc?.clientHeight - error) > scrollTop) {
-                            setSecondColPos('relative');
-                            setSecondColMgTop(scrollTop);
-                            setSecondColTop(0);
+                            setSecondColParams('relative', scrollTop, 0);
                         }
                     } else {
                         if (secondColPos === 'relative') {
                             if (secondColMgTop + col.clientHeight - doc?.clientHeight - error <= scrollTop) {
-                                setSecondColPos('sticky');
-                                setSecondColTop(doc?.clientHeight - col.clientHeight);
-                                setSecondColMgTop(0);
+                                setSecondColParams('sticky', doc?.clientHeight - col.clientHeight, 0);
                             }
                         } else {
-                            setSecondColPos('relative');
-                            setSecondColMgTop(scrollTop);
-                            setSecondColTop(0);
+                            setSecondColParams('relative', scrollTop, 0);
                         }
                     }
                 } else {
                     if (scrollDirection === lastScrollDirection) {
                         if (secondColPos === 'relative' && (secondColMgTop + error) >= scrollTop) {
-                            setSecondColPos('sticky');
-                            setSecondColTop(headerHeight);
-                            setSecondColMgTop(0);
+                            setSecondColParams('sticky', headerHeight, 0);
                         }
                     } else {
                         if (secondColPos === 'sticky') {
-                            setSecondColPos('relative');
-                            setSecondColMgTop(scrollTop + doc?.clientHeight - headerHeight - col.clientHeight);
-                            setSecondColTop(0);
+                            setSecondColParams('relative', scrollTop + doc?.clientHeight - headerHeight - col.clientHeight, 0);
                         } else {
                             if (secondColMgTop >= scrollTop) {
-                                setSecondColPos('sticky');
-                                setSecondColTop(headerHeight);
-                                setSecondColMgTop(0);
+                                setSecondColParams('sticky', headerHeight, 0);
                             }
                         }
                     }

@@ -38,6 +38,7 @@ const ThemeLayout = () => {
         document.getElementById('theme').setAttribute('href', theme.cssPaths.main);
         document.getElementById('custom').setAttribute('href', theme.cssPaths.custom);
         localStorage.setItem('theme', JSON.stringify(theme));
+        window.dispatchEvent(new Event('theme'));
     }
 
     const toggleButton = (isChecked) => {
