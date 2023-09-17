@@ -99,11 +99,13 @@ function Header() {
     }, [i18n.isInitialized]);
 
     useEffect(() => {
-        if (scrollTop > lastScrollTop) {
-            setScrollDirection(false);
-        } else if (scrollTop < lastScrollTop) {
-            setScrollDirection(true);
+        const scrollDirection = scrollTop > lastScrollTop
+
+        const header = document.getElementById('header');
+        if (header?.style) {
+            setHeaderPos(scrollDirection ? -header.clientHeight : 0);
         }
+
         setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
     }, [scrollTop])
 
@@ -134,7 +136,7 @@ function Header() {
             position: 'sticky',
             top: '0px',
             zIndex: 1000,
-            transition: 'transform .1s ease',
+            transition: 'transform .1s ease 0s',
         }}>
             <div className="d-flex flex-row py-2">
                 <img src={logol} alt="" width={imgSize} height={imgSize} className="rounded-circle ms-3" onClick={() => navigate("/")}/>
