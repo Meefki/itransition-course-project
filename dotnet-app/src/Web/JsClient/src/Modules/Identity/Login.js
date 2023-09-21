@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import {
   MDBContainer,
   MDBTabs,
@@ -16,11 +16,16 @@ from 'mdb-react-ui-kit';
 import CryptoJS from 'crypto-js';
 import { IdentityService } from '../../Services/IdentityService';
 import { useTranslation } from 'react-i18next';
+import { UserManagerContext } from '../../Contexts/UserManagerContext';
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
     
     const ns = 'identity-login';
     const { t, i18n } = useTranslation(ns);
+
+    const mgr = useContext(UserManagerContext);
+    const navigate = useNavigate();
 
     const [justifyActive, setJustifyActive] = useState('login')
     // const [name, setName] = useState('');
@@ -105,6 +110,14 @@ export function Login() {
         i18n.hasLoadedNamespace(ns) &&
             setPageLoadingStage(false);
     }, [i18n.isInitialized]);
+
+    useEffect(() => {
+        mgr.getUser()
+            .then(user => {
+                if (user)
+                    navigate("/")
+            })
+    }, [])
     /* eslint-enable */
 
     return pageLoadingStage ? '' :
