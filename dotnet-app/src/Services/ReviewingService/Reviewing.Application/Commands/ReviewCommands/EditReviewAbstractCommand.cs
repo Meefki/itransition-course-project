@@ -5,8 +5,9 @@ public abstract record EditReviewAbstractCommand(
     string Name,
     string Content,
     string ShortDesc,
-    string? ImageUrl,
+    string? ImageContentType,
+    Stream? ImageInputStream,
+    string SubjectId,
     string SubjectName,
-    string SubjectGroupName,
     int SubjectGrade,
     IEnumerable<string> Tags);

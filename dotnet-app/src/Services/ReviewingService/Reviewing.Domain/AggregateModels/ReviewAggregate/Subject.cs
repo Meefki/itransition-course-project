@@ -1,24 +1,34 @@
 ﻿using Reviewing.Domain.AggregateModels.ReviewAggregate.DomainExceptions;
 using Reviewing.Domain.Enumerations;
+using Reviewing.Domain.Identifiers;
 using Reviewing.Domain.SeedWork;
 
 namespace Reviewing.Domain.AggregateModels.ReviewAggregate;
 
 public sealed class Subject
-    : ValueObject
+    : Entity<Guid>
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    private Subject() { }
+    private Subject() : base(null!) { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private Subject(
+        SubjectId id,
         string name,
         SubjectGroups group,
         int grade)
+        : base(id)
     {
         Name = name;
         Group = group;
         Grade = grade;
+    }
+
+    private SubjectId id = null!;
+    public override EntityIdentifier<Guid> Id
+    {
+        get => id;
+        init => id = (SubjectId)value;
     }
 
     public string Name { get; init; }
@@ -37,26 +47,6 @@ public sealed class Subject
         }
     }
 
-    public static Subject Create(string name, SubjectGroups group, int grade)
-        => new(name, group, grade);
-
-    #region Value Object
-    protected override IEnumerable<object?> GetEqualityComponents()
-    {
-        yield return Name;
-        yield return Group;
-        yield return Grade;
-    }
-
-    public override bool Equals(object? obj)
-        => base.Equals(obj);
-
-    public override int GetHashCode()
-        => base.GetHashCode();
-
-    public static bool operator ==(Subject left, Subject right)
-        => EqualOperator(left, right);
-    public static bool operator !=(Subject left, Subject right)
-        => NotEqualOperator(left, right);
-    #endregion
+    public static Subject Create(SubjectId id, string name, SubjectGroups group, int grade)
+        => new(id, name, group, grade);
 }

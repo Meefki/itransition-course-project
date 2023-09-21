@@ -32,7 +32,8 @@ public sealed class Review
 
         this.tags = tags;
         comments = new HashSet<CommentId>();
-        likes = new HashSet<UserId>();
+        likes = new HashSet<Like>();
+        estimates = new HashSet<Estimate>();
     }
 
     private ReviewId id = null!;
@@ -106,13 +107,23 @@ public sealed class Review
         comments.Remove(commentId);
     }
 
-    private readonly ISet<UserId> likes;
-    public IReadOnlyCollection<UserId> Likes => likes.ToList().AsReadOnly();
-    public void ChangeLike(UserId userId)
+    private readonly ISet<Like> likes;
+    public IReadOnlyCollection<Like> Likes => likes.ToList().AsReadOnly();
+    public void ChangeLike(Like like)
     {
-        if (likes.Contains(userId))
-            likes.Remove(userId);
+        if (likes.Any(x => x == like))
+            likes.Remove(likes.First(x => x == like));
         else
-            likes.Add(userId);
+            likes.Add(like);
+    }
+
+    private readonly ISet<Estimate> estimates;
+    public IReadOnlyCollection<Estimate> Estimates => estimates.ToList().AsReadOnly();
+    public void ChangeEstimate(Estimate estimate)
+    {
+        if (estimates.Any(x => x == estimate))
+            estimates.First(x => x == estimate).ChangeGrade(estimate.Grade);
+        else
+            estimates.Add(estimate);
     }
 }

@@ -5,9 +5,10 @@ public record ReviewOptions(
     string AuthorUserId,
     string Content,
     string ShortDesc,
-    string? ImageUrl,
+    string? image,
+    string? imageType,
+    string SubjectId,
     string SubjectName,
-    string SubjectGroupName,
     int SubjectGrade,
     IEnumerable<string> Tags,
     string? Id = null);

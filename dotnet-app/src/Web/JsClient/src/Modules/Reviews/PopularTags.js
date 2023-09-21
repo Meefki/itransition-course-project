@@ -73,7 +73,7 @@ function PopularTags() {
         let moveOn = (items.clientWidth - tagHeader.clientWidth + rightOffser) / steps;
         const leftOffset = parseFloat(items.style.marginLeft.length < 3 ? '0' : items.style.marginLeft.substring(0, items.style.marginLeft.length - 2));
         if (d) {
-            if (-leftOffset < moveOn) {
+            if (-leftOffset < moveOn || items.clientWidth < tagHeader.clientWidth) {
                 items.style.marginLeft = '0px';
                 return;
             } 

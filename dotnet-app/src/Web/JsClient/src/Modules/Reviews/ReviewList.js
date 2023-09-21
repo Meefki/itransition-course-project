@@ -6,6 +6,7 @@ import ReviewCard from "./ReviewCard";
 import { MDBCheckbox, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
 import ReviewTr from "./ReviewTr";
 import { useTranslation } from "react-i18next";
+import { UserManagerContext } from "../../Contexts/UserManagerContext";
 
 function ReviewList({ table = false }) {
 
@@ -26,6 +27,8 @@ function ReviewList({ table = false }) {
     const ns = "reviews";
     const { t, i18n } = useTranslation(ns);
     const [pageLoadingStage, setPageLoadingStage] = useState(true);
+    const mgr = useContext(UserManagerContext);
+    const [userId, setUserId] = useState(null);
 
     /* eslint-disable */
     useEffect(() => {
@@ -58,7 +61,8 @@ function ReviewList({ table = false }) {
                 (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, 
                 (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null, 
                 (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null,
-                !table)
+                !table,
+                userId)
             .then((reviews) => {
                 setReviewsDesc((current) => [...current, ...(reviews
                     .filter((review) => !current.map((curr) => curr.id).includes(review.id)))]);
@@ -85,7 +89,8 @@ function ReviewList({ table = false }) {
                 (sortOptions && sortOptions.length !== 0) ? sortOptions : defaultSortOptions, 
                 (filterOptions.filter(f => f.name !== 'tags').length !== 0) ? filterOptions.filter(f => f.name !== "tags") : null,
                 (filterOptions.filter(f => f.name === 'tags').length !== 0) ? filterOptions.find(f => f.name === "tags")?.value : null,
-                !table)
+                !table,
+                userId)
             .then((reviews) => {
                 setReviewsDesc(reviews);
                 setDataLoading(false);
@@ -113,6 +118,19 @@ function ReviewList({ table = false }) {
         i18n.hasLoadedNamespace(ns) &&
             setPageLoadingStage(false);
     }, [i18n.isInitialized]);
+    
+    useEffect(() => {
+        window.addEventListener('scroll', handleOnScroll);
+        mgr.getUser()
+            .then(user => {
+                if (user)
+                    setUserId(user.profile.sub);
+            });
+
+        return () => {
+            window.removeEventListener('scroll', handleOnScroll);
+        }
+    }, [])
     /* eslint-enable */
 
     const loadMore = () => {
@@ -125,13 +143,7 @@ function ReviewList({ table = false }) {
         setScrollTop(height);
     }
 
-    useEffect(() => {
-        window.addEventListener('scroll', handleOnScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleOnScroll);
-        }
-    }, [])
+    
 
     return pageLoadingStage ? '' :
     <div id="review-list" className="pt-3">

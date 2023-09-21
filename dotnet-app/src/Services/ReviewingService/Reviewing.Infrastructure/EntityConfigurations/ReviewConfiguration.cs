@@ -31,72 +31,11 @@ public class ReviewConfiguration
                 status => status.Name,
                 value => Enumeration.FromDisplayName<ReviewStatuses>(value));
 
-        builder.OwnsOne(x => x.Subject, subjectBuidler =>
-        {
-            subjectBuidler.Ignore(x => x.Group);
-                //.HasConversion(
-                //    group => group.Id,
-                //    value => Enumeration.FromValue<SubjectGroups>(value))
-                //.HasColumnName("Subject_Group");
-
-            //subjectBuidler.OwnsOne(x => x.Group, groupBuilder =>
-            //{
-            //    groupBuilder.ToTable("SubjectGroups", ReviewingDbContext.DEFAULT_SCHEMA);
-
-            //    groupBuilder.OwnsMany<Review>("ReviewId", subBuilder =>
-            //    {
-            //        subBuilder.HasOne(x => x.Subject.Group)
-            //            .WithMany()
-            //            .HasForeignKey("Subject_Group");
-            //    });
-
-            //    //const string foreignKey = "Id";
-            //    //groupBuilder.WithOwner().HasForeignKey(foreignKey);
-
-            //    groupBuilder.Property(x => x.Id)
-            //        .ValueGeneratedNever()
-            //        .IsRequired();
-            //    groupBuilder.HasKey(x => x.Id);
-
-            //    groupBuilder.Property(x => x.Name)
-            //        .HasMaxLength(50)
-            //        .IsRequired();
-            //    groupBuilder.HasIndex(x => x.Name)
-            //        .IsUnique();
-            //});
-
-            //subjectBuidler.OwnsMany<SubjectGroups>(nameof(Subject.Group), subjectGroupBuilder =>
-            //{
-
-            //});
-
-            //subjectBuidler.OwnsOne(x => x.Group, groupBuilder =>
-            //{
-            //    groupBuilder.ToTable("SubjectGroups", ReviewingDbContext.DEFAULT_SCHEMA);
-            //    const string foreignKey = "Id";
-            //    groupBuilder.WithOwner().HasForeignKey(foreignKey);
-            //    groupBuilder.Property(x => x.Id)
-            //        .ValueGeneratedNever()
-            //        .IsRequired();
-            //    groupBuilder.HasKey(x => x.Id);
-
-            //    groupBuilder.Property(x => x.Name)
-            //        .HasMaxLength(50)
-            //        .IsRequired();
-            //    groupBuilder.HasIndex(x => x.Name)
-            //        .IsUnique();
-            //});
-        });
-
         builder.OwnsMany(x => x.Comments, commentBuilder =>
         {
             commentBuilder.ToTable("ReviewComments", ReviewingDbContext.DEFAULT_SCHEMA);
             const string foreignKey = "ReviewId";
             const string primaryKey = "CommentId";
-            commentBuilder.Property<EntityIdentifier<Guid>>(foreignKey)
-                .HasConversion(
-                    id => id.Value,
-                    value => ReviewId.Create<ReviewId>(value));
             commentBuilder.WithOwner().HasForeignKey(foreignKey);
             commentBuilder.Property(x => x.Value).HasColumnName(primaryKey);
             commentBuilder.HasKey(nameof(CommentId.Value), foreignKey);
@@ -107,14 +46,31 @@ public class ReviewConfiguration
             likeBuilder.ToTable("ReviewLikes", ReviewingDbContext.DEFAULT_SCHEMA);
             const string foreignKey = "ReviewId";
             const string primaryKey = "UserId";
-            likeBuilder.Property<EntityIdentifier<Guid>>(foreignKey)
+            likeBuilder.WithOwner().HasForeignKey(foreignKey);
+            likeBuilder.Property(x => x.Id)
                 .HasConversion(
                     id => id.Value,
-                    value => ReviewId.Create<ReviewId>(value));
-            likeBuilder.WithOwner().HasForeignKey(foreignKey);
-            likeBuilder.Property(x => x.Value).HasColumnName(primaryKey);
-            likeBuilder.HasKey(nameof(UserId.Value), foreignKey);
+                    value => UserId.Create<UserId>(value))
+                .HasColumnName(primaryKey);
+            likeBuilder.HasKey("Id", foreignKey);
         });
+
+        builder.OwnsMany(x => x.Estimates, estimateBuilder =>
+        {
+            estimateBuilder.ToTable("Estimates", ReviewingDbContext.DEFAULT_SCHEMA);
+            const string foreignKey = "ReviewId";
+            estimateBuilder.WithOwner().HasForeignKey(foreignKey);
+            estimateBuilder.Property(x => x.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => UserId.Create<UserId>(value))
+                .HasColumnName("UserId");
+            estimateBuilder.HasKey(foreignKey, "Id");
+        });
+
+        builder.HasOne(x => x.Subject)
+            .WithMany()
+            .HasForeignKey("SubjectId");
 
         builder.HasMany(x => x.Tags)
             .WithMany();

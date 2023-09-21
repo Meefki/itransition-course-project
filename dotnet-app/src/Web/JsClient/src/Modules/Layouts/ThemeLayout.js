@@ -56,7 +56,7 @@ const ThemeLayout = () => {
         <div>
             <Outlet />
 
-            <div className='position-fixed bottom-0 end-0 m-3'>
+            <div className='bg position-fixed bottom-0 end-0 m-3'>
                 <div className='d-flex flex-column justify-content-center align-items-center border rounded p-2'>
                     <MDBIcon icon={theme.icon} className='mb-3' size='2x' title={theme.key}/>
                     <MDBSwitch title='Change theme here!' checked={theme.key === dark} onChange={(e) => toggleButton(e.target.checked)}/>

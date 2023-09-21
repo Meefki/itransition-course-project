@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Reviewing.Application.Repositories;
 using Reviewing.Application.SeedWork;
+using Reviewing.Application.Services;
 using Reviewing.Domain.AggregateModels.ReviewAggregate;
 using Reviewing.Domain.Enumerations;
 using Reviewing.Domain.Identifiers;
-using Reviewing.Domain.SeedWork;
 
 namespace Reviewing.Application.Commands.ReviewCommands;
 
@@ -13,13 +13,16 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
     where TRequest : EditReviewAbstractCommand
 {
     private readonly IReviewRepository reviewRepository;
+    private readonly IImageService imageService;
 
     protected EditReviewAbstractCommandHandler(
         IReviewRepository reviewRepository,
+        IImageService imageService,
         ILogger logger)
         : base(logger)
     {
         this.reviewRepository = reviewRepository;
+        this.imageService = imageService;
     }
 
     protected override async Task Action(TRequest request, CancellationToken cancellationToken)
@@ -27,7 +30,7 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
         ReviewId reviewId = ReviewId.Create<ReviewId>(Guid.Parse(request.ReviewId));
         Review review = await reviewRepository.GetById(reviewId);
 
-        bool isChanged = EditReviewAbstractCommandHandler<TRequest>.UpdateReview(review, request);
+        bool isChanged = await UpdateReview(review, request);
 
         if (isChanged)
         {
@@ -37,16 +40,12 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
         }
     }
 
-    private static bool UpdateReview(Review review, TRequest request)
+    private async Task<bool> UpdateReview(Review review, TRequest request)
     {
         bool isChanged = false;
 
-        IEnumerable<SubjectGroups> subjectGroups = Enumeration.GetAll<SubjectGroups>();
-        SubjectGroups subjectGroup =
-            subjectGroups
-                .FirstOrDefault(x => x.Name == request.SubjectName) ??
-                new(subjectGroups.Max(x => x.Id) + 1, request.SubjectName);
-        Subject subject = Subject.Create(request.SubjectName, subjectGroup, request.SubjectGrade);
+        SubjectGroups subjectGroup = new(1, request.SubjectName);
+        Subject subject = Subject.Create(SubjectId.Create<SubjectId>(Guid.Parse(request.SubjectId)), request.SubjectName, subjectGroup, request.SubjectGrade);
         if (review.Subject != subject)
         {
             review.ChangeSubject(subject);
@@ -71,9 +70,15 @@ public abstract class EditReviewAbstractCommandHandler<TRequest>
             isChanged = true;
         }
 
-        if (review.ImageUrl != request.ImageUrl)
+        if (!string.IsNullOrEmpty(request.ImageContentType) && request.ImageInputStream is not null)
         {
-            review.ChangeImage(request.ImageUrl);
+            string? imageUrl = await imageService.UploadImageAsync(review.Id.ToString(), request.ImageContentType, request.ImageInputStream);
+            review.ChangeImage(imageUrl);
+            isChanged = true;
+        }
+        else
+        {
+            review.ChangeImage(null);
             isChanged = true;
         }
 

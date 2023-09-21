@@ -18,6 +18,7 @@ import { UserManager } from "oidc-client";
 import { config } from "../../Contexts/UserManagerContext";
 import PopularTags from "../Reviews/PopularTags";
 import TagsCloud from "../Reviews/TagCloud";
+import ReviewEditor from "../Reviews/ReviewEditor";
 
 const mgr = new UserManager(config);
 const publicProfileSideComponents = async () => {
@@ -39,6 +40,20 @@ const AppRoutes = [
                 path: '/login',
                 component: <Login />,
                 isPublic: true
+            },
+            {
+                name: 'review-create',
+                title: 'Create review',
+                path: '/review/create/:userId',
+                component: <ReviewEditor />,
+                isPublic: true // should be false
+            },
+            {
+                name: 'review-edit',
+                title: 'Create review',
+                path: '/review/edit/:id',
+                component: <ReviewEditor />,
+                isPublic: true // should be false
             }
         ]
     },
@@ -108,7 +123,7 @@ const AppRoutes = [
                 path: '/review/:id',
                 component: <Review />,
                 isPublic: true
-            },
+            }
         ]
     }
 ]

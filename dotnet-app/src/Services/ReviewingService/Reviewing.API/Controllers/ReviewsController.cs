@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using Amazon.S3.Model;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reviewing.API.Application.Commands.ReviewCommands;
 using Reviewing.API.Application.Queries.Options;
+using Reviewing.Application.Services;
 
 namespace Reviewing.API.Controllers
 {
@@ -37,10 +39,20 @@ namespace Reviewing.API.Controllers
         }
 
         [HttpGet]
-        [Route("{reviewId}")]
-        public async Task<dynamic> GetReview(string reviewId)
+        [Route("subjects")]
+        public async Task<dynamic> GetSubjects(string? startWith = null)
         {
-            return await reviewQueries.GetReview(reviewId);
+            return await reviewQueries.GetSubjects(startWith ?? "");
+        }
+
+        [HttpGet]
+        [Route("{reviewId}")]
+        public async Task<dynamic> GetReview(
+            string reviewId,
+            string? userId = null)
+        {
+            dynamic review = await reviewQueries.GetReview(reviewId, userId);
+            return review;
         }
 
         [HttpGet]
@@ -71,7 +83,8 @@ namespace Reviewing.API.Controllers
             int pageNumber = 0,
             [FromQuery] Dictionary<string, string>? sortOptions = null,
             [FromQuery] Dictionary<string, string>? filterOptions = null,
-            [FromQuery] List<string>? tags = null)
+            [FromQuery] List<string>? tags = null,
+            string? userId = null)
         {
             if (filterOptions is not null)
             {
@@ -107,7 +120,7 @@ namespace Reviewing.API.Controllers
                 };
             }
 
-            return await reviewQueries.GetReviewsShortDescription(pagination, sort, filter);
+            return await reviewQueries.GetReviewsShortDescription(pagination, sort, filter, userId);
         }
 
         [HttpPost]
@@ -115,17 +128,25 @@ namespace Reviewing.API.Controllers
         [Authorize(Policy = "Review_edit")]
         public async Task<dynamic> Publish([FromBody] ReviewOptions opt)
         {
-            PublishReviewCommand command = new(opt.Name, opt.AuthorUserId, opt.Content, opt.ShortDesc, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
+            string? imageString = string.IsNullOrEmpty(opt.image) ? null : opt.image[(opt.image.IndexOf("base64,") + "base64,".Length)..];
+            var bytes = string.IsNullOrEmpty(imageString) ? null : Convert.FromBase64String(imageString);
+            Stream? imageStream = bytes is null ? null : new MemoryStream(bytes);
+
+            PublishReviewCommand command = new(opt.Name, opt.AuthorUserId, opt.Content, opt.ShortDesc, opt.imageType, imageStream, opt.SubjectId, opt.SubjectName, opt.SubjectGrade, opt.Tags);
             CommandResponse<string> response = await mediator.Send(command);
 
             return response;
         }
 
         [HttpPut]
-        [Authorize(Policy = "Review_edit")]
+        [Authorize]
         public async Task<CommandResponse> Edit([FromBody] ReviewOptions opt)
         {
-            EditReviewCommand command = new(opt.Id!, opt.Name, opt.Content, opt.ShortDesc, opt.ImageUrl, opt.SubjectName, opt.SubjectGroupName, opt.SubjectGrade, opt.Tags);
+            string? imageString = string.IsNullOrEmpty(opt.image) ? null : opt.image[(opt.image.IndexOf("base64,") + "base64,".Length)..];
+            var bytes = string.IsNullOrEmpty(imageString) ? null : Convert.FromBase64String(imageString);
+            Stream? imageStream = bytes is null ? null : new MemoryStream(bytes);
+
+            EditReviewCommand command = new(opt.Id!, opt.Name, opt.Content, opt.ShortDesc, opt.imageType, imageStream, opt.SubjectId, opt.SubjectName, opt.SubjectGrade, opt.Tags);
             CommandResponse response = await mediator.Send(command);
 
             return response;
@@ -136,6 +157,28 @@ namespace Reviewing.API.Controllers
         public async Task<CommandResponse> Delete(string reviewId)
         {
             DeleteReviewCommand command = new(reviewId);
+            CommandResponse response = await mediator.Send(command);
+
+            return response;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("like")]
+        public async Task<CommandResponse> Like(string reviewId, string userId)
+        {
+            LikeReviewCommand command = new(reviewId, userId);
+            CommandResponse response = await mediator.Send(command);
+
+            return response;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("estimate")]
+        public async Task<CommandResponse> Estimate(string reviewId, string userId, int grade)
+        {
+            EstimateReviewCommand command = new(reviewId, userId, grade);
             CommandResponse response = await mediator.Send(command);
 
             return response;

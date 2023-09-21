@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Reviewing.Application.SeedWork;
 using Reviewing.Domain.AggregateModels.CommentAggregate;
 using Reviewing.Domain.AggregateModels.ReviewAggregate;
+using Reviewing.Domain.Enumerations;
 using Reviewing.Infrastructure.SeedWork;
 using System.Data;
 
@@ -16,8 +17,12 @@ public class ReviewingDbContext
     private readonly IDomainEventMediator mediator = null!;
     private IDbContextTransaction? currentTransaction;
 
-    public DbSet<Review> Reviews { get; } = null!;
+    public DbSet<Review> Reviews { get; set; }
     public DbSet<Comment> Comments { get; set; }
+
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<SubjectGroups> SubjectGroups { get; set; }
 
     //public ReviewingDbContext(DbContextOptions<ReviewingDbContext> options) : base(options) { }
     public ReviewingDbContext(

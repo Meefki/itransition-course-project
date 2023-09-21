@@ -1,9 +1,6 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace Reviewing.API.Authorization;
 
@@ -45,7 +42,7 @@ public class ReviewEditHandler : AuthorizationHandler<ReviewEditRequirenment>
         string? authorUserId = request["AuthorUserId"];
         string? subClaim = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         string? adminClaim = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role && x.Value == "admin")?.Value;
-        if (string.IsNullOrEmpty(authorUserId) || (authorUserId != subClaim && adminClaim is null))
+        if (!(adminClaim is not null || authorUserId == subClaim))
         {
             AuthorizationFailureReason reason = new(this, "Wrong value of authorUserId");
             context.Fail(reason);

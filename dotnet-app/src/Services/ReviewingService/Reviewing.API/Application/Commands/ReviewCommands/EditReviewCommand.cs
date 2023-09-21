@@ -8,9 +8,10 @@ public record EditReviewCommand(
     string Name,
     string Content,
     string ShortDesc,
-    string? ImageUrl,
+    string? ImageContentType,
+    Stream? ImageInputStream,
+    string SubjectId,
     string SubjectName,
-    string SubjectGroupName,
     int Grade,
     IEnumerable<string> Tags) : 
     EditReviewAbstractCommand(
@@ -18,9 +19,10 @@ public record EditReviewCommand(
         Name,
         Content,
         ShortDesc,
-        ImageUrl,
+        ImageContentType,
+        ImageInputStream,
+        SubjectId,
         SubjectName,
-        SubjectGroupName,
         Grade,
         Tags), 
     IRequest<CommandResponse>;

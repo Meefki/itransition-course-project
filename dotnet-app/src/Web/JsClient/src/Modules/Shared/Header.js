@@ -17,7 +17,6 @@ import HrStyle from "../../Assets/Css/hr";
 function Header() {
     const navigate = useNavigate();
 
-    const [scrollDirection, setScrollDirection] = useState(true);
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [scrollTop, setScrollTop] = useState(0);
     const [headerPos, setHeaderPos] = useState(0);
@@ -122,13 +121,6 @@ function Header() {
     const handleOnScroll = () => {
         setScrollTop(window.scrollY || document.documentElement.scrollTop);
     }
-
-    useEffect(() => {
-        const header = document.getElementById('header');
-        if (header?.style) {
-            setHeaderPos(scrollDirection ? 0 : -header.clientHeight);
-        }
-    }, [scrollDirection])
 
     return pageLoadingStage ? '' :
         <div id="header" className="header" style={{

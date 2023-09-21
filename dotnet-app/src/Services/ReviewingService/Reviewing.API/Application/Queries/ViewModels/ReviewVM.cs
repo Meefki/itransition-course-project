@@ -19,6 +19,9 @@ public class ReviewVM
     public int? likesCount { get; set; }
     public DateTime publishedDate { get; set; }
     public List<string> tags { get; set; }
-    public string content { get; set; }
+    public string content { get; set; } = null!;
+    public float estimate { get; set; }
+    public bool isLiked { get; set; } = false;
+    public int userEstimate { get; set; }
 
 }

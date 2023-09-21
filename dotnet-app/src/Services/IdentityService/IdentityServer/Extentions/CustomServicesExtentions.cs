@@ -1,8 +1,11 @@
 ﻿using IdentityServer.Data;
 using IdentityServer.IdentityServer;
 using IdentityServer.IdentityServer.ReturnUrlParsers;
+using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +59,20 @@ public static class CustomServicesExtentions
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddAuthentication()
+            .AddGoogle(options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.ClientId = configuration["Authentication:Google:ClientId"]!;
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+            });
+            //.AddFacebook(options =>
+            //{
+            //    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+            //    options.AppId = configuration["Authentication:Facebook:AppId"]!;
+            //    options.AppSecret = configuration["Authentication:Facebook:AppSecret"]!;
+            //});
 
         var assemblyName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
         var authenticationConnectionString = configuration.GetConnectionString("Authentication");

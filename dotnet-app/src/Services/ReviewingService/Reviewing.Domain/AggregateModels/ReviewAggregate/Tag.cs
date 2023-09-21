@@ -20,7 +20,7 @@ public class Tag
     #region Value Object
     protected override IEnumerable<object?> GetEqualityComponents()
     {
-        throw new NotImplementedException();
+        yield return Name;
     }
 
     public override bool Equals(object? obj)

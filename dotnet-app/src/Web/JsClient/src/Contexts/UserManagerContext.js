@@ -10,9 +10,10 @@ export const config = {
     post_logout_redirect_uri : process.env.REACT_APP_IDENTITY_POST_LOGOUT_REDIRECT_URI,
     response_mode: process.env.REACT_APP_IDENTITY_RESPONSE_MODE,
     client_secret: process.env.REACT_APP_IDENTITY_CLIENT_SECRET,
-    //monitorSession: true,
+    monitorSession: true,
     automaticSilentRenew: true,
     loadUserInfo: true,
+    revokeAccessTokenOnSignout: true,
     userStore: new WebStorageStateStore({ store: localStorage })
 };
 

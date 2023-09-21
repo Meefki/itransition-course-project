@@ -8,9 +8,10 @@ public record PublishReviewCommand(
     string AuthorUserId,
     string Content,
     string ShortDesc,
-    string? ImageUrl,
+    string? ImageContentType,
+    Stream? ImageInputStream,
+    string SubjectId,
     string SubjectName,
-    string SubjectGroupName,
     int SubjectGrade,
     IEnumerable<string> Tags) : 
     PublishReviewAbstractCommand(
@@ -18,9 +19,10 @@ public record PublishReviewCommand(
         AuthorUserId,
         Content,
         ShortDesc,
-        ImageUrl,
+        ImageContentType,
+        ImageInputStream,
+        SubjectId,
         SubjectName,
-        SubjectGroupName,
         SubjectGrade,
         Tags),
     IRequest<CommandResponse<string>>;

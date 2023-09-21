@@ -1,4 +1,6 @@
-﻿namespace Reviewing.Domain.SeedWork;
+﻿using Reviewing.Domain.Identifiers;
+
+namespace Reviewing.Domain.SeedWork;
 
 public abstract class EntityIdentifier<T>
     : ValueObject
@@ -22,4 +24,18 @@ public abstract class EntityIdentifier<T>
         var instance = (Activator.CreateInstance(type, value) as TIdentifier)!;
         return instance;
     }
+
+    #region Value Object
+    public override bool Equals(object? obj)
+        => base.Equals(obj);
+
+    public override int GetHashCode()
+        => base.GetHashCode();
+
+    public static bool operator ==(EntityIdentifier<T> left, EntityIdentifier<T> right)
+        => EqualOperator(left, right);
+
+    public static bool operator !=(EntityIdentifier<T> left, EntityIdentifier<T> right)
+        => NotEqualOperator(left, right);
+    #endregion
 }

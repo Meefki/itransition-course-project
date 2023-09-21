@@ -12,9 +12,9 @@ public class SubjectGroupConfiguration
     {
         builder.ToTable("SubjectGroups", ReviewingDbContext.DEFAULT_SCHEMA);
 
-        builder.HasMany<Review>()
-            .WithOne()
-            .HasForeignKey("Subject_Group");
+        //builder.HasMany<Review>()
+        //    .WithOne()
+        //    .HasForeignKey("Subject_GroupId");
 
         builder.Property(x => x.Id)
             .ValueGeneratedNever()

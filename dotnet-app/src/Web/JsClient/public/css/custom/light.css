@@ -2,6 +2,10 @@
     background-color: #fff !important;
 }
 
+.bg {
+    background-color: #fff !important;
+}
+
 .carousel-dark-custom {
     filter: invert(1) grayscale(100);
 }

@@ -1,6 +1,11 @@
+using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Reviewing.API.Authorization;
+using Reviewing.Application.Services;
+using Reviewing.Infrastructure.S3;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +47,9 @@ services.AddMediatR(cfg =>
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
 });
+
+services.AddSingleton<IAmazonS3>(new AmazonS3Client(config.GetValue<string>("AWSCredentials:AccessKeyID"), config.GetValue<string>("AWSCredentials:SecretAccessKey"), RegionEndpoint.EUWest2));
+services.AddSingleton<IImageService, ImageService>();
 services.AddScoped<IDomainEventMediator>(x => new DomainEventMediator(x.GetRequiredService<IServiceScopeFactory>(), typeof(DomainEventMediator)));
 services.AddScoped<ICommentQueries>(sp => new CommentQueries(config.GetConnectionString("Reviewving")!));
 services.AddScoped<IReviewQueries>(sp => new ReviewQueries(config.GetConnectionString("Reviewving")!));

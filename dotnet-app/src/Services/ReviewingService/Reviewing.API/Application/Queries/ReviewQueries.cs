@@ -3,6 +3,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Extensions;
 using Reviewing.API.Application.Queries.Options;
 using Reviewing.API.Application.Queries.ViewModels;
+using Reviewing.Domain.AggregateModels.ReviewAggregate;
+using Reviewing.Domain.Identifiers;
 
 namespace Reviewing.API.Application.Queries;
 
@@ -17,7 +19,9 @@ public class ReviewQueries
         this.connectionString = connectionString;
     }
 
-    public async Task<dynamic> GetReview(string reviewId)
+    public async Task<dynamic> GetReview(
+        string reviewId, 
+        string? userId = null)
     {
         var timeout = TimeSpan.FromSeconds(10);
         object param = new { reviewId };
@@ -26,22 +30,30 @@ public class ReviewQueries
     select count(rl.UserId)
         from [reviewing].ReviewLikes as rl
         where rl.ReviewId = @reviewId
+),
+estimate (estimate) as (
+  select cast(iif(count(e.Grade) = 0, 0, cast(sum(e.Grade) as float) / cast(count(e.Grade) as float)) as numeric(10,1))
+    from [reviewing].Estimates as e
+    where e.ReviewId = @reviewId
 )
-select top 1 
+select top 1
          r.Id             as [id]
         ,r.[Name]         as [name]
         ,r.AuthorUserId   as [authorUserId]
         ,r.Content        as content
         ,r.[Status]       as [status]
         ,r.ImageUrl       as imageUrl
-        ,r.Subject_Name   as subjectName
-        ,r.Subject_Grade  as subjectGrage
         ,r.PublishedDate  as publishedDate
+        ,s.[Name]         as subjectName
+        ,s.[Grade]        as subjectGrade
         ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
-    from [reviewing].Reviews       as r
-    join [reviewing].SubjectGroups as sg on sg.Id = r.Subject_Group
-    cross join likes_count         as lc
+        ,e.estimate
+    from [reviewing].Reviews          as r
+    join [reviewing].[Subjects]       as s  on s.Id  = r.SubjectId
+    join [reviewing].[SubjectGroups]  as sg on sg.Id = s.GroupId
+    cross join likes_count            as lc
+    cross join estimate               as e
     where r.Id = @reviewId";
         string tagsSql =
 @"select rt.TagsName as [name]
@@ -57,6 +69,23 @@ select top 1
         foreach (dynamic tag in reviewTags)
             tags.Add(tag.name);
         review.tags = tags;
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            param = new { reviewId, userId };
+            string estimateSql =
+@"select
+     e.Grade                                   as estimate
+    ,cast(iif(rl.UserId is null, 0, 1) as bit) as isLiked
+  from [reviewing].[reviewing].[Reviews]          as r
+  left join [reviewing].[reviewing].[Estimates]   as e  on e.ReviewId = r.Id
+  left join [reviewing].[reviewing].[ReviewLikes] as rl on rl.ReviewId = r.Id and rl.UserId = @userId
+  where r.Id = @reviewId";
+
+            dynamic? estimate = (await connection.QueryAsync<dynamic>(estimateSql, param, commandTimeout: timeout.Seconds)).FirstOrDefault();
+            review.isLiked = estimate?.isLiked ?? false;
+            review.userEstimate = estimate?.estimate ?? 0;
+        }
 
         return review;
     }
@@ -82,10 +111,34 @@ select top 1
         return reviewsCount;
     }
 
+    public async Task<dynamic> GetSubjects(string startWith)
+    {
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var timeout = TimeSpan.FromSeconds(10);
+
+        object reviewParam = new { };
+        string subjectsSql =
+@$"select 
+     s.Id     as [id]
+    ,s.[Name] as [name]
+  from [reviewing].[Subjects] as s
+  {(string.IsNullOrEmpty(startWith) ? "" : $"where s.[name] like '{startWith}%'" )}";
+        IEnumerable<dynamic> subjects = await connection.QueryAsync<dynamic>(subjectsSql, reviewParam, commandTimeout: timeout.Seconds);
+
+        return subjects;
+    }
+
+    public Task<dynamic> GetSubjectGroups()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<dynamic> GetReviewsShortDescription(
         PaginationOptions paginationOptions, 
-        List<ReviewSortOptions>? sortOptions = null, 
-        ReviewFilterOptions? filterOptions = null)
+        List<ReviewSortOptions>? sortOptions = null,
+        ReviewFilterOptions? filterOptions = null,
+        string? userId = null)
     {
         using var connection = new SqlConnection(connectionString);
         connection.Open();
@@ -99,6 +152,11 @@ select top 1
     select rl.ReviewId, count(rl.UserId)
         from [reviewing].ReviewLikes as rl
         group by rl.ReviewId
+),
+estimate (ReviewId, estimate) as (
+  select e.ReviewId, cast(iif(count(e.Grade) = 0, 0, cast(sum(e.Grade) as float) / cast(count(e.Grade) as float)) as numeric(10,1))
+    from [reviewing].Estimates as e
+    group by e.ReviewId
 )
 select distinct
          r.Id             as [id]
@@ -107,15 +165,15 @@ select distinct
         ,r.ShortDesc      as shortDesc
         ,r.[Status]       as [status]
         ,r.ImageUrl       as imageUrl
-        ,r.Subject_Name   as subjectName
-        ,r.Subject_Grade  as subjectGrage
         ,r.PublishedDate  as publishedDate
-        ,sg.[Name]        as subjectGroupName
         ,lc.likesCount
-    from [reviewing].Reviews        as r
-    join [reviewing].SubjectGroups  as sg on sg.Id       = r.Subject_Group
-    left join [reviewing].ReviewTag as rt on rt.ReviewId = r.Id
-    left join likes_count           as lc on lc.ReviewId = r.Id
+        ,e.estimate
+    from [reviewing].[Reviews]        as r
+    join [reviewing].[Subjects]       as s  on s.Id        = r.SubjectId
+    join [reviewing].[SubjectGroups]  as sg on sg.Id       = s.GroupId
+    left join [reviewing].[ReviewTag] as rt on rt.ReviewId = r.Id
+    left join likes_count             as lc on lc.ReviewId = r.Id
+    left join estimate                as e  on e.ReviewId  = r.Id
     " + reviewWhereCondition + "\n    " + reviewOrderCondition;
         IEnumerable<ReviewVM> reviews = await connection.QueryAsync<ReviewVM>(reviewSql, reviewParam, commandTimeout: timeout.Seconds);
         if (reviews.Any())
@@ -130,10 +188,12 @@ select distinct
             IEnumerable<TagVM> reviewsTags = await connection.QueryAsync<TagVM>(tagsSql, tagsSql, commandTimeout: timeout.Seconds);
 
             foreach (var review in reviews)
+            {
                 review.tags = reviewsTags
                     .Where(t => t.reviewId == review.id)
                     .Select(t => t.name)
                     .ToList();
+            }
         }
 
         return reviews;
@@ -152,11 +212,11 @@ select distinct
         connection.Open();
         dynamic response = await connection.QueryAsync<dynamic>(sql, commandTimeout: timeout.Seconds);
 
-        List<string> tags = new();
-        foreach (dynamic item in response)
-            tags.Add(item.name);
+        //List<string> tags = new();
+        //foreach (dynamic item in response)
+        //    tags.Add(item.name);
 
-        return tags;
+        return response;
     }
 
     public async Task<dynamic> GetMostPopularTags(int pageSize = 10)

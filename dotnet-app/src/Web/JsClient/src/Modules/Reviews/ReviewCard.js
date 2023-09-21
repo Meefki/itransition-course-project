@@ -49,11 +49,11 @@ function ReviewCard({ reviewDesc }) {
                     <div className="d-flex justify-content-start">
                         <span className="mx-1">
                             {reviewDesc?.likesCount ?? 0}
-                            <MDBIcon className="mx-1" icon="thumbs-up"/>
+                            <MDBIcon className="mx-1" icon="thumbs-up" style={reviewDesc?.isLiked ? {color: '#3b71ca'} : {}}/>
                         </span>
                         <span>&#x2022;</span>
                         <span className="mx-1">
-                            {reviewDesc?.subjectGrade ?? 0}
+                            {reviewDesc?.estimate ?? 0}
                             <MDBIcon className="mx-1" icon="star"/>
                         </span>
                         {reviewDesc?.publishedDate && <span>&#x2022;</span>}
@@ -65,7 +65,7 @@ function ReviewCard({ reviewDesc }) {
                 </MDBCol>
                 <MDBCol size="4" sm="3" md="3" lg="3" className="d-flex justify-content-end d-none d-sm-flex"> 
                     <img
-                        src={reviewDesc?.imageUrl ?? "https://placehold.co/200x200"}
+                        src={reviewDesc?.imageUrl ?? "https://placehold.co/200x200?text=No+Image"}
                         role="button"
                         width="112px" 
                         height="112px" 

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FilterOptionsContext } from "../../Contexts/FilterOptionsContext";
-import TagInput from "./TagInput";
+import DropdownInput from "./DropdownInput";
 import { Tag } from "antd";
 import { ReviewingService } from "../../Services/ReviewingService";
 
@@ -110,7 +110,7 @@ function ReviewsFilter({ immutableFilters = [] }) {
             <h5>{t('filter_header')}</h5>
             <div className="d-flex flex-column flex-md-row">
                 <div className="card mb-3 col-12 col-sm-6 col-md-4">
-                    <TagInput tags={filterTags()} getTags={getTags} addTag={addTag} inputPlaceholder={t('filter_tags_input_placeholder')}/>
+                    <DropdownInput items={filterTags()} getItems={getTags} addItem={addTag} inputPlaceholder={t('filter_tags_input_placeholder')}/>
                     <div style={styles.tagsArea} className="overflow-auto">
                     {
                         selectedTags.map((tag) => 
