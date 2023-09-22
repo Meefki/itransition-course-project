@@ -31,23 +31,16 @@ namespace Reviewing.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "SubjectGroups",
                 schema: "reviewing",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Subject_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Subject_Grade = table.Column<int>(type: "int", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("PK_SubjectGroups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,6 +53,76 @@ namespace Reviewing.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Name);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subjects",
+                schema: "reviewing",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subjects_SubjectGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalSchema: "reviewing",
+                        principalTable: "SubjectGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                schema: "reviewing",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShortDesc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalSchema: "reviewing",
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Estimates",
+                schema: "reviewing",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReviewId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Estimates", x => new { x.ReviewId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_Estimates_Reviews_ReviewId",
+                        column: x => x.ReviewId,
+                        principalSchema: "reviewing",
+                        principalTable: "Reviews",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,27 +158,6 @@ namespace Reviewing.Infrastructure.Migrations
                     table.PrimaryKey("PK_ReviewLikes", x => new { x.UserId, x.ReviewId });
                     table.ForeignKey(
                         name: "FK_ReviewLikes_Reviews_ReviewId",
-                        column: x => x.ReviewId,
-                        principalSchema: "reviewing",
-                        principalTable: "Reviews",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SubjectGroups",
-                schema: "reviewing",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    ReviewId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubjectGroups", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SubjectGroups_Reviews_ReviewId",
                         column: x => x.ReviewId,
                         principalSchema: "reviewing",
                         principalTable: "Reviews",
@@ -163,6 +205,12 @@ namespace Reviewing.Infrastructure.Migrations
                 column: "ReviewId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reviews_SubjectId",
+                schema: "reviewing",
+                table: "Reviews",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReviewTag_TagsName",
                 schema: "reviewing",
                 table: "ReviewTag",
@@ -176,11 +224,10 @@ namespace Reviewing.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubjectGroups_ReviewId",
+                name: "IX_Subjects_GroupId",
                 schema: "reviewing",
-                table: "SubjectGroups",
-                column: "ReviewId",
-                unique: true);
+                table: "Subjects",
+                column: "GroupId");
         }
 
         /// <inheritdoc />
@@ -188,6 +235,10 @@ namespace Reviewing.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comments",
+                schema: "reviewing");
+
+            migrationBuilder.DropTable(
+                name: "Estimates",
                 schema: "reviewing");
 
             migrationBuilder.DropTable(
@@ -203,7 +254,7 @@ namespace Reviewing.Infrastructure.Migrations
                 schema: "reviewing");
 
             migrationBuilder.DropTable(
-                name: "SubjectGroups",
+                name: "Reviews",
                 schema: "reviewing");
 
             migrationBuilder.DropTable(
@@ -211,7 +262,11 @@ namespace Reviewing.Infrastructure.Migrations
                 schema: "reviewing");
 
             migrationBuilder.DropTable(
-                name: "Reviews",
+                name: "Subjects",
+                schema: "reviewing");
+
+            migrationBuilder.DropTable(
+                name: "SubjectGroups",
                 schema: "reviewing");
         }
     }

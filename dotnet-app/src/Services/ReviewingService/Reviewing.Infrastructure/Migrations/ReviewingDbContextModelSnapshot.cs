@@ -173,27 +173,7 @@ namespace Reviewing.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Review.Comments#Reviewing.Domain.Identifiers.CommentId", "Comments", b1 =>
-                        {
-                            b1.Property<Guid>("Value")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("CommentId");
-
-                            b1.Property<Guid>("ReviewId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("Value", "ReviewId");
-
-                            b1.HasIndex("ReviewId");
-
-                            b1.ToTable("ReviewComments", "reviewing");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReviewId");
-                        });
-
-                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Review.Estimates#Reviewing.Domain.AggregateModels.ReviewAggregate.ReviewEstimate", "Estimates", b1 =>
+                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Estimate", "Estimates", b1 =>
                         {
                             b1.Property<Guid>("ReviewId")
                                 .HasColumnType("uniqueidentifier");
@@ -213,12 +193,31 @@ namespace Reviewing.Infrastructure.Migrations
                                 .HasForeignKey("ReviewId");
                         });
 
-                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Review.Likes#Reviewing.Domain.Identifiers.UserId", "Likes", b1 =>
+                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Like", "Likes", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserId");
+
+                            b1.Property<Guid>("ReviewId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("Id", "ReviewId");
+
+                            b1.HasIndex("ReviewId");
+
+                            b1.ToTable("ReviewLikes", "reviewing");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ReviewId");
+                        });
+
+                    b.OwnsMany("Reviewing.Domain.Identifiers.CommentId", "Comments", b1 =>
                         {
                             b1.Property<Guid>("Value")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier")
-                                .HasColumnName("UserId");
+                                .HasColumnName("CommentId");
 
                             b1.Property<Guid>("ReviewId")
                                 .HasColumnType("uniqueidentifier");
@@ -227,7 +226,7 @@ namespace Reviewing.Infrastructure.Migrations
 
                             b1.HasIndex("ReviewId");
 
-                            b1.ToTable("ReviewLikes", "reviewing");
+                            b1.ToTable("ReviewComments", "reviewing");
 
                             b1.WithOwner()
                                 .HasForeignKey("ReviewId");

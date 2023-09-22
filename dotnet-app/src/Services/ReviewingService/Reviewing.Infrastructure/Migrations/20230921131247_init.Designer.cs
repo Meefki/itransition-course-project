@@ -12,7 +12,7 @@ using Reviewing.Infrastructure;
 namespace Reviewing.Infrastructure.Migrations
 {
     [DbContext(typeof(ReviewingDbContext))]
-    [Migration("20230829141947_init")]
+    [Migration("20230921131247_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -85,13 +85,44 @@ namespace Reviewing.Infrastructure.Migrations
                     b.Property<DateTime>("PublishedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ShortDesc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("Reviews", "reviewing");
+                });
+
+            modelBuilder.Entity("Reviewing.Domain.AggregateModels.ReviewAggregate.Subject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reviews", "reviewing");
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("Subjects", "reviewing");
                 });
 
             modelBuilder.Entity("Reviewing.Domain.AggregateModels.ReviewAggregate.Tag", b =>
@@ -102,6 +133,24 @@ namespace Reviewing.Infrastructure.Migrations
                     b.HasKey("Name");
 
                     b.ToTable("Tags", "reviewing");
+                });
+
+            modelBuilder.Entity("Reviewing.Domain.Enumerations.SubjectGroups", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("SubjectGroups", "reviewing");
                 });
 
             modelBuilder.Entity("ReviewTag", b =>
@@ -121,54 +170,49 @@ namespace Reviewing.Infrastructure.Migrations
 
             modelBuilder.Entity("Reviewing.Domain.AggregateModels.ReviewAggregate.Review", b =>
                 {
-                    b.OwnsOne("Reviewing.Domain.AggregateModels.ReviewAggregate.Subject", "Subject", b1 =>
+                    b.HasOne("Reviewing.Domain.AggregateModels.ReviewAggregate.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Estimate", "Estimates", b1 =>
                         {
                             b1.Property<Guid>("ReviewId")
                                 .HasColumnType("uniqueidentifier");
 
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserId");
+
                             b1.Property<int>("Grade")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.HasKey("ReviewId", "Id");
 
-                            b1.HasKey("ReviewId");
-
-                            b1.ToTable("Reviews", "reviewing");
+                            b1.ToTable("Estimates", "reviewing");
 
                             b1.WithOwner()
                                 .HasForeignKey("ReviewId");
+                        });
 
-                            b1.OwnsOne("Reviewing.Domain.Enumerations.SubjectGroups", "Group", b2 =>
-                                {
-                                    b2.Property<int>("Id")
-                                        .HasColumnType("int");
+                    b.OwnsMany("Reviewing.Domain.AggregateModels.ReviewAggregate.Like", "Likes", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("UserId");
 
-                                    b2.Property<string>("Name")
-                                        .IsRequired()
-                                        .HasMaxLength(50)
-                                        .HasColumnType("nvarchar(50)");
+                            b1.Property<Guid>("ReviewId")
+                                .HasColumnType("uniqueidentifier");
 
-                                    b2.Property<Guid>("ReviewId")
-                                        .HasColumnType("uniqueidentifier");
+                            b1.HasKey("Id", "ReviewId");
 
-                                    b2.HasKey("Id");
+                            b1.HasIndex("ReviewId");
 
-                                    b2.HasIndex("Name")
-                                        .IsUnique();
+                            b1.ToTable("ReviewLikes", "reviewing");
 
-                                    b2.HasIndex("ReviewId")
-                                        .IsUnique();
-
-                                    b2.ToTable("SubjectGroups", "reviewing");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ReviewId");
-                                });
-
-                            b1.Navigation("Group")
-                                .IsRequired();
+                            b1.WithOwner()
+                                .HasForeignKey("ReviewId");
                         });
 
                     b.OwnsMany("Reviewing.Domain.Identifiers.CommentId", "Comments", b1 =>
@@ -191,32 +235,24 @@ namespace Reviewing.Infrastructure.Migrations
                                 .HasForeignKey("ReviewId");
                         });
 
-                    b.OwnsMany("Reviewing.Domain.Identifiers.UserId", "Likes", b1 =>
-                        {
-                            b1.Property<Guid>("Value")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uniqueidentifier")
-                                .HasColumnName("UserId");
-
-                            b1.Property<Guid>("ReviewId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("Value", "ReviewId");
-
-                            b1.HasIndex("ReviewId");
-
-                            b1.ToTable("ReviewLikes", "reviewing");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReviewId");
-                        });
-
                     b.Navigation("Comments");
+
+                    b.Navigation("Estimates");
 
                     b.Navigation("Likes");
 
-                    b.Navigation("Subject")
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("Reviewing.Domain.AggregateModels.ReviewAggregate.Subject", b =>
+                {
+                    b.HasOne("Reviewing.Domain.Enumerations.SubjectGroups", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
                 });
 #pragma warning restore 612, 618
         }
