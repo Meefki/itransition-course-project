@@ -1,10 +1,8 @@
-﻿using Amazon.S3.Model;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reviewing.API.Application.Commands.ReviewCommands;
 using Reviewing.API.Application.Queries.Options;
-using Reviewing.Application.Services;
 
 namespace Reviewing.API.Controllers
 {

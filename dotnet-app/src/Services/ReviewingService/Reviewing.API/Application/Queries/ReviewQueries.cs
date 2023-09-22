@@ -5,6 +5,9 @@ using Reviewing.API.Application.Queries.Options;
 using Reviewing.API.Application.Queries.ViewModels;
 using Reviewing.Domain.AggregateModels.ReviewAggregate;
 using Reviewing.Domain.Identifiers;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace Reviewing.API.Application.Queries;
 
@@ -86,6 +89,8 @@ select top 1
             review.isLiked = estimate?.isLiked ?? false;
             review.userEstimate = estimate?.estimate ?? 0;
         }
+
+        review.authorLikesCount = (await GetUsersLikes(new[] { review.authorUserId.ToString() })).Single().likesCount;
 
         return review;
     }
@@ -196,6 +201,10 @@ select distinct
             }
         }
 
+        IEnumerable<UserLikesCountVM> userLikesCounts = await GetUsersLikes(reviews.Select(x => x.authorUserId.ToString()));
+        foreach (var review in reviews)
+            review.authorLikesCount = userLikesCounts.First(u => u.userId == review.authorUserId).likesCount;
+
         return reviews;
     }
 
@@ -211,10 +220,6 @@ select distinct
         using var connection = new SqlConnection(connectionString);
         connection.Open();
         dynamic response = await connection.QueryAsync<dynamic>(sql, commandTimeout: timeout.Seconds);
-
-        //List<string> tags = new();
-        //foreach (dynamic item in response)
-        //    tags.Add(item.name);
 
         return response;
     }
@@ -240,15 +245,11 @@ select distinct
         connection.Open();
         dynamic tags = await connection.QueryAsync<dynamic>(sql, commandTimeout: timeout.Seconds);
 
-        //List<dynamic> tags = new();
-        //foreach (dynamic item in response)
-        //    tags.Add(item.name);
-
         return tags;
     }
 
-    #region Query Builders
-    string GetWhereCondition(ReviewFilterOptions? filterOptions, params object[] tableAlias)
+    #region Query Helpers
+    private string GetWhereCondition(ReviewFilterOptions? filterOptions, params object[] tableAlias)
     {
         string whereCondition = "";
         if (filterOptions is not null)
@@ -299,7 +300,7 @@ select distinct
         return whereCondition;
     }
 
-    string GetOrderCondition(List<ReviewSortOptions>? sortOptions, PaginationOptions pagination, params object[] tableAlias)
+    private string GetOrderCondition(List<ReviewSortOptions>? sortOptions, PaginationOptions pagination, params object[] tableAlias)
     {
         string sortCondition = "";
         if (sortOptions is not null && sortOptions.Any())
@@ -323,6 +324,24 @@ select distinct
         sortCondition += $"\n    offset({offset}) rows fetch next({pagination.PageSize}) rows only";
 
         return sortCondition;
+    }
+
+    private async Task<IEnumerable<UserLikesCountVM>> GetUsersLikes(IEnumerable<string> userIds)
+    {
+        string userLikesCountSql =
+@$"select
+     r.AuthorUserId   as userId
+    ,count(rl.UserId) as likesCount
+  from [reviewing].[Reviews]     as r
+  join [reviewing].[ReviewLikes] as rl on rl.ReviewId = r.Id
+  where r.AuthorUserId in ({ string.Join(',', userIds.Select(x => $"'{x}'")) })
+  group by r.AuthorUserId";
+
+        using var connection = new SqlConnection(connectionString);
+        connection.Open();
+        var timeout = TimeSpan.FromSeconds(10);
+        IEnumerable<UserLikesCountVM> userLikesCount = await connection.QueryAsync<UserLikesCountVM>(userLikesCountSql, commandTimeout: timeout.Seconds);
+        return userLikesCount;
     }
     #endregion
 }

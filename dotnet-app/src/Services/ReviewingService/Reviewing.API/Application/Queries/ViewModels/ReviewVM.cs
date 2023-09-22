@@ -23,5 +23,6 @@ public class ReviewVM
     public float estimate { get; set; }
     public bool isLiked { get; set; } = false;
     public int userEstimate { get; set; }
+    public int authorLikesCount { get; set; }
 
 }

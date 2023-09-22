@@ -35,7 +35,7 @@ function ReviewCard({ reviewDesc }) {
                     <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + reviewDesc?.authorUserId)}>{reviewDesc?.userName ?? ''}</span>
                     <span>&#x2022;</span>
                     <span className="mx-1">
-                        0{/* summ likes count for all user reviews */}
+                        {reviewDesc?.authorLikesCount}
                         <MDBIcon className="mx-1" icon="thumbs-up"/>
                     </span>
                 </div>

@@ -151,7 +151,7 @@ function Review() {
                     <span role="button" className="me-1 link-primary user-select-none" onClick={() => {navigate("/profile/" + author.id)}}>{author.userName}</span>
                     <span>&#x2022;</span>
                     <span className="mx-1">
-                        0{/* summ likes count for all user reviews */}
+                        {review.authorLikesCount}
                         <MDBIcon className="mx-1" icon="thumbs-up"/>
                     </span>
                 </div>
