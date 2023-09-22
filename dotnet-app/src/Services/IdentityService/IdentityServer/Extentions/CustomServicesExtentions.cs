@@ -61,13 +61,13 @@ public static class CustomServicesExtentions
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthentication()
-            .AddGoogle(options =>
-            {
-                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                options.ClientId = configuration["Authentication:Google:ClientId"]!;
-                options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
-            });
+        //services.AddAuthentication()
+            //.AddGoogle(options =>
+            //{
+            //    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+            //    options.ClientId = configuration["Authentication:Google:ClientId"]!;
+            //    options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+            //});
 
         var assemblyName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
         var authenticationConnectionString = configuration.GetConnectionString("Authentication");
