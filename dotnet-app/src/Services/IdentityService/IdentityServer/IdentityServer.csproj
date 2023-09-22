@@ -7,7 +7,6 @@
     <!--<UserSecretsId>cbd421e0-b9f3-439a-a523-055a348f7be8</UserSecretsId>-->
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>3339d856-f351-4a85-aa29-5d322b46f930</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
