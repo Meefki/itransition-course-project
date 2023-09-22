@@ -67,12 +67,13 @@ public static class CustomServicesExtentions
                 options.ClientId = configuration["Authentication:Google:ClientId"]!;
                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
             });
-            //.AddFacebook(options =>
-            //{
-            //    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-            //    options.AppId = configuration["Authentication:Facebook:AppId"]!;
-            //    options.AppSecret = configuration["Authentication:Facebook:AppSecret"]!;
-            //});
+
+        services.Configure<CookieAuthenticationOptions>(IdentityServerConstants.DefaultCookieAuthenticationScheme, options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //options.Cookie.IsEssential = true;
+        });
 
         var assemblyName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
         var authenticationConnectionString = configuration.GetConnectionString("Authentication");
