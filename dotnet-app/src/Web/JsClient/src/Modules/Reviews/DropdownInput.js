@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown } from "antd";
 
-function DropdownInput({ items = [], getItems = () => {}, addItem = () => {}, inputPlaceholder = "Enter an item name" }) {
+function DropdownInput({ items = [], getItems = () => {}, addItem = () => {}, inputPlaceholder = "Enter an item name", menuContainer }) {
 
     const [searchedText, setSearchedText] = useState('');
 
@@ -17,14 +17,19 @@ function DropdownInput({ items = [], getItems = () => {}, addItem = () => {}, in
         if (searchedText && !items.find(item => item?.name === searchedText)) nemuItems.unshift({ name: searchedText})
         const menuItems = nemuItems.map((item, index) => {
             return { key: index, label: (
-            <span className="d-flex" key={item?.name} onClick={menuItemClick} >{item?.name}</span>
+            <span className="d-flex" key={item?.name} onClick={menuItemClick}>{item?.name}</span>
         )}});
 
         return menuItems;
     }
 
     return (
-        <Dropdown className="w-100" menu={{ items: menuItems() }} trigger={['click']}>
+        <Dropdown 
+            className="w-100" 
+            menu={{ items: menuItems(), style: { maxHeight: '250px', position: "relative", overflowY: "auto" }}} 
+            trigger={['click']}
+            getPopupContainer={() => menuContainer}
+            >
             <input
                 size="large"
                 value={searchedText}
@@ -36,6 +41,7 @@ function DropdownInput({ items = [], getItems = () => {}, addItem = () => {}, in
                 }}
             />
         </Dropdown>
+        
     );
 }
 

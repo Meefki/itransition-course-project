@@ -87,7 +87,7 @@ function ReviewsFilter({ immutableFilters = [] }) {
         });
     }
     const filterTags = () => {
-        return tags?.filter(tag => !selectedTags.includes(tag));
+        return tags?.filter(tag => !selectedTags.includes(tag.name));
     }
 
     /* eslint-disable */
@@ -109,8 +109,14 @@ function ReviewsFilter({ immutableFilters = [] }) {
         <div className="d-flex flex-column">
             <h5>{t('filter_header')}</h5>
             <div className="d-flex flex-column flex-md-row">
-                <div className="card mb-3 col-12 col-sm-6 col-md-4">
-                    <DropdownInput items={filterTags()} getItems={getTags} addItem={addTag} inputPlaceholder={t('filter_tags_input_placeholder')}/>
+                <div id="filter-tags-menu-container" className="card mb-3 col-12 col-sm-6 col-md-4">
+                    <DropdownInput 
+                        items={filterTags()} 
+                        getItems={getTags} 
+                        addItem={addTag} 
+                        inputPlaceholder={t('filter_tags_input_placeholder')} 
+                        menuContainer={() => document.getElementById('filter-tags-menu-container')}
+                    />
                     <div style={styles.tagsArea} className="overflow-auto">
                     {
                         selectedTags.map((tag) => 

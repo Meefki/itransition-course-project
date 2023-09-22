@@ -41,7 +41,7 @@ function ReviewCard({ reviewDesc }) {
                 </div>
             </MDBRow>
             <MDBRow>
-                <MDBCol size="8" sm="9" md="9" lg="9">
+                <MDBCol size="12" sm="9" md="9" lg="9">
                     <div onClick={() => navigate("/review/" + reviewDesc?.id)} role="button">
                         <h5>{reviewDesc?.name}</h5>
                         <p>{reviewDesc?.shortDesc}</p>

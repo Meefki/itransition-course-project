@@ -68,7 +68,7 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
                     }
                 } else {
                     if (scrollDirection === lastScrollDirection) {
-                        if (secondColPos === 'relative' && (secondColMgTop + error) >= scrollTop) {
+                        if (secondColPos === 'relative' && (secondColMgTop + error) <= scrollTop) {
                             setSecondColParams('sticky', headerHeight, 0);
                         }
                     } else {
