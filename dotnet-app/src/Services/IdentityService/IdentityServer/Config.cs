@@ -9,7 +9,7 @@ namespace IdentityServer;
 
 public static class Config
 {
-    public static IEnumerable<Client> GetClients(IConfiguration? configuration = null) =>
+    public static IEnumerable<Client> GetClients(IConfiguration configuration = null) =>
         new Client[]
         {
             new Client()
@@ -20,7 +20,7 @@ public static class Config
                 RequireClientSecret = true,
                 ClientName = "Js Static Site",
                 Description = null,
-                ClientUri = null,
+                ClientUri = configuration["Clients:js:ClientUri"]!,
                 LogoUri = null,
                 RequireConsent = false,
                 AllowRememberConsent = true,

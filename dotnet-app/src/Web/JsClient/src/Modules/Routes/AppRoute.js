@@ -46,14 +46,14 @@ const AppRoutes = [
                 title: 'Create review',
                 path: '/review/create/:userId',
                 component: <ReviewEditor />,
-                isPublic: true // should be false
+                isPublic: false // should be false
             },
             {
                 name: 'review-edit',
                 title: 'Create review',
                 path: '/review/edit/:id',
                 component: <ReviewEditor />,
-                isPublic: true // should be false
+                isPublic: false // should be false
             }
         ]
     },

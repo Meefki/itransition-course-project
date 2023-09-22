@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using IdentityServer4.Stores;
 
 namespace IdentityServer.Controllers
 {
@@ -19,6 +22,7 @@ namespace IdentityServer.Controllers
         private readonly IConfiguration configuration;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IEventService events;
+        private readonly IClientStore clientStore;
         private readonly ILogger<ExternalController> logger;
 
         public ExternalController(
@@ -27,6 +31,7 @@ namespace IdentityServer.Controllers
             IConfiguration configuration,
             SignInManager<IdentityUser> signInManager,
             IEventService events,
+            IClientStore clientStore,
             ILogger<ExternalController> logger)
         {
             this.interaction = interaction;
@@ -34,13 +39,20 @@ namespace IdentityServer.Controllers
             this.configuration = configuration;
             this.signInManager = signInManager;
             this.events = events;
+            this.clientStore = clientStore;
             this.logger = logger;
         }
 
         [HttpGet]
-        public IActionResult Challenge(string scheme, string returnUrl)
+        [Route("challenge")]
+        public async Task<IActionResult> Challenge(string scheme, string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
+
+            if (returnUrl.StartsWith("?ReturnUrl="))
+                returnUrl = returnUrl["?ReturnUrl=".Length..];
+
+            returnUrl = Uri.UnescapeDataString(returnUrl);
 
             if (!interaction.IsValidReturnUrl(returnUrl))
             {
@@ -61,6 +73,7 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
+        [Route("callback")]
         public async Task<IActionResult> Callback()
         {
             // read external identity from the temporary cookie

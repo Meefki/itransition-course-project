@@ -1,9 +1,11 @@
-﻿using IdentityServer.Data;
+﻿using IdentityModel;
+using IdentityServer.Data;
 using IdentityServer.IdentityServer;
 using IdentityServer.IdentityServer.ReturnUrlParsers;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,9 +65,17 @@ public static class CustomServicesExtentions
         services.AddAuthentication()
             .AddGoogle(options =>
             {
-                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.CorrelationCookie.Domain = "https://localhost:3000";
+                options.SignInScheme = "Identity.External";
+                options.CallbackPath = "/external/callback";
                 options.ClientId = configuration["Authentication:Google:ClientId"]!;
                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+            })
+            .AddFacebook(options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.AppId = configuration["Authentication:Facebook:AppId"]!;
+                options.AppSecret = configuration["Authentication:Facebook:AppSecret"]!;
             });
 
         services.Configure<CookieAuthenticationOptions>(IdentityServerConstants.DefaultCookieAuthenticationScheme, options =>

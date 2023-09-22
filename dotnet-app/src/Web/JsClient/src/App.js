@@ -2,16 +2,17 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Routes } from './Modules/Routes/AppRoute';
 import { UserManagerContext, config } from './Contexts/UserManagerContext';
 import { UserManager } from 'oidc-client';
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function App() {
-  const userManager = useMemo(() => new UserManager(config), []);
+  const userManager = useRef(new UserManager(config));
   const [pageLoadingStage, setPageLoadingStage] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
  useEffect(() => {
   setPageLoadingStage(true);
-  userManager.getUser().then((user) => {
+
+  userManager.current.getUser().then((user) => {
 
     let isAuth = false;
     if (user) 
@@ -22,8 +23,8 @@ function App() {
  }, [userManager])
 
   return (
-    <UserManagerContext.Provider value={userManager}>
-      {!pageLoadingStage && <Routes isAuth={isAuthorized}/>}
+    <UserManagerContext.Provider value={userManager.current}>
+      {!pageLoadingStage && <Routes isAuth={isAuthorized.current}/>}
     </UserManagerContext.Provider>
   );
 }

@@ -1,4 +1,5 @@
 using IdentityServer.Extentions;
+using IdentityServer.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsProduction())
@@ -29,6 +30,10 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseCors();
 app.UseIdentityServer();
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/external/challenge"), appBuilder =>
+{
+    appBuilder.UseMiddleware<ChallengeMiddleware>();
+});
 
 await app.InitializeDatabase();
 

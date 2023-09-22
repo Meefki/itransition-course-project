@@ -18,9 +18,11 @@ function SubjectEditor({ subject, setSubject }) {
         setSubject(subjects.find(o => o.name === name) ?? {})
     }
 
+    /* eslint-disable */
     useEffect(() => {
         getSubjects(null);
     }, [])
+    /* eslint-enable */
 
     return (
     <div>

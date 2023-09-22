@@ -17,4 +17,18 @@ export const config = {
     userStore: new WebStorageStateStore({ store: localStorage })
 };
 
+let google = {...config};
+google.client_id = '4910687195-p69q4sjr9u6i50bj86ha9n0n21lvoqln.apps.googleusercontent.com';
+google.client_secret = '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';
+google.authority = 'https://accounts.google.com';
+google.scope = 'sub email name';
+export const googleConfig = google;
+
+let facebook = {...config};
+facebook.client_id = '681063086965837';
+facebook.client_secret = 'b1cacc485924dc3ca24d76f903f6cff9';
+facebook.authority = 'https://www.facebook.com';
+facebook.scope = 'sub email name';
+export const facebookConfig = facebook;
+
 export const UserManagerContext = createContext(new UserManager());

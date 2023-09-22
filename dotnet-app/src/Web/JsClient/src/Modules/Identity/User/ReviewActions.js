@@ -10,6 +10,12 @@ function ReviewActions() {
     const [userId, setUserId] = useState(null);
     const mgr = useContext(UserManagerContext);
 
+    const ns = "user-profile";
+    const { t, i18n } = useTranslation(ns);
+    const [pageLoadingStage, setPageLoadingStage] = useState(true);
+    const navigate = useNavigate();
+
+    /* eslint-disable */
     useEffect(() => {
         if (id) {
             setUserId(id);
@@ -22,12 +28,6 @@ function ReviewActions() {
         }
     }, [])
 
-    const ns = "user-profile";
-    const { t, i18n } = useTranslation(ns);
-    const [pageLoadingStage, setPageLoadingStage] = useState(true);
-    const navigate = useNavigate();
-
-    /* eslint-disable */
     useMemo(() => {
         i18n.isInitialized &&
         !i18n.hasLoadedNamespace(ns) && 

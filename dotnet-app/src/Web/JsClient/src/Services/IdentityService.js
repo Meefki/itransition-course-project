@@ -1,3 +1,5 @@
+import { fetchGet, getSearch } from "./QueryHelper";
+
 export class IdentityService {
 
     login = async (credentials, search) => {
@@ -17,6 +19,17 @@ export class IdentityService {
 
         const data = await response.json();
         return data;
+    }
+
+    externalLogin = async (scheme, search) => {
+        const params = [
+            { name: "scheme", value: scheme },
+            { name: "returnUrl", value: search }
+        ]
+
+        const url = process.env.REACT_APP_IDENTITY + '/external/challenge' + getSearch(params);
+        const response = await fetchGet(url);
+        return response;
     }
 
     register = async (credentials, search) => {

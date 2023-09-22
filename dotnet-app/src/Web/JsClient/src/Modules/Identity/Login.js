@@ -18,6 +18,7 @@ import { IdentityService } from '../../Services/IdentityService';
 import { useTranslation } from 'react-i18next';
 import { UserManagerContext } from '../../Contexts/UserManagerContext';
 import { useNavigate } from 'react-router-dom';
+import ExternalSignButton from './ExternalSignButton';
 
 export function Login() {
     
@@ -41,6 +42,8 @@ export function Login() {
     const [pageLoadingStage, setPageLoadingStage] = useState(true);
 
     const identityService = new IdentityService();
+    const [location, setLocation] = useState('');
+    const [isFirstRender, setIsFirstRender] = useState(true);
 
     function handleJustifyClick(value) {
         if (value === justifyActive) {
@@ -66,7 +69,10 @@ export function Login() {
             username: username,
         }
         const search = window.location.search;
-        const data = await identityService.register(credentials, search);
+        const data = await identityService.register(credentials, search)
+            .catch(() => {
+                setLoadingState(false);
+            });
 
         if (data && data.isOk) {
           window.location = data.redirectUrl;
@@ -78,8 +84,9 @@ export function Login() {
     }
 
     async function login(event) {
-        event.preventDefault();
+        event?.preventDefault();
         setLoadingState(true);
+        localStorage.removeItem('authProvider');
 
         const credentials = {
             passHash: passHash,
@@ -87,7 +94,10 @@ export function Login() {
             rememberMe: rememberMe,
         }
         const search = window.location.search;
-        const data = await identityService.login(credentials, search);
+        const data = await identityService.login(credentials, search)
+            .catch(() => {
+                setLoadingState(false);
+            });
 
         if (data && data.isOk) {
             window.location = data.redirectUrl;
@@ -96,6 +106,20 @@ export function Login() {
             setError('Wrong email or password');
             setLoadingState(false);
         }
+    }
+
+    async function externalLogin(scheme) {
+        setLoadingState(true);
+
+        const search = window.location.search;
+        const response = await identityService.externalLogin(scheme, search)
+            .catch(() => {
+                setLoadingState(false);
+            });
+
+        setLocation(response?.location);
+
+        setLoadingState(false);
     }
 
     /* eslint-disable */
@@ -118,6 +142,18 @@ export function Login() {
                     navigate("/")
             })
     }, [])
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        if (location) {
+            window.location.href = location;
+        }
+
+    }, [location])
     /* eslint-enable */
 
     return pageLoadingStage ? '' :
@@ -145,17 +181,17 @@ export function Login() {
                         <div className="text-center mb-3">
                             <p>{t('signin_label')}</p>
                             <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
-                                <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}>
-                                    <MDBIcon fab icon='facebook-f' size="sm" />
-                                </MDBBtn>
+                                <ExternalSignButton loading={loadingState} login={externalLogin} scheme={"Facebook"} icon={"facebook-f"} />
 
                                 <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}>
                                     <MDBIcon fab icon='twitter' size="sm" />
                                 </MDBBtn>
 
-                                <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}>
+                                <ExternalSignButton loading={loadingState} login={externalLogin} scheme={"Google"} icon={"google"} />
+                                {/* <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}
+                                    onClick={() => externalLogin("Google")}>
                                     <MDBIcon fab icon='google' size="sm" />
-                                </MDBBtn>
+                                </MDBBtn> */}
 
                                 <MDBBtn tag='a' color='none' className='p-2' style={{ color: '#1266f1' }}>
                                     <MDBIcon fab icon='github' size="sm" />

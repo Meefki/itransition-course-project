@@ -47,11 +47,13 @@ public static class CustomApplicationExtentions
         if (!userContext.Roles.Any())
         {
             await userContext.Roles.AddRangeAsync(Config.GetRoles());
+            await userContext.SaveChangesAsync();
         }
 
         if (!userContext.RoleClaims.Any())
         {
             await userContext.RoleClaims.AddRangeAsync(Config.GetRoleClaims());
+            await userContext.SaveChangesAsync();
         }
     }
 }
