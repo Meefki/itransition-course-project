@@ -5,13 +5,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["src/Services/ReviewingService/Reviewing.API/Reviewing.API.csproj", "src/Services/ReviewingService/Reviewing.API/"]
-COPY ["src/Services/ReviewingService/Reviewing.Infrastructure/Reviewing.Infrastructure.csproj", "src/Services/ReviewingService/Reviewing.Infrastructure/"]
-COPY ["src/Services/ReviewingService/Reviewing.Application/Reviewing.Application.csproj", "src/Services/ReviewingService/Reviewing.Application/"]
-COPY ["src/Services/ReviewingService/Reviewing.Domain/Reviewing.Domain.csproj", "src/Services/ReviewingService/Reviewing.Domain/"]
-RUN dotnet restore "src/Services/ReviewingService/Reviewing.API/Reviewing.API.csproj"
+COPY ["/Reviewing.API/Reviewing.API.csproj", "/Reviewing.API/"]
+COPY ["/Reviewing.Infrastructure/Reviewing.Infrastructure.csproj", "/Reviewing.Infrastructure/"]
+COPY ["/Reviewing.Application/Reviewing.Application.csproj", "/Reviewing.Application/"]
+COPY ["/Reviewing.Domain/Reviewing.Domain.csproj", "/Reviewing.Domain/"]
+RUN dotnet restore "/Reviewing.API/Reviewing.API.csproj"
 COPY . .
-WORKDIR "/src/src/Services/ReviewingService/Reviewing.API"
+WORKDIR "/src/Reviewing.API"
 RUN dotnet build "Reviewing.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
