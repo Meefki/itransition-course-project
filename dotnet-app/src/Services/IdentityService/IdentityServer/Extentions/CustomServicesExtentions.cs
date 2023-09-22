@@ -69,11 +69,6 @@ public static class CustomServicesExtentions
                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
             });
 
-        services.Configure<IdentityServerOptions>(options =>
-        {
-            options.Authentication.CookieSameSiteMode = SameSiteMode.None;
-        });
-
         var assemblyName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
         var authenticationConnectionString = configuration.GetConnectionString("Authentication");
         UserInteractionOptions userInteractionOptions = configuration.GetSection("Identity:UserInteraction").Get<UserInteractionOptions>();
