@@ -69,11 +69,9 @@ public static class CustomServicesExtentions
                 options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
             });
 
-        services.Configure<CookieAuthenticationOptions>(IdentityServerConstants.DefaultCookieAuthenticationScheme, options =>
+        services.Configure<IdentityServerOptions>(options =>
         {
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //options.Cookie.IsEssential = true;
+            options.Authentication.CookieSameSiteMode = SameSiteMode.None;
         });
 
         var assemblyName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
