@@ -41,6 +41,17 @@ public static class CustomApplicationExtentions
             await context.SaveChangesAsync();
         }
 
-        await scope.ServiceProvider.GetRequiredService<AuthorizationDbContext>().Database.MigrateAsync();
+        var userContext = scope.ServiceProvider.GetRequiredService<AuthorizationDbContext>();
+        await userContext.Database.MigrateAsync();
+
+        if (!userContext.Roles.Any())
+        {
+            await userContext.Roles.AddRangeAsync(Config.GetRoles());
+        }
+
+        if (!userContext.RoleClaims.Any())
+        {
+            await userContext.RoleClaims.AddRangeAsync(Config.GetRoleClaims());
+        }
     }
 }

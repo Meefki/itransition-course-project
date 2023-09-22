@@ -2,6 +2,7 @@
 using IdentityServer.IdentityServer;
 using IdentityServer4;
 using IdentityServer4.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace IdentityServer;
@@ -57,14 +58,15 @@ public static class Config
                     new Secret { Value = "secret".Sha256() },
                 },
                 AllowedGrantTypes = GrantTypes.Code,
-                RedirectUris = { "https://localhost:3000/callback" },
-                PostLogoutRedirectUris = { "https://localhost:3000/" },
-                AllowedCorsOrigins = { "https://localhost:3000", "https://localhost:3001" },
+                RedirectUris = configuration.GetValue<string[]>("Clients:js:RedirectUris"),
+                PostLogoutRedirectUris = configuration.GetValue<string[]>("Clients:js:PostLogoutRedirectUris"),
+                AllowedCorsOrigins = configuration.GetValue<string[]>("Clients:js:AllowedCorsOrigins"),
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
+                    "name",
                     "reviewing"
                 }
             }
@@ -82,5 +84,19 @@ public static class Config
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new IdentityResources.Email()
+        };
+
+    public static IEnumerable<IdentityRole> GetRoles() =>
+        new IdentityRole[]
+        {
+            new IdentityRole { Id = "0793d400-ae95-4fca-82a1-f7292202b569", Name = "admin" },
+            new IdentityRole { Id = "a2d1a0cf-eee7-4658-ad96-0b5a7aaa34a4", Name = "user" },
+        };
+
+    public static IEnumerable<IdentityRoleClaim<string>> GetRoleClaims() =>
+        new IdentityRoleClaim<string>[]
+        {
+            new IdentityRoleClaim<string> { Id = 0, RoleId = "0793d400-ae95-4fca-82a1-f7292202b569", ClaimType = ClaimTypes.Role, ClaimValue = "admin" },
+            new IdentityRoleClaim<string> { Id = 1, RoleId = "a2d1a0cf-eee7-4658-ad96-0b5a7aaa34a4", ClaimType = ClaimTypes.Role, ClaimValue = "user" },
         };
 }
