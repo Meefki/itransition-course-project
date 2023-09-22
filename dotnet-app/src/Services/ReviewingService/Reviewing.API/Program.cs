@@ -11,7 +11,7 @@ using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsProduction())
 {
-    builder.Configuration.AddJsonFile("/etc/secrets/secrets.json");
+    builder.Configuration.AddJsonFile("/etc/secrets/secrets.json", false, true);
 }
 var config = builder.Configuration;
 
