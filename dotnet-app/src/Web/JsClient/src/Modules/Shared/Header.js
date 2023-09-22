@@ -38,9 +38,7 @@ function Header() {
 
     const menuItems = () => {
         return [
-            { tag: 'noAuth', value: <span key="menu-item-1" className="dropdown-item">Action 2</span> },
-            { tag: 'noAuth', value: <span key="menu-item-2" className="dropdown-item">Action 1</span> },
-            { tag: 'noAuth', value: <hr key="menu-item-3" className="dropdown-divider" /> },
+            //{ tag: 'noAuth', value: <hr key="menu-item-3" className="dropdown-divider" /> },
             { tag: 'noAuth', value: [
                                         <span key="menu-item-4" className="dropdown-item">{t('language_menu_item')}</span>,
                                         <ul key="menu-item-5" className="dropdown-menu dropdown-submenu-left shadow-lg btn-group-vertical">
