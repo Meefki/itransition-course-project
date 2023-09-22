@@ -70,7 +70,7 @@ function ReviewCarousel() {
                     items.filter(i => i).map((item, index) => {
                         return(
                             <div className={`px-5 carousel-item ${index === activeSlide ? 'active' : ''}`} key={index}>
-                                <div style={{height: "300px"}} className="px-3 d-flex flex-column align-items-center justify-content-between">
+                                <div style={{height: "500px"}} className="px-3 d-flex flex-column align-items-center justify-content-between">
                                     <div>
                                         <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>
                                         <span>&#x2022;</span>
