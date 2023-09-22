@@ -17,13 +17,13 @@ namespace IdentityServer.Controllers
 
         [HttpGet]
         [Route("names")]
-        public async Task<dynamic> GetUserNames([FromQuery] List<string> ids)
+        public async Task<dynamic> GetUserNames([FromQuery] List<string>? ids)
         {
             using var connection = new SqlConnection(connectionString);
             connection.Open();
             var timeout = TimeSpan.FromSeconds(10);
 
-            if (ids.Any())
+            if (ids is not null && ids.Any())
             {
                 object param = new { };
                 string sql =

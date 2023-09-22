@@ -61,6 +61,7 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
+        [Route("callback")]
         public async Task<IActionResult> Callback()
         {
             // read external identity from the temporary cookie
