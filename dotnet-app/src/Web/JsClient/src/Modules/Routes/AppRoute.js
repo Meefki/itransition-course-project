@@ -35,13 +35,6 @@ const AppRoutes = [
         layout: <ThemeLayout />,
         routes: [
             {
-                name: 'login',
-                title: 'Login page',
-                path: '/login',
-                component: <Login />,
-                isPublic: true
-            },
-            {
                 name: 'review-create',
                 title: 'Create review',
                 path: '/review/create/:userId',
@@ -60,6 +53,13 @@ const AppRoutes = [
     {
         layout: <WithoutLayout />,
         routes: [
+            {
+                name: 'login',
+                title: 'Login page',
+                path: '/login',
+                component: <Login />,
+                isPublic: true
+            },
             {
                 name: 'callback',
                 title: 'Redirection page',

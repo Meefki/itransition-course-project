@@ -1,0 +1,1 @@
+docker build . -t idsrv -f Dockerfile
