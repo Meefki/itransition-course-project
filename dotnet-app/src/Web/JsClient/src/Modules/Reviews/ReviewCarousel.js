@@ -75,7 +75,7 @@ function ReviewCarousel() {
                                         <span className="me-1 link-primary" role="button" onClick={() => navigate("/profile/" + item?.authorUserId)}>{item?.userName ?? ''}</span>
                                         <span>&#x2022;</span>
                                         <span className="mx-1">
-                                            0
+                                            {item?.authorLikesCount}
                                             <MDBIcon className="mx-1" icon="thumbs-up"/>    
                                         </span>
                                     </div>
