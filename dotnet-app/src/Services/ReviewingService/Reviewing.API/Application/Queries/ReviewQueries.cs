@@ -328,6 +328,7 @@ select distinct
 
     private async Task<IEnumerable<UserLikesCountVM>> GetUsersLikes(IEnumerable<string> userIds)
     {
+        if (!userIds.Any()) return new List<UserLikesCountVM>();
         string userLikesCountSql =
 @$"select
      r.AuthorUserId   as userId
