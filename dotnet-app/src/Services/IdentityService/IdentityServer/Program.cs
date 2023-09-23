@@ -35,7 +35,7 @@ await app.InitializeDatabase();
 if (app.Environment.IsProduction())
 {
     var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-    var url = $"https://0.0.0.0:{port}";
+    var url = $"http://0.0.0.0:{port}";
     app.Run();
 }
 else
