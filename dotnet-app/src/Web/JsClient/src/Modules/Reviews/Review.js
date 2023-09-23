@@ -72,7 +72,7 @@ function Review() {
     const [likesCount, setLikesCount] = useState(0);
     const reviewingService = useMemo(() => new ReviewingService(mgr), [mgr]);
     const userService = useMemo(() => new UserService(), []);
-    const [review, setReview] = useState({});
+    const [review, setReview] = useState(null);
     const [author, setAuthor] = useState({});
 
     const navigate = useNavigate();
