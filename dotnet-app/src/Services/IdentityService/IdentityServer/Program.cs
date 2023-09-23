@@ -32,4 +32,11 @@ app.UseIdentityServer();
 
 await app.InitializeDatabase();
 
-app.Run();
+if (app.Environment.IsProduction())
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    var url = $"https://0.0.0.0:{port}";
+    app.Run();
+}
+else
+    app.Run();
