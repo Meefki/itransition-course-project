@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection;
 
 namespace IdentityServer.Extentions;
@@ -61,6 +62,21 @@ public static class CustomServicesExtentions
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
 
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.Cookie.Name = IdentityServerConstants.DefaultCookieAuthenticationScheme;
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                options.Events.OnRedirectToLogout = (context) =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
         //services.AddAuthentication()
             //.AddGoogle(options =>
             //{
