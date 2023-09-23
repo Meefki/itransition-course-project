@@ -1,0 +1,1 @@
+docker run -p 5000:443 -e ASPNETCORE_URLS="https://+:443" -e ASPNETCORE_Kestrel__Certificates__Default__Password="Device54321" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/app/https/cert.pfx -e ASPNETCORE_ENVIRONMENT=Production idsrv
