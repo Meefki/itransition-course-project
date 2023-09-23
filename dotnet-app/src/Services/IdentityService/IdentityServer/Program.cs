@@ -43,7 +43,7 @@ if (app.Environment.IsProduction())
     var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
     Console.WriteLine($"Port: {port}");
     var url = $"http://0.0.0.0:{port}";
-    app.Run();
+    app.Run(url);
 }
 else
     app.Run();
