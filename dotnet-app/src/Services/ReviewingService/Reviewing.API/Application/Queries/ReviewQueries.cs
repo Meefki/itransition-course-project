@@ -203,7 +203,7 @@ select distinct
 
         IEnumerable<UserLikesCountVM> userLikesCounts = await GetUsersLikes(reviews.Select(x => x.authorUserId.ToString()));
         foreach (var review in reviews)
-            review.authorLikesCount = userLikesCounts.First(u => u.userId == review.authorUserId).likesCount;
+            review.authorLikesCount = userLikesCounts.FirstOrDefault(u => u.userId == review.authorUserId)?.likesCount;
 
         return reviews;
     }

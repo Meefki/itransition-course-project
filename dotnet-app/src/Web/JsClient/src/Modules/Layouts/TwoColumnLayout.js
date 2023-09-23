@@ -110,7 +110,7 @@ function TwoColumnLayout({sideComponents, mainComponents, hideSecondCol = true})
         <div>
             <MDBContainer className={hideSecondCol ? colClasses.hide.parent : colClasses.show.parent}>
                 <div className={hideSecondCol ? colClasses.hide.first : colClasses.show.first} style={{minHeight: `calc(100vh - ${document.getElementById('header')?.clientHeight}px)`}}>
-                    <div className="px-4 flex-fill w-100">
+                    <div className="px-0 px-md-4 flex-fill w-100">
                         {mainComponents && mainComponents?.map((c, index) => React.cloneElement(c, {key: index}))}
                     </div>
                     <div className="d-none d-lg-block" style={HrStyle.verticalHrStyle}/>
