@@ -46,7 +46,7 @@ public static class CustomServicesExtention
         services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
-                options.Authority = "https://localhost:5000";
+                options.Authority = configuration["Identity:Url"];
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,
