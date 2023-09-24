@@ -97,7 +97,7 @@ function Review() {
     }
 
     const estimateReview = (grade) => {
-        reviewingService.estimateReview(review.id, userId, grade);
+        reviewingService.estimateReview(review?.id, userId, grade);
         setEstimate(grade);
     }
 
@@ -131,9 +131,9 @@ function Review() {
                                 .then(user => {
                                     setAuthor(user);
                                 })
-                            setIsLiked(review.isLiked ?? false);
-                            setEstimate(review.userEstimate ?? 0);
-                            setLikesCount(review.likesCount ?? 0);
+                            setIsLiked(review?.isLiked ?? false);
+                            setEstimate(review?.userEstimate ?? 0);
+                            setLikesCount(review?.likesCount ?? 0);
                         });
                 }
             });
@@ -142,7 +142,7 @@ function Review() {
 
     return !review && pageLoadingStage ? '' :
     <MDBContainer >
-        <h1 className="mt-5 mb-4">{review.name}</h1>
+        <h1 className="mt-5 mb-4">{review?.name}</h1>
 
         <div className="my-4 d-flex flex-column">
             <div className="mb-2" style={HrStyle.horizontalHrStyle}/>
@@ -151,7 +151,7 @@ function Review() {
                     <span role="button" className="me-1 link-primary user-select-none" onClick={() => {navigate("/profile/" + author.id)}}>{author.userName}</span>
                     <span>&#x2022;</span>
                     <span className="mx-1">
-                        {review.authorLikesCount}
+                        {review?.authorLikesCount}
                         <MDBIcon className="mx-1" icon="thumbs-up"/>
                     </span>
                 </div>
@@ -187,17 +187,17 @@ function Review() {
             <div className="mt-2" style={HrStyle.horizontalHrStyle}/>
         </div>
 
-        <div className="d-flex justify-content-center mb-4"><img style={{maxHeight: "300px"}} src={review.imageUrl ?? "https://placehold.co/200x200?text=No+Image"} alt="..."/></div>
+        <div className="d-flex justify-content-center mb-4"><img style={{maxHeight: "300px"}} src={review?.imageUrl ?? "https://placehold.co/200x200?text=No+Image"} alt="..."/></div>
 
         <div className="d-flex flex-column">
             <div className="my-2" style={HrStyle.horizontalHrStyle}/>
             <div className="d-flex flex-row">
-                <span>{review.subjectName}</span>
+                <span>{review?.subjectName}</span>
                 <span className="mx-1">&#x2022;</span>
-                <span>{review.subjectGroupName}</span>
+                <span>{review?.subjectGroupName}</span>
                 <span className="mx-1">&#x2022;</span>
                 <span>
-                    {review.subjectGrade}
+                    {review?.subjectGrade}
                     <MDBIcon className="mx-1" icon="star"/>
                 </span>
             </div>
