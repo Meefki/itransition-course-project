@@ -1,4 +1,5 @@
 using IdentityServer.Extentions;
+using IdentityServer4.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsProduction())
@@ -31,9 +32,33 @@ app.UseCookiePolicy(new CookiePolicyOptions()
 });
 app.MapControllers();
 app.UseCors();
+
+// https://github.com/IdentityServer/IdentityServer4/issues/4535#issuecomment-647084412
+app.Use(async (ctx, next) =>
+{
+    var urls = Environment.GetEnvironmentVariable("ASPNETCORE_URLS")?.Split(';');
+    if (urls is not null && urls.Length > 0)
+    {
+        string scheme = "https";
+
+        string host = CustomApplicationExtentions.FindHttpsUrl(urls, scheme);
+        if (string.IsNullOrEmpty(host))
+        {
+            host = ctx.Request.Host.ToString();
+        } 
+        else
+        {
+            ctx.Request.Scheme = scheme;
+            ctx.Request.IsHttps = true;
+        }
+            
+        ctx.Request.Host = new HostString(host);
+    }
+    await next();
+});
 app.UseIdentityServer();
 
-await app.InitializeDatabase();
-
 app.MapGet("/", () => $"Identity API Works!");
+
+await app.InitializeDatabase();
 app.Run();

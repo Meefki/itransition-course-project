@@ -54,4 +54,25 @@ public static class CustomApplicationExtentions
             await userContext.RoleClaims.AddRangeAsync(Config.GetRoleClaims());
         }
     }
+
+    public static string FindHttpsUrl(string[] urls, string scheme)
+    {
+        string host = "";
+        foreach (var url in urls)
+        {
+            host = RemoveSchemeFromString(url, scheme);
+            if (!string.IsNullOrEmpty(host))
+                break;
+        }
+        return host;
+    }
+
+    public static string RemoveSchemeFromString(string url, string scheme)
+    {
+        int startIndex = url.StartsWith(scheme + "://") ? (scheme + "://").Length : -1;
+        if (startIndex <= 0) return "";
+
+        string host = url[startIndex..];
+        return host;
+    }
 }
