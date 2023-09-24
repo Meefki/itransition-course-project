@@ -131,6 +131,7 @@ namespace IdentityServer.Controllers
 
             if ((User?.Identity?.IsAuthenticated ?? false) && context is not null)
             {
+                await HttpContext.SignOutAsync();
                 CookieOptions options = new()
                 {
                     SameSite = SameSiteMode.None,
@@ -139,7 +140,7 @@ namespace IdentityServer.Controllers
                 };
                 Response.Cookies.Delete(IdentityServerConstants.DefaultCheckSessionCookieName, options);
                 Response.Cookies.Delete(".AspNetCore.Identity.Application", options);
-                await HttpContext.SignOutAsync();
+                Response.Cookies.Delete("Identity.External", options);
             }
 
             return Ok(new 
