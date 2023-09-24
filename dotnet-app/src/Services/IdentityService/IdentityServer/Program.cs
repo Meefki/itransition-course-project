@@ -6,6 +6,8 @@ if (builder.Environment.IsProduction())
 {
     builder.Configuration.AddJsonFile("/etc/secrets/secrets.json", false, true);
 }
+builder.Configuration.AddEnvironmentVariables();
+
 var config = builder.Configuration;
 var services = builder.Services;
 services.AddControllers();
@@ -36,24 +38,12 @@ app.UseCors();
 // https://github.com/IdentityServer/IdentityServer4/issues/4535#issuecomment-647084412
 app.Use(async (ctx, next) =>
 {
-    var urls = Environment.GetEnvironmentVariable("ASPNETCORE_URLS")?.Split(';');
-    if (urls is not null && urls.Length > 0)
-    {
-        string scheme = "https";
+    string host = config["ASPNETCORE_HOST"] ?? "0.0.0.0:5000";
+    string scheme = config["ASPNETCORE_SCHEME"] ?? "http";
+    ctx.Request.Scheme = scheme;
+    ctx.Request.IsHttps = scheme == "https";
+    ctx.Request.Host = new HostString(host);
 
-        string host = CustomApplicationExtentions.FindHttpsUrl(urls, scheme);
-        if (string.IsNullOrEmpty(host))
-        {
-            host = ctx.Request.Host.ToString();
-        } 
-        else
-        {
-            ctx.Request.Scheme = scheme;
-            ctx.Request.IsHttps = true;
-        }
-            
-        ctx.Request.Host = new HostString(host);
-    }
     await next();
 });
 app.UseIdentityServer();
