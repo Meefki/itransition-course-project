@@ -78,6 +78,7 @@ namespace IdentityServer.Controllers
                 ClaimType = ClaimTypes.Role,
                 ClaimValue = "user"
             };
+            await dbContext.UserClaims.AddAsync(userClaim);
             await dbContext.SaveChangesAsync();
 
             LoginVM loginVM = new()
