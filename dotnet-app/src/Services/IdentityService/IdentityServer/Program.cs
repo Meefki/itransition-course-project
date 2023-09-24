@@ -35,13 +35,5 @@ app.UseIdentityServer();
 
 await app.InitializeDatabase();
 
-if (app.Environment.IsProduction())
-{
-    app.MapGet("/", () => $"Identity API Works!");
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-    Console.WriteLine($"Port: {port}");
-    var url = $"http://0.0.0.0:{port}";
-    app.Run(url);
-}
-else
-    app.Run();
+app.MapGet("/", () => $"Identity API Works!");
+app.Run();
