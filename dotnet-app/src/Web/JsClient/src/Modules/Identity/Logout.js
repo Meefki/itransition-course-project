@@ -1,13 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { IdentityService } from "../../Services/IdentityService"
-import { UserManagerContext } from "../../Contexts/UserManagerContext";
-import { UserInteraction } from "../../Services/UserInteraction";
 
 export function Logout() {
     const identityService = new IdentityService();
-    const mgr = useContext(UserManagerContext);
-    const userInteraction = new UserInteraction(mgr);
-
     async function logout() {
         var query = window.location.search;
         var logoutIdQuery = query && query.toLowerCase().indexOf('?logoutid=') === 0 && query;
@@ -23,7 +18,6 @@ export function Logout() {
           document.getElementById('logout_iframe').appendChild(iframe);
         }
 
-        userInteraction.logout();
         if (data.postLogoutRedirectUri) {
           window.location = data.postLogoutRedirectUri;
         } else {
