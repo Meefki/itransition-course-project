@@ -14,4 +14,5 @@ RUN dotnet publish "IdentityServer.csproj" -c Release -o /app/publish /p:UseAppH
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY /https/cert.pfx /app/https/cert.pfx
 ENTRYPOINT ["dotnet", "IdentityServer.dll"]

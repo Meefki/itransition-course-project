@@ -1,17 +1,10 @@
 ﻿using IdentityServer.Data;
 using IdentityServer.IdentityServer;
 using IdentityServer.IdentityServer.ReturnUrlParsers;
-using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Reflection;
 
 namespace IdentityServer.Extentions;
@@ -62,29 +55,6 @@ public static class CustomServicesExtentions
             .AddEntityFrameworkStores<AuthorizationDbContext>()
             .AddDefaultTokenProviders();
 
-        services.Configure<CookiePolicyOptions>(options =>
-        {
-            options.ConsentCookie.IsEssential = true;
-            options.CheckConsentNeeded = context => false;
-            options.MinimumSameSitePolicy = SameSiteMode.None;
-            options.Secure = CookieSecurePolicy.Always;
-        });
-
-        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-            {
-                options.Cookie.Name = IdentityServerConstants.DefaultCookieAuthenticationScheme;
-                options.SlidingExpiration = true;
-                options.ExpireTimeSpan = TimeSpan.FromHours(1);
-                options.Events.OnRedirectToLogout = (context) =>
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return Task.CompletedTask;
-                };
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            });
         //services.AddAuthentication()
             //.AddGoogle(options =>
             //{
@@ -99,6 +69,7 @@ public static class CustomServicesExtentions
         services
             .AddIdentityServer(options =>
             {
+                options.Authentication.CookieSameSiteMode = SameSiteMode.None;
                 options.UserInteraction.LoginUrl = userInteractionOptions.LoginUrl;
                 options.UserInteraction.ErrorUrl = userInteractionOptions.ErrorUrl;
                 options.UserInteraction.LogoutUrl = userInteractionOptions.LogoutUrl;
@@ -114,6 +85,11 @@ public static class CustomServicesExtentions
                 options.ConfigureDbContext = b => b.UseSqlServer(authenticationConnectionString,
                     sql => sql.MigrationsAssembly(assemblyName));
             });
+
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.None;
+        });
 
         services.AddTransient<IReturnUrlParser, CustomReturnUrlParser>();
 

@@ -1,11 +1,6 @@
 using IdentityServer.Extentions;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http2);
-});
 if (builder.Environment.IsProduction())
 {
     builder.Configuration.AddJsonFile("/etc/secrets/secrets.json", false, true);
@@ -30,7 +25,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseCookiePolicy(new CookiePolicyOptions()
+{
+    Secure = CookieSecurePolicy.Always
+});
 app.MapControllers();
 app.UseCors();
 app.UseIdentityServer();
